@@ -12,11 +12,6 @@ public class ValidationResult
         State = state;
     }
 
-    public static ValidationResult Valid()
-    {
-        return new ValidationResult(null, ValidationState.Valid);
-    }
-    
     public static ValidationResult Invalid(string message)
     {
         return new ValidationResult(message, ValidationState.Invalid);

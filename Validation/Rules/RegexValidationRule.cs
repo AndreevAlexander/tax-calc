@@ -13,7 +13,7 @@ public class RegexValidationRule : IValidationRule
         var pattern = (string)context;
         if (data is string s && !Regex.IsMatch(s, pattern))
         {
-            result.Add(ValidationResult.Invalid($"Property {propertyName} does not match {pattern}"));
+            result.Add(ValidationResult.Invalid($"Value does not match {pattern}"));
         }
 
         return result;

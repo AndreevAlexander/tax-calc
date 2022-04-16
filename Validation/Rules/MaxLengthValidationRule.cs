@@ -12,7 +12,7 @@ public class MaxLengthValidationRule : IValidationRule
         var maxLength = (int)context;
         if (data is string s && s.Length > maxLength)
         {
-            result.Add(ValidationResult.Invalid($"Property {propertyName} can not greater than {maxLength}"));
+            result.Add(ValidationResult.Invalid($"Value can not greater than {maxLength}"));
         }
 
         return result;

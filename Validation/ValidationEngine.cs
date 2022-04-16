@@ -17,7 +17,7 @@ public class ValidationEngine : IValidationEngine
 
 	public ValidationResultContainer Validate<TModel>(TModel model, object? context = null)
 	{
-		var results = new List<ValidationResult>();
+		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
 
 		var profilesForModel = _validationProfiles.Where(x => x.HasRules<TModel>()).ToArray();
 		
@@ -35,40 +35,46 @@ public class ValidationEngine : IValidationEngine
 
 				var value = property?.GetValue(model);
 
-				var resultsForProperty = ExecuteValidationRules(propertyValidationConfiguration, propertyNameForValidation, value, context);
-				results.AddRange(resultsForProperty);
+				var resultsForProperty = ExecuteValidationRules(propertyValidationConfiguration,
+					propertyNameForValidation, value, context);
+				
+				foreach (var result in resultsForProperty)
+				{
+					results.Add(result.Key, result.Value);
+				}
 			}
 		}
 		
 		return new ValidationResultContainer(results);
 	}
 
-	private IEnumerable<ValidationResult> ExecuteValidationRules(RuleConfiguration configuration, string propertyName, object? value, object? context = null)
+	private Dictionary<string, IEnumerable<ValidationResult>> ExecuteValidationRules(RuleConfiguration configuration,
+		string propertyName, object? value, object? context = null)
 	{
-		var results = new List<ValidationResult>();
+		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
 		
 		if (configuration.IsRequired)
 		{
 			var requiredRule = (IValidationRule)Activator.CreateInstance(typeof(RequiredValidationRule));
-			results.AddRange(requiredRule.Validate(value, propertyName));
+			SetResults(propertyName, results, requiredRule.Validate(value, propertyName).ToList());
 		}
 
 		if (configuration.MaxLength != null)
 		{
-			var requiredRule = (IValidationRule)Activator.CreateInstance(typeof(MaxLengthValidationRule));
-			results.AddRange(requiredRule.Validate(value, propertyName, configuration.MaxLength));
+			var maxLengthRule = (IValidationRule)Activator.CreateInstance(typeof(MaxLengthValidationRule));
+			SetResults(propertyName, results, maxLengthRule.Validate(value, propertyName, configuration.MaxLength).ToList());
 		}
 
 		if (configuration.MinLength != null)
 		{
-			var requiredRule = (IValidationRule)Activator.CreateInstance(typeof(MinLengthValidationRule));
-			results.AddRange(requiredRule.Validate(value, propertyName, configuration.MinLength));
+			var minLengthRule = (IValidationRule)Activator.CreateInstance(typeof(MinLengthValidationRule));
+			SetResults(propertyName, results, minLengthRule.Validate(value, propertyName, configuration.MinLength).ToList());
 		}
 
 		if (configuration.Regex != null)
 		{
-			var requiredRule = (IValidationRule)Activator.CreateInstance(typeof(RegexValidationRule));
-			results.AddRange(requiredRule.Validate(value, propertyName, configuration.Regex));
+			var regexRule = (IValidationRule)Activator.CreateInstance(typeof(RegexValidationRule));
+			SetResults(propertyName, results, regexRule.Validate(value, propertyName, configuration.Regex).ToList());
 		}
 		
 		if (configuration.CustomValidators.Any())
@@ -76,13 +82,30 @@ public class ValidationEngine : IValidationEngine
 			foreach (var customValidatorType in configuration.CustomValidators)
 			{
 				var customValidator = (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, customValidatorType);
-				results.AddRange(customValidator.Validate(value, propertyName, context));
+				SetResults(propertyName, results, customValidator.Validate(value, propertyName, context).ToList());
 			}
 		}
 
 		return results;
 	}
 
+	private void SetResults(string propertyName, Dictionary<string, IEnumerable<ValidationResult>> results,
+		List<ValidationResult> validationResults)
+	{
+		if (validationResults.Any())
+		{
+			if (results.TryGetValue(propertyName, out IEnumerable<ValidationResult> existingResults))
+			{
+				validationResults.AddRange(existingResults);
+				results[propertyName] = validationResults;
+			}
+			else
+			{
+				results.Add(propertyName, validationResults);
+			}
+		}
+	}
+	
 	public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
 	{
 		_validationProfiles.Add(new TProfile());
