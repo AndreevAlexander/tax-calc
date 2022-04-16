@@ -43,7 +43,7 @@ public class RuleBuilder : IRuleBuilder, IRuleStage
         return this;
     }
 
-    public IRuleStage WithCustomRule<TCustomRule>() where TCustomRule : class
+    public IRuleStage WithCustomRule<TCustomRule>() where TCustomRule : IValidationRule
     {
         _ruleConfigurations[PropertyName].CustomValidators.Add(typeof(TCustomRule));
         return this;

@@ -6,5 +6,5 @@ public interface IRuleStage
     IRuleStage MinLength(int value);
     IRuleStage MaxLength(int value);
     IRuleStage Regex(string pattern);
-    IRuleStage WithCustomRule<TCustomRule>() where TCustomRule : class;
+    IRuleStage WithCustomRule<TCustomRule>() where TCustomRule : IValidationRule;
 }
