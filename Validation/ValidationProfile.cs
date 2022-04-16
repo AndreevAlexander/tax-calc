@@ -1,22 +1,31 @@
-﻿namespace TaxCalculator.Validation;
+﻿using TaxCalculator.Validation.Contracts;
 
-public class ValidationProfile
+namespace TaxCalculator.Validation;
+
+public class ValidationProfile : IValidationProfile
 {
-    void ForModel<TModel>(Action<object> ruleBuilder)
+	private readonly Dictionary<Type, RuleBuilder> _rulesForModels;
+
+	public ValidationProfile()
+	{
+		_rulesForModels = new Dictionary<Type, RuleBuilder>();
+	}
+	
+    public void ForModel<TModel>(Action<IRuleBuilder> builder)
     {
-        
+	    var ruleBuilder = new RuleBuilder();
+	    builder(ruleBuilder);
+
+	    _rulesForModels.TryAdd(typeof(TModel), ruleBuilder);
+    }
+
+    public RuleBuilder GetRuleBuilder<TModel>()
+    {
+	    return _rulesForModels[typeof(TModel)];
+    }
+
+    public bool HasRules<TModel>()
+    {
+	    return _rulesForModels.ContainsKey(typeof(TModel));
     }
 }
-/**
-var profile = new ValidationProfile();
-
-profile.ForModel<CreateTaxProfileCommand>((profileBuilder) => 
-{
-	profileBuilder.Property(nameof(CreateTaxProfileCommand.Name))
-		.Required()
-		.MinLength(10)
-		.MaxLength(20)
-		.Regex(string regex)
-		.WithCustomRule<TCustomRule>();
-});
-*/

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Contracts;
 using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
@@ -8,6 +9,8 @@ using TaxCalculator.Data;
 using TaxCalculator.Infrastructure;
 using TaxCalculator.Infrastructure.Mapper;
 using TaxCalculator.Persistence;
+using TaxCalculator.Validation;
+using TaxCalculator.Validation.Contracts;
 
 namespace TaxCalculator.WebApi.Extensions;
 
@@ -40,6 +43,26 @@ public static class ServiceCollectionExtensions
         {
             var handlers = provider.GetCqrsHandlers();
             return new CommandBus(handlers.ToList());
+        });
+    }
+
+    public static void AddValidation(this IServiceCollection services)
+    {
+        var profile = new ValidationProfile();
+        profile.ForModel<CreateTaxProfileCommand>(b =>
+        {
+            b.Property(nameof(CreateTaxProfileCommand.Name))
+                .MinLength(5);
+
+            b.Property(nameof(CreateTaxProfileCommand.Description))
+                .Required();
+        });
+        
+        services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
+        {
+            var engine = new ValidationEngine(provider);
+            engine.RegisterValidationProfile(profile);
+            return engine;
         });
     }
 }
