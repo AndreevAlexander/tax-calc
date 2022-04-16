@@ -43,7 +43,7 @@ public class RequiredValidationRule : IValidationRule
 
         if (hasErrors)
         {
-            results.Add(ValidationResult.Invalid($"Value is required"));
+            results.Add(ValidationResult.Invalid("Value is required"));
         }
 
         return results;
