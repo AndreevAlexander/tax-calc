@@ -14,9 +14,9 @@ public class HandlerLoader : IHandlerLoader
         _cache = cache;
     }
 
-    public IEnumerable<Type> LoadHandlersTypesForAssemblies(params Assembly[] assemblies)
+    public IEnumerable<HandlerMetadata> LoadHandlersTypesForAssemblies(params Assembly[] assemblies)
     {
-        var result = new List<Type>();
+        var result = new List<HandlerMetadata>();
         
         foreach (var assembly in assemblies)
         {
@@ -27,11 +27,26 @@ public class HandlerLoader : IHandlerLoader
         return result;
     }
 
-    private IEnumerable<Type> LoadTypesForAssembly(Assembly assembly)
+    private IEnumerable<HandlerMetadata> LoadTypesForAssembly(Assembly assembly)
     {
         return assembly.GetTypes()
             .Where(t => t.GetInterfaces().Any(i =>
                 i.IsGenericType && (i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>) ||
-                                    i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))).ToArray();
+                                    i.GetGenericTypeDefinition() == typeof(ICommandHandler<>))))
+            .Select(x =>
+            {
+                var handlerInterface = x.GetInterfaces()
+                    .FirstOrDefault(i => i.IsGenericType && (i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>) ||
+                                                    i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)));
+
+                return new HandlerMetadata
+                {
+                    GenericTypeDefinition = handlerInterface.GetGenericTypeDefinition(),
+                    GenericArguments = handlerInterface.GetGenericArguments(),
+                    IsCommand = handlerInterface.GetGenericTypeDefinition() == typeof(ICommandHandler<>),
+                    Type = x
+                };
+            })
+            .ToArray();
     }
 }

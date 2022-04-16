@@ -83,8 +83,8 @@ public class ValidationEngine : IValidationEngine
 		return results;
 	}
 
-	public void RegisterValidationProfile(ValidationProfile validationProfile)
+	public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
 	{
-		_validationProfiles.Add(validationProfile);
+		_validationProfiles.Add(new TProfile());
 	}
 }

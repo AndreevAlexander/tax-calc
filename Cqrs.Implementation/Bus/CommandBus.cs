@@ -6,16 +6,16 @@ namespace TaxCalculator.Cqrs.Implementation.Bus;
 
 public class CommandBus : ICommandBus
 {
-    private readonly List<IHandler> _handlers;
+    private readonly CommandHandlerResolver _handlerResolver;
 
-    public CommandBus(List<IHandler> handlers)
+    public CommandBus(CommandHandlerResolver handlerResolver)
     {
-        _handlers = handlers;
+        _handlerResolver = handlerResolver;
     }
 
     public Task<CommandResult> DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
     {
-        var handler = _handlers.OfType<ICommandHandler<TCommand>>().FirstOrDefault();
+        var handler = (ICommandHandler<TCommand>)_handlerResolver(typeof(TCommand));
         if (handler == null)
         {
             throw new Exception($"Can not retrieve handler for command {typeof(TCommand).FullName}");

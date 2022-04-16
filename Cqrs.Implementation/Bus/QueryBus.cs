@@ -6,16 +6,16 @@ namespace TaxCalculator.Cqrs.Implementation.Bus;
 
 public class QueryBus : IQueryBus
 {
-    private readonly List<IHandler> _queryHandlers;
+    private readonly QueryHandlerResolver _queryHandlerResolver;
 
-    public QueryBus(List<IHandler> queryHandlers)
+    public QueryBus(QueryHandlerResolver queryHandlerResolver)
     {
-        _queryHandlers = queryHandlers;
+        _queryHandlerResolver = queryHandlerResolver;
     }
 
     public Task<TResult> ExecuteAsync<TQuery, TResult>(TQuery query) where TQuery : IQuery
     {
-        var handler = _queryHandlers.OfType<IQueryHandler<TQuery, TResult>>().FirstOrDefault();
+        var handler = (IQueryHandler<TQuery, TResult>)_queryHandlerResolver(typeof(TQuery), typeof(TResult));
         if (handler == null)
         {
             throw new Exception($"Can not retrieve handler for: {typeof(TQuery).FullName}; {typeof(TResult).FullName}");

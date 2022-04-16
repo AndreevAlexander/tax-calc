@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaxCalculator.Application.TaxProfiles;
 using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Contracts;
 using TaxCalculator.Cqrs.Contracts;
@@ -33,35 +34,17 @@ public static class ServiceCollectionExtensions
 
     public static void AddCqrs(this IServiceCollection services)
     {
-        services.AddScoped<IQueryBus, QueryBus>(provider =>
-        {
-            var handlers = provider.GetCqrsHandlers();
-            return new QueryBus(handlers.ToList());
-        });
+        services.AddScoped<IQueryBus, QueryBus>(provider => new QueryBus(provider.GetQueryHandler));
     
-        services.AddScoped<ICommandBus, CommandBus>(provider =>
-        {
-            var handlers = provider.GetCqrsHandlers();
-            return new CommandBus(handlers.ToList());
-        });
+        services.AddScoped<ICommandBus, CommandBus>(provider => new CommandBus(provider.GetCommandHandler));
     }
 
     public static void AddValidation(this IServiceCollection services)
     {
-        var profile = new ValidationProfile();
-        profile.ForModel<CreateTaxProfileCommand>(b =>
-        {
-            b.Property(nameof(CreateTaxProfileCommand.Name))
-                .MinLength(5);
-
-            b.Property(nameof(CreateTaxProfileCommand.Description))
-                .Required();
-        });
-        
         services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
         {
             var engine = new ValidationEngine(provider);
-            engine.RegisterValidationProfile(profile);
+            engine.RegisterValidationProfile<TaxProfileValidationProfile>();
             return engine;
         });
     }

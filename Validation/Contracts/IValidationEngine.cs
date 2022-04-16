@@ -5,5 +5,5 @@ namespace TaxCalculator.Validation.Contracts;
 public interface IValidationEngine
 {
     ValidationResultContainer Validate<TModel>(TModel model, object? context = null);
-    void RegisterValidationProfile(ValidationProfile validationProfile);
+    void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new();
 }
