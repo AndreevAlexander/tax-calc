@@ -37,7 +37,7 @@ public class TaxProfileController : Controller
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
-            return Ok(result);
+            return Ok(result); 
         }
 
         return BadRequest(validationResult.ValidationResults);

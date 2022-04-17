@@ -43,7 +43,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
         {
-            var engine = new ValidationEngine(provider);
+            var engine = new ValidationEngine(ruleType => 
+                (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(provider, ruleType));
+            
             engine.RegisterValidationProfile<TaxProfileValidationProfile>();
             return engine;
         });

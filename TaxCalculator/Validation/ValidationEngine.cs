@@ -6,12 +6,12 @@ namespace TaxCalculator.Validation;
 
 public class ValidationEngine : IValidationEngine
 {
-	private readonly IServiceProvider _serviceProvider;
+	private readonly RuleResolver _ruleResolver;
 	private readonly List<IValidationProfile> _validationProfiles;
 
-	public ValidationEngine(IServiceProvider serviceProvider)
+	public ValidationEngine(RuleResolver ruleResolver)
 	{
-		_serviceProvider = serviceProvider;
+		_ruleResolver = ruleResolver;
 		_validationProfiles = new List<IValidationProfile>();
 	}
 
@@ -81,7 +81,7 @@ public class ValidationEngine : IValidationEngine
 		{
 			foreach (var customValidatorType in configuration.CustomValidators)
 			{
-				var customValidator = (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, customValidatorType);
+				var customValidator = _ruleResolver(customValidatorType);
 				SetResults(propertyName, results, customValidator.Validate(value, propertyName, context).ToList());
 			}
 		}
