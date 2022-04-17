@@ -1,4 +1,6 @@
-﻿namespace TaxCalculator.Domain.Entities;
+﻿using TaxCalculator.Domain.Enums;
+
+namespace TaxCalculator.Domain.Entities;
 
 public class Tax : BaseEntity
 {
@@ -9,4 +11,6 @@ public class Tax : BaseEntity
     public decimal? AppliesBefore { get; set; }
 
     public TaxProfile TaxProfile { get; set; }
+
+    public TaxType TaxType { get; set; }
 }
