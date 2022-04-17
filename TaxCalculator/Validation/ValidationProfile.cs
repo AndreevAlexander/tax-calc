@@ -4,24 +4,24 @@ namespace TaxCalculator.Validation;
 
 public class ValidationProfile : IValidationProfile
 {
-	private readonly Dictionary<Type, RuleBuilder> _rulesForModels;
+	private readonly Dictionary<Type, IRuleBuilder> _rulesForModels;
 
 	public ValidationProfile()
 	{
-		_rulesForModels = new Dictionary<Type, RuleBuilder>();
+		_rulesForModels = new Dictionary<Type, IRuleBuilder>();
 	}
 	
-    public void ForModel<TModel>(Action<IRuleBuilder> builder)
+    public void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class
     {
-	    var ruleBuilder = new RuleBuilder();
+	    var ruleBuilder = new RuleBuilder<TModel>();
 	    builder(ruleBuilder);
 
 	    _rulesForModels.TryAdd(typeof(TModel), ruleBuilder);
     }
 
-    public RuleBuilder GetRuleBuilder<TModel>()
+    public IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class
     {
-	    return _rulesForModels[typeof(TModel)];
+	    return (IRuleBuilder<TModel>)_rulesForModels[typeof(TModel)];
     }
 
     public bool HasRules<TModel>()

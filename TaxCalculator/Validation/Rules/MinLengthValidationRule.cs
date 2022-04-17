@@ -12,7 +12,7 @@ public class MinLengthValidationRule : IValidationRule
         var minLength = (int)context;
         if (data is string s && s.Length < minLength)
         {
-            result.Add(ValidationResult.Invalid($"Value can not less than {minLength}"));
+            result.Add(ValidationResult.Invalid($"Value can not be less than {minLength}"));
         }
 
         return result;

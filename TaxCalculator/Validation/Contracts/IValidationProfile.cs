@@ -2,7 +2,7 @@
 
 public interface IValidationProfile
 {
-    void ForModel<TModel>(Action<IRuleBuilder> builder);
-    RuleBuilder GetRuleBuilder<TModel>();
+    void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class;
+    IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class;
     bool HasRules<TModel>();
 }

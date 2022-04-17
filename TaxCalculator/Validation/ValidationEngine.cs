@@ -15,7 +15,7 @@ public class ValidationEngine : IValidationEngine
 		_validationProfiles = new List<IValidationProfile>();
 	}
 
-	public ValidationResultContainer Validate<TModel>(TModel model, object? context = null)
+	public ValidationResultContainer Validate<TModel>(TModel model, object? context = null) where TModel : class
 	{
 		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
 
