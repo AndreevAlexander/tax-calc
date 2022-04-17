@@ -10,6 +10,8 @@ public class TaxContext : DbContext
     public DbSet<Tax> Taxes { get; set; }
 
     public DbSet<AdditionalSpend> AdditionalSpends { get; set; }
+    
+    public DbSet<Income> Incomes { get; set; }
 
     public TaxContext()
     {
