@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TaxCalculator.Domain.Entities;
+﻿using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.ValueObjects;
+using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Data.Repositories;
 
-public class TaxProfileRepository : RepositoryBase<TaxProfile>
+public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepository
 {
     public TaxProfileRepository(TaxContext context) : base(context)
     {
