@@ -11,6 +11,8 @@ public class Tax : BaseEntity
     public decimal? AppliesBefore { get; set; }
 
     public TaxProfile TaxProfile { get; set; }
+    
+    public Guid TaxProfileId { get; set; }
 
     public TaxType TaxType { get; set; }
 }

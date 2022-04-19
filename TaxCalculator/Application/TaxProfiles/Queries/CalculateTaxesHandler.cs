@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaxCalculator.Cqrs.Contracts.Handler;
+using TaxCalculator.Data.Repositories;
 using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Persistence;
@@ -17,16 +18,14 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, List<Tax
 
     public async Task<List<TaxDataItemDto>> HandleAsync(CalculateTaxesQuery query)
     {
-        var taxProfile = await _entityManager.GetRepository<TaxProfile>().GetMany()
-            .Include(x => x.Incomes)
-            .Include(x => x.Taxes)
-            .Include(x => x.AdditionalSpends)
-            .FirstOrDefaultAsync(x => x.Id == query.ProfileId);
+        var taxProfile = await _entityManager.GetRepository<TaxProfile>()
+            .As<TaxProfileRepository>()
+            .GetOneAsync(query.ProfileId, query.Period);
 
         var result = new List<TaxDataItemDto>();
         if (taxProfile != null)
         {
-            result.AddRange(taxProfile.CalculateTaxes(query.From, query.To));
+            result.AddRange(taxProfile.CalculateTaxes());
 
             var total = new TaxDataItemDto
             {

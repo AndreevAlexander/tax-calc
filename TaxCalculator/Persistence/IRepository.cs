@@ -11,5 +11,5 @@ public interface IRepository<TEntity> : IRepository where TEntity : BaseEntity
 
 public interface IRepository
 {
-    
+    TRepository As<TRepository>() where TRepository : IRepository;
 }

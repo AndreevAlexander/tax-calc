@@ -7,4 +7,6 @@ public class AdditionalSpend : BaseEntity
     public bool AppliedBeforeTax { get; set; } = false;
 
     public TaxProfile TaxProfile { get; set; }
+    
+    public Guid TaxProfileId { get; set; }
 }

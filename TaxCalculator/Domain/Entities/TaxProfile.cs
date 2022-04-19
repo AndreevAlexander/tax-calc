@@ -22,10 +22,9 @@ public class TaxProfile : BaseEntity
         Incomes = new HashSet<Income>();
     }
 
-    public IEnumerable<TaxDataItemDto> CalculateTaxes(DateTime? from = null, DateTime? to = null)
+    public IEnumerable<TaxDataItemDto> CalculateTaxes()
     {
         var incomes = Incomes.ToArray();
-        ApplyDateFilter(ref incomes, from, to);
         
         var groupedIncomes = incomes.GroupBy(x => new
         {
@@ -123,20 +122,5 @@ public class TaxProfile : BaseEntity
         }
         
         return socialTaxPerMonth;
-    }
-
-    private void ApplyDateFilter(ref Income[] incomes, DateTime? from = null, DateTime? to = null)
-    {
-        if (from != null)
-        {
-            incomes = incomes.Where(x => x.CreatedDate.Month >= from.Value.Month 
-                                         && x.CreatedDate.Year == from.Value.Year).ToArray();
-        }
-
-        if (to != null)
-        {
-            incomes = incomes.Where(x => x.CreatedDate.Month <= to.Value.Month 
-                                         && x.CreatedDate.Year == to.Value.Year).ToArray();
-        }
     }
 }

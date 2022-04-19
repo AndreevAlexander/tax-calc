@@ -5,20 +5,30 @@ namespace TaxCalculator.Data.Repositories;
 
 public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
 {
-    private readonly TaxContext _context;
+    protected readonly TaxContext Context;
 
     public RepositoryBase(TaxContext context)
     {
-        _context = context;
+        Context = context;
     }
 
-    public ValueTask<TEntity?> GetOneAsync(Guid id)
+    public virtual ValueTask<TEntity?> GetOneAsync(Guid id)
     {
-        return _context.Set<TEntity>().FindAsync(id);
+        return Context.Set<TEntity>().FindAsync(id);
     }
 
-    public IQueryable<TEntity> GetMany()
+    public virtual IQueryable<TEntity> GetMany()
     {
-        return _context.Set<TEntity>().AsQueryable();
+        return Context.Set<TEntity>().AsQueryable();
+    }
+
+    public TRepository As<TRepository>() where TRepository : IRepository
+    {
+        if (this is TRepository repository)
+        {
+            return repository;
+        }
+
+        throw new Exception("Can not cast repository");
     }
 }

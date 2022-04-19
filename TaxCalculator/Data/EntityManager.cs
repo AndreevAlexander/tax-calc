@@ -13,7 +13,10 @@ public class EntityManager : IEntityManager
     public EntityManager(TaxContext context)
     {
         _context = context;
-        _repositories = new Dictionary<Type, IRepository>();
+        _repositories = new Dictionary<Type, IRepository>
+        {
+            {typeof(TaxProfile), new TaxProfileRepository(_context)}
+        };
     }
 
     public IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity

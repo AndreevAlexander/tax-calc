@@ -5,4 +5,6 @@ public class Income : BaseEntity
     public decimal Value { get; set; }
 
     public TaxProfile TaxProfile { get; set; }
+    
+    public Guid TaxProfileId { get; set; }
 }
