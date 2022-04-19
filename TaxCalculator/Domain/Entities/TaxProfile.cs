@@ -1,5 +1,6 @@
 ﻿using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Enums;
+using TaxCalculator.Domain.Exceptions;
 
 namespace TaxCalculator.Domain.Entities;
 
@@ -75,7 +76,7 @@ public class TaxProfile : BaseEntity
         var incomeTaxes = Taxes.Where(x => x.TaxType == TaxType.IncomeTax).ToArray();
         if (!incomeTaxes.Any())
         {
-            throw new Exception("No income taxes were configured");
+            throw new TaxCalculatorException("No income taxes were configured");
         }
         
         var incomeTax = incomeTaxes.Where(x => x.AppliesBefore != null && x.AppliesBefore < totalIncome)

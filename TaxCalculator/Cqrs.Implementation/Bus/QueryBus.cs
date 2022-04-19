@@ -1,6 +1,7 @@
 ﻿using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Cqrs.Contracts.Handler;
+using TaxCalculator.Domain.Exceptions;
 
 namespace TaxCalculator.Cqrs.Implementation.Bus;
 
@@ -18,7 +19,7 @@ public class QueryBus : IQueryBus
         var handler = (IQueryHandler<TQuery, TResult>)_queryHandlerResolver(typeof(TQuery), typeof(TResult));
         if (handler == null)
         {
-            throw new Exception($"Can not retrieve handler for: {typeof(TQuery).FullName}; {typeof(TResult).FullName}");
+            throw new TaxCalculatorException($"Can not retrieve handler for: {typeof(TQuery).FullName}; {typeof(TResult).FullName}");
         }
 
         return handler.HandleAsync(query);

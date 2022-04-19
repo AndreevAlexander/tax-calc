@@ -1,4 +1,5 @@
 ﻿using TaxCalculator.Domain.Entities;
+using TaxCalculator.Domain.Exceptions;
 using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Data.Repositories;
@@ -29,6 +30,6 @@ public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : Base
             return repository;
         }
 
-        throw new Exception("Can not cast repository");
+        throw new TaxCalculatorException("Can not cast repository");
     }
 }

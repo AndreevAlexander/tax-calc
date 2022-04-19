@@ -1,6 +1,7 @@
 ﻿using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Cqrs.Contracts.Handler;
+using TaxCalculator.Domain.Exceptions;
 
 namespace TaxCalculator.Cqrs.Implementation.Bus;
 
@@ -18,7 +19,7 @@ public class CommandBus : ICommandBus
         var handler = (ICommandHandler<TCommand>)_handlerResolver(typeof(TCommand));
         if (handler == null)
         {
-            throw new Exception($"Can not retrieve handler for command {typeof(TCommand).FullName}");
+            throw new TaxCalculatorException($"Can not retrieve handler for command {typeof(TCommand).FullName}");
         }
 
         return handler.HandleAsync(command);
