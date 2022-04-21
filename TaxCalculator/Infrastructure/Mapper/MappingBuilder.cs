@@ -16,7 +16,10 @@ public class MappingBuilder
     private void ConfigureMappings(IProfileExpression profile)
     {
         profile.CreateMap<CreateTaxProfileCommand, TaxProfile>()
-            .ForAllMembers(x => x.MapAtRuntime());
+            .ForMember(x => x.ProfileCurrency, x => x.Ignore())
+            .ForMember(x => x.ProfileCurrencyId, x => x.MapFrom(y => y.ProfileCurrencyId))
+            .ForMember(x => x.Name, x => x.MapFrom(y => y.Name))
+            .ForMember(x => x.Description, x => x.MapFrom(y => y.Description));
         
         profile.CreateMap<CreateTaxCommand, Tax>()
             .ForAllMembers(x => x.MapAtRuntime());

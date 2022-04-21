@@ -8,4 +8,6 @@ public class CalculateTaxesQuery : IQuery
     public Guid ProfileId { get; set; }
 
     public DateRange? Period { get; set; } = null;
+
+    public Guid? CurrencyId { get; set; } = null;
 }

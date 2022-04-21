@@ -16,6 +16,10 @@ public class TaxProfile : BaseEntity
     
     public ICollection<Income> Incomes { get; set; }
 
+    public Currency? ProfileCurrency { get; set; }
+    
+    public Guid? ProfileCurrencyId { get; set; }
+
     public TaxProfile()
     {
         Taxes = new HashSet<Tax>();

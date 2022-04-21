@@ -1,4 +1,5 @@
-﻿using TaxCalculator.Data.Repositories;
+﻿using TaxCalculator.Contracts;
+using TaxCalculator.Data.Repositories;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Persistence;
 
@@ -10,12 +11,13 @@ public class EntityManager : IEntityManager
 
     private readonly Dictionary<Type, IRepository> _repositories;
 
-    public EntityManager(TaxContext context)
+    public EntityManager(TaxContext context, ICache cache)
     {
         _context = context;
         _repositories = new Dictionary<Type, IRepository>
         {
-            {typeof(TaxProfile), new TaxProfileRepository(_context)}
+            {typeof(TaxProfile), new TaxProfileRepository(_context)},
+            {typeof(Currency), new CurrencyRepository(_context, cache)}
         };
     }
 

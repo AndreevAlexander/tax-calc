@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaxCalculator.Application.Services;
 using TaxCalculator.Application.TaxProfiles;
-using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Contracts;
 using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Cqrs.Implementation;
 using TaxCalculator.Cqrs.Implementation.Bus;
 using TaxCalculator.Data;
+using TaxCalculator.Domain.Services;
+using TaxCalculator.Domain.Services.Identifier;
 using TaxCalculator.Infrastructure;
 using TaxCalculator.Infrastructure.Mapper;
 using TaxCalculator.Persistence;
@@ -24,6 +26,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMapper, MapperDecorator>();
         services.AddSingleton<ICache, CacheDecorator>();
         services.AddSingleton<IHandlerLoader, HandlerLoader>();
+        services.AddSingleton<IIdentifierService, IdentifierService>();
+        services.AddScoped<ICurrencyConverterService, CurrencyConverterService>();
     }
 
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)

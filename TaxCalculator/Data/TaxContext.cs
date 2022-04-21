@@ -13,6 +13,8 @@ public class TaxContext : DbContext
     
     public DbSet<Income> Incomes { get; set; }
 
+    public DbSet<Currency> Currencies { get; set; }
+    
     public TaxContext()
     {
         
