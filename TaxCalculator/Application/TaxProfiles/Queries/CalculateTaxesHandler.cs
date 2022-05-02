@@ -46,9 +46,8 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
                 taxProfile.Taxes = taxes;
             }
 
-            var calculatedTaxes = new List<TaxDataItemDto>();
-            calculatedTaxes.AddRange(taxProfile.CalculateTaxes());
-            
+            var calculatedTaxes = taxProfile.CalculateTaxes().ToList();
+
             var total = new TaxTotalDto
             {
                 TotalIncomeGross = calculatedTaxes.Sum(x => x.IncomeGross),
