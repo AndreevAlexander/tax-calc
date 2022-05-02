@@ -47,7 +47,7 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
             result.TaxInformation = calculatedTaxes;
             result.IncomeTotal = total;
             result.Currency = query.CurrencyId.HasValue
-                ? _identifierService.Currencies.GetIdentifierName(query.CurrencyId.Value)
+                ? _identifierService.GetNameByIdentifierValue(_identifierService.Currencies, query.CurrencyId.Value)
                 : taxProfile.ProfileCurrency.Name;
         }
 

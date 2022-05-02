@@ -1,4 +1,6 @@
-﻿namespace TaxCalculator.Domain.Services.Identifier;
+﻿using System.Reflection;
+
+namespace TaxCalculator.Domain.Services.Identifier;
 
 public class IdentifierService : IIdentifierService
 {
@@ -7,6 +9,11 @@ public class IdentifierService : IIdentifierService
     public IdentifierService()
     {
         SetUpCurrencies();
+    }
+
+    public string GetNameByIdentifierValue<T>(IIdentifier<T> identifier, T value)
+    {
+        return identifier.GetType().GetProperties().FirstOrDefault(x => x.GetValue(identifier).Equals(value))?.Name;
     }
 
     private void SetUpCurrencies()
