@@ -1,6 +1,5 @@
 ﻿using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Validation.Result;
-using TaxCalculator.WebApi.Dtos;
 
 namespace TaxCalculator.WebApi.Extensions;
 

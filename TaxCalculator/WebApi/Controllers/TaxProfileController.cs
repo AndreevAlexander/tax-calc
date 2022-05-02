@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Application.TaxProfiles.Queries;
-using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Validation.Contracts;
-using TaxCalculator.WebApi.Dtos;
 using TaxCalculator.WebApi.Extensions;
 
 namespace TaxCalculator.WebApi.Controllers;

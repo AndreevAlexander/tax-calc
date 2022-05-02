@@ -1,7 +1,7 @@
 ﻿using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.WebApi.Dtos;
+namespace TaxCalculator.WebApi;
 
 public class ValidatedCommandResult : CommandResult
 {
