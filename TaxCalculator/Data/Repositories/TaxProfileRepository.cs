@@ -30,6 +30,7 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
             taxProfile.AdditionalSpends = additionalSpends.ToList();
             taxProfile.Incomes = incomes.ToList();
             taxProfile.Taxes = taxes.ToList();
+            taxProfile.ProfileCurrency = Context.Currencies.FirstOrDefault(x => x.Id == taxProfile.ProfileCurrencyId);
         }
 
         return taxProfile;

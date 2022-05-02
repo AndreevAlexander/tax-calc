@@ -14,6 +14,9 @@ public class TaxProfileValidationProfile : ValidationProfile
 
             b.Property(x => x.Description)
                 .Required();
+
+            b.Property(x => x.ProfileCurrencyId)
+                .Required();
         });
     }
 }

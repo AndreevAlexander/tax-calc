@@ -2,6 +2,7 @@
 using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
+using TaxCalculator.Domain.Services.Identifier;
 using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Application.TaxProfiles.Queries;
@@ -10,12 +11,15 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
 {
     private readonly IEntityManager _entityManager;
     private readonly ICurrencyConverterService _currencyConverterService;
+    private readonly IIdentifierService _identifierService;
 
     public CalculateTaxesHandler(IEntityManager entityManager,
-                                 ICurrencyConverterService currencyConverterService)
+                                 ICurrencyConverterService currencyConverterService,
+                                 IIdentifierService identifierService)
     {
         _entityManager = entityManager;
         _currencyConverterService = currencyConverterService;
+        _identifierService = identifierService;
     }
 
     public async Task<CalculateTaxesResult> HandleAsync(CalculateTaxesQuery query)
@@ -29,21 +33,7 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
         {
             if (query.CurrencyId.HasValue)
             {
-                taxProfile.Incomes = taxProfile.Incomes.Select(x =>
-                {
-                    x.Value = _currencyConverterService.ToCurrency(x.Value, taxProfile, query.CurrencyId.Value);
-                    return x;
-                }).ToList();
-
-                var fixedTaxes = taxProfile.Taxes.Where(x => !x.IsPercentage).Select(x =>
-                {
-                    x.Amount = (double)_currencyConverterService.ToCurrency((decimal)x.Amount, taxProfile, query.CurrencyId.Value);
-                    return x;
-                }).ToList();
-
-                var taxes = taxProfile.Taxes.Where(x => x.IsPercentage).ToList();
-                taxes.AddRange(fixedTaxes);
-                taxProfile.Taxes = taxes;
+                ConvertMoneyValues(taxProfile, query.CurrencyId.Value);
             }
 
             var calculatedTaxes = taxProfile.CalculateTaxes().ToList();
@@ -56,8 +46,30 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
 
             result.TaxInformation = calculatedTaxes;
             result.TaxTotal = total;
+            result.Currency = query.CurrencyId.HasValue
+                ? _identifierService.Currencies.GetIdentifierName(query.CurrencyId.Value)
+                : taxProfile.ProfileCurrency.Name;
         }
 
         return result;
+    }
+
+    private void ConvertMoneyValues(TaxProfile taxProfile, Guid currencyId)
+    {
+        taxProfile.Incomes = taxProfile.Incomes.Select(x =>
+        {
+            x.Value = _currencyConverterService.ToCurrency(x.Value, taxProfile, currencyId);
+            return x;
+        }).ToList();
+
+        var fixedTaxes = taxProfile.Taxes.Where(x => !x.IsPercentage).Select(x =>
+        {
+            x.Amount = (double)_currencyConverterService.ToCurrency((decimal)x.Amount, taxProfile, currencyId);
+            return x;
+        }).ToList();
+
+        var taxes = taxProfile.Taxes.Where(x => x.IsPercentage).ToList();
+        taxes.AddRange(fixedTaxes);
+        taxProfile.Taxes = taxes;
     }
 }

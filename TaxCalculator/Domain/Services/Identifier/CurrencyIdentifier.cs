@@ -1,6 +1,6 @@
 ﻿namespace TaxCalculator.Domain.Services.Identifier;
 
-public class CurrencyIdentifier<T>
+public class CurrencyIdentifier<T> : IdentifierBase<T>
 {
     public T Usd { get; set; }
 
