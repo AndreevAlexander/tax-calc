@@ -8,6 +8,7 @@ public class RuleBuilder<TModel> : IRuleBuilder<TModel>, IRuleStage where TModel
     private string PropertyName { get; set; }
 
     private readonly Dictionary<string, RuleConfiguration> _ruleConfigurations;
+    
     public RuleBuilder()
     {
         _ruleConfigurations = new Dictionary<string, RuleConfiguration>();

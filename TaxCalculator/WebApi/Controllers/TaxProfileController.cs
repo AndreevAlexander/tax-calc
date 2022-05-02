@@ -3,7 +3,6 @@ using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Application.TaxProfiles.Queries;
 using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
-using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Validation.Contracts;
 
@@ -45,9 +44,9 @@ public class TaxProfileController : Controller
     }
 
     [HttpGet("CalculateTaxes")]
-    public async Task<ActionResult<List<TaxDataItemDto>>> CalculateTaxes([FromQuery] CalculateTaxesQuery query)
+    public async Task<ActionResult<CalculateTaxesResult>> CalculateTaxes([FromQuery] CalculateTaxesQuery query)
     {
-        var result = await _queryBus.ExecuteAsync<CalculateTaxesQuery, List<TaxDataItemDto>>(query);
+        var result = await _queryBus.ExecuteAsync<CalculateTaxesQuery, CalculateTaxesResult>(query);
         return Ok(result);
     }
 }

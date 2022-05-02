@@ -2,12 +2,11 @@
 using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
-using TaxCalculator.Domain.Services.Identifier;
 using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Application.TaxProfiles.Queries;
 
-public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, List<TaxDataItemDto>>
+public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, CalculateTaxesResult>
 {
     private readonly IEntityManager _entityManager;
     private readonly ICurrencyConverterService _currencyConverterService;
@@ -19,13 +18,13 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, List<Tax
         _currencyConverterService = currencyConverterService;
     }
 
-    public async Task<List<TaxDataItemDto>> HandleAsync(CalculateTaxesQuery query)
+    public async Task<CalculateTaxesResult> HandleAsync(CalculateTaxesQuery query)
     {
         var taxProfile = await _entityManager.GetRepository<TaxProfile>()
             .As<ITaxProfileRepository>()
             .GetOneAsync(query.ProfileId, query.Period);
 
-        var result = new List<TaxDataItemDto>();
+        var result = new CalculateTaxesResult();
         if (taxProfile != null)
         {
             if (query.CurrencyId.HasValue)
@@ -47,16 +46,17 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, List<Tax
                 taxProfile.Taxes = taxes;
             }
 
-            result.AddRange(taxProfile.CalculateTaxes());
-
-            var total = new TaxDataItemDto
+            var calculatedTaxes = new List<TaxDataItemDto>();
+            calculatedTaxes.AddRange(taxProfile.CalculateTaxes());
+            
+            var total = new TaxTotalDto
             {
-                Title = "Total",
-                IncomeGross = result.Sum(x => x.IncomeGross),
-                IncomeNet = result.Sum(x => x.IncomeNet)
+                TotalIncomeGross = calculatedTaxes.Sum(x => x.IncomeGross),
+                TotalIncomeNet = calculatedTaxes.Sum(x => x.IncomeNet)
             };
 
-            result.Add(total);
+            result.TaxInformation = calculatedTaxes;
+            result.TaxTotal = total;
         }
 
         return result;
