@@ -5,6 +5,8 @@ using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Validation.Contracts;
+using TaxCalculator.WebApi.Dtos;
+using TaxCalculator.WebApi.Extensions;
 
 namespace TaxCalculator.WebApi.Controllers;
 
@@ -31,13 +33,13 @@ public class TaxProfileController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<CommandResult>> CreateProfile([FromBody] CreateTaxProfileCommand command)
+    public async Task<ActionResult<ValidatedCommandResult>> CreateProfile([FromBody] CreateTaxProfileCommand command)
     {
         var validationResult = _validationEngine.Validate(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
-            return Ok(result); 
+            return Ok(result.ToValidated(validationResult.ValidationResults)); 
         }
 
         return BadRequest(validationResult.ValidationResults);
