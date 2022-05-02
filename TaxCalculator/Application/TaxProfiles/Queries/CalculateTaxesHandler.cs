@@ -38,14 +38,14 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
 
             var calculatedTaxes = taxProfile.CalculateTaxes().ToList();
 
-            var total = new TaxTotalDto
+            var total = new IncomeTotalDto
             {
-                TotalIncomeGross = calculatedTaxes.Sum(x => x.IncomeGross),
-                TotalIncomeNet = calculatedTaxes.Sum(x => x.IncomeNet)
+                TotalGross = calculatedTaxes.Sum(x => x.IncomeGross),
+                TotalNet = calculatedTaxes.Sum(x => x.IncomeNet)
             };
 
             result.TaxInformation = calculatedTaxes;
-            result.TaxTotal = total;
+            result.IncomeTotal = total;
             result.Currency = query.CurrencyId.HasValue
                 ? _identifierService.Currencies.GetIdentifierName(query.CurrencyId.Value)
                 : taxProfile.ProfileCurrency.Name;

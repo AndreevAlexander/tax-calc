@@ -6,7 +6,7 @@ public class CalculateTaxesResult
 {
     public List<TaxDataItemDto> TaxInformation { get; set; }
 
-    public TaxTotalDto TaxTotal { get; set; }
+    public IncomeTotalDto IncomeTotal { get; set; }
 
     public string Currency { get; set; }
 }

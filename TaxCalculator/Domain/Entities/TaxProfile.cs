@@ -64,7 +64,7 @@ public class TaxProfile : BaseEntity
 
             result.Add(new TaxDataItemDto
             {
-                Title = $"For: {incomeGroup.Key.Year}/{incomeGroup.Key.Month}",
+                Month = $"{incomeGroup.Key.Year}/{incomeGroup.Key.Month}",
                 IncomeGross = incomePerMonth,
                 IncomeTax = incomeTaxPerMonth,
                 SocialTax = socialTaxPerMonth,
