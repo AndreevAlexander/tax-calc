@@ -8,5 +8,5 @@ public class CalculateTaxesResult
 
     public IncomeTotalDto IncomeTotal { get; set; }
 
-    public string Currency { get; set; }
+    public string? Currency { get; set; }
 }
