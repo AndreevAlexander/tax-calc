@@ -27,7 +27,6 @@
     <ItemGroup>
       <Folder Include="Application\AdditionalSpends" />
       <Folder Include="Application\Incomes" />
-      <Folder Include="Application\Taxes\Queries" />
     </ItemGroup>
 
 </Project>

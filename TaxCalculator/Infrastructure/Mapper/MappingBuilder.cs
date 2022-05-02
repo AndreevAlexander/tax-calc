@@ -23,5 +23,8 @@ public class MappingBuilder
         
         profile.CreateMap<CreateTaxCommand, Tax>()
             .ForAllMembers(x => x.MapAtRuntime());
+        
+        profile.CreateMap<UpdateTaxCommand, Tax>()
+            .ForAllMembers(x => x.MapAtRuntime());
     }
 }
