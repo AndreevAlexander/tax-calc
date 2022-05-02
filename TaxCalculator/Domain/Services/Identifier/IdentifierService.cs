@@ -11,11 +11,6 @@ public class IdentifierService : IIdentifierService
         SetUpCurrencies();
     }
 
-    public string GetNameByIdentifierValue<T>(IIdentifier<T> identifier, T value)
-    {
-        return identifier.GetType().GetProperties().FirstOrDefault(x => x.GetValue(identifier).Equals(value))?.Name;
-    }
-
     private void SetUpCurrencies()
     {
         Currencies = new CurrencyIdentifier<Guid>
