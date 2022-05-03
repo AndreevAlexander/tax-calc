@@ -7,4 +7,6 @@ public class Income : BaseEntity
     public TaxProfile TaxProfile { get; set; }
     
     public Guid TaxProfileId { get; set; }
+
+    public DateTime IncomeDate { get; set; }
 }
