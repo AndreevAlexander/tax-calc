@@ -22,7 +22,7 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
 
             if (period != null)
             {
-                incomes = incomes.Where(x => x.CreatedDate >= period.From && x.CreatedDate <= period.To);
+                incomes = incomes.Where(x => x.IncomeDate >= period.From && x.IncomeDate <= period.To);
                 additionalSpends = additionalSpends.Where(x => x.CreatedDate >= period.From && x.CreatedDate <= period.To);
                 taxes = taxes.Where(x => x.CreatedDate >= period.From && x.CreatedDate <= period.To);
             }
