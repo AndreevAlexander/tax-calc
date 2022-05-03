@@ -8,5 +8,5 @@ public class AddIncomeCommand : ICommand
     
     public Guid TaxProfileId { get; set; }
 
-    public DateTime? IncomeDate { get; set; }
+    public DateTime IncomeDate { get; set; }
 }

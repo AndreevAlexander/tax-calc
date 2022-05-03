@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaxCalculator.Application.Incomes;
 using TaxCalculator.Application.Services;
 using TaxCalculator.Application.TaxProfiles;
 using TaxCalculator.Contracts;
@@ -51,6 +52,8 @@ public static class ServiceCollectionExtensions
                 (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(provider, ruleType));
             
             engine.RegisterValidationProfile<TaxProfileValidationProfile>();
+            engine.RegisterValidationProfile<IncomeValidationProfile>();
+          
             return engine;
         });
     }
