@@ -46,6 +46,11 @@ public class RequiredValidationRule : IValidationRule
             hasErrors = true;
         }
 
+        if (data is Guid guid && guid == Guid.Empty)
+        {
+            hasErrors = true;
+        }
+        
         if (hasErrors)
         {
             results.Add(ValidationResult.Invalid("Value is required"));
