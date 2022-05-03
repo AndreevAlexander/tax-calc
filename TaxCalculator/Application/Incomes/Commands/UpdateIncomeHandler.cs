@@ -25,6 +25,11 @@ public class UpdateIncomeHandler : ICommandHandler<UpdateIncomeCommand>
         if (income != null)
         {
             income = _mapper.Map(command, income);
+
+            if (command.IncomeDate.HasValue)
+            {
+                income.IncomeDate = command.IncomeDate.Value;
+            }
             
             _entityManager.Persist(income);
             await _entityManager.SaveAsync();

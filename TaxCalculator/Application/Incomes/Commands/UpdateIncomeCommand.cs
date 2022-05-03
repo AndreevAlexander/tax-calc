@@ -8,5 +8,5 @@ public class UpdateIncomeCommand : ICommand
     
     public decimal Value { get; set; }
 
-    public DateTime IncomeDate { get; set; }
+    public DateTime? IncomeDate { get; set; }
 }

@@ -37,6 +37,6 @@ public class MappingBuilder
         profile.CreateMap<UpdateIncomeCommand, Income>()
             .ForMember(x => x.TaxProfile, x => x.Ignore())
             .ForMember(x => x.Value, x => x.MapFrom(y => y.Value))
-            .ForMember(x => x.IncomeDate, x => x.MapFrom(y => y.IncomeDate));
+            .ForMember(x => x.IncomeDate, x => x.Ignore());
     }
 }
