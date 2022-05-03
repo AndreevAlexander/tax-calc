@@ -41,6 +41,11 @@ public class RequiredValidationRule : IValidationRule
             }
         }
 
+        if (data is DateTime dateTime && dateTime == DateTime.MinValue)
+        {
+            hasErrors = true;
+        }
+
         if (hasErrors)
         {
             results.Add(ValidationResult.Invalid("Value is required"));

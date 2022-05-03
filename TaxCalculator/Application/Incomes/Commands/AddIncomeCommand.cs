@@ -1,10 +1,10 @@
-﻿namespace TaxCalculator.Domain.Entities;
+﻿using TaxCalculator.Cqrs.Contracts;
 
-public class Income : BaseEntity
+namespace TaxCalculator.Application.Incomes.Commands;
+
+public class AddIncomeCommand : ICommand
 {
     public decimal Value { get; set; }
-
-    public TaxProfile TaxProfile { get; set; }
     
     public Guid TaxProfileId { get; set; }
 
