@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TaxCalculator.Contracts\TaxCalculator.Contracts.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Cqrs.Contracts\TaxCalculator.Cqrs.Contracts.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Persistence\TaxCalculator.Persistence.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Validation\TaxCalculator.Validation.csproj" />
+    </ItemGroup>
+
+</Project>
