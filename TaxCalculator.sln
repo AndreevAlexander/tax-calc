@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator", "TaxCalculator\TaxCalculator.csproj", "{F7D4BCD6-9AAF-464C-89A4-6ED23CD95B8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.WebApi", "TaxCalculator.WebApi\TaxCalculator.WebApi.csproj", "{F7D4BCD6-9AAF-464C-89A4-6ED23CD95B8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Cqrs.Contracts", "TaxCalculator.Cqrs.Contracts\TaxCalculator.Cqrs.Contracts.csproj", "{E9681B1A-B0C3-4CB8-B5E6-F85D8CCF3634}"
 EndProject
