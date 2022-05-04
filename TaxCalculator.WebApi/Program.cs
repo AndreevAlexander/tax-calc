@@ -22,8 +22,14 @@ builder.Services.AddDatabase(configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddCqrs();
 builder.Services.AddValidation();
+builder.Services.AddCors(x =>
+{
+    x.AddPolicy("local", policy => policy.WithOrigins("https://localhost:7015"));
+});
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -33,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("local");
 
 app.UseAuthorization();
 

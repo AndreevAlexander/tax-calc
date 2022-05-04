@@ -12,8 +12,19 @@ public static class CommandResultExtensions
         {
             Status = commandResult.Status,
             RecordId = commandResult.RecordId,
-            Warnings = results.Where(x => x.Value.All(y => y.State == ValidationState.Warning))
+            ValidationResults = results.Where(x => x.Value.All(y => y.State == ValidationState.Warning))
                 .ToDictionary(x => x.Key, x => x.Value)
+        };
+    }
+
+    public static ValidatedCommandResult ToInvalid(this CommandResult commandResult,
+        Dictionary<string, IEnumerable<ValidationResult>> results)
+    {
+        return new ValidatedCommandResult
+        {
+            Status = CommandStatus.Fail,
+            RecordId = null,
+            ValidationResults = results
         };
     }
 }

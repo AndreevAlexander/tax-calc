@@ -10,7 +10,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AdditionalSpendController : Controller
+public class AdditionalSpendController : BaseController
 {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;
@@ -45,11 +45,11 @@ public class AdditionalSpendController : Controller
         var validationResults = _validationEngine.Validate(command);
         if (!validationResults.HasErrors)
         {
-            var results = await _commandBus.DispatchAsync(command);
-            return Ok(results.ToValidated(validationResults.ValidationResults));
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResults.ValidationResults));
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
     
     [HttpPut]
@@ -58,10 +58,10 @@ public class AdditionalSpendController : Controller
         var validationResults = _validationEngine.Validate(command);
         if (!validationResults.HasErrors)
         {
-            var results = await _commandBus.DispatchAsync(command);
-            return Ok(results.ToValidated(validationResults.ValidationResults));
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResults.ValidationResults));
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
 }

@@ -10,7 +10,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class IncomeController : Controller
+public class IncomeController : BaseController
 {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;
@@ -49,7 +49,7 @@ public class IncomeController : Controller
             return Ok(result.ToValidated(validationResult.ValidationResults));
         }
 
-        return BadRequest(validationResult.ValidationResults);
+        return BadRequest(validationResult);
     }
 
     [HttpPut]
@@ -62,6 +62,6 @@ public class IncomeController : Controller
             return Ok(result.ToValidated(validationResult.ValidationResults));
         }
 
-        return BadRequest(validationResult.ValidationResults);
+        return BadRequest(validationResult);
     }
 }

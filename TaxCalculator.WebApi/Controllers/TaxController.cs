@@ -10,7 +10,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TaxController : Controller
+public class TaxController : BaseController
 {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
@@ -44,10 +44,10 @@ public class TaxController : Controller
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
-            return Ok(result.ToValidated(validationResults.ValidationResults));   
+            return Ok(result.ToValidated(validationResults.ValidationResults)); 
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
 
     [HttpPut]
@@ -57,9 +57,9 @@ public class TaxController : Controller
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
-            return Ok(result.ToValidated(validationResults.ValidationResults));   
+            return Ok(result.ToValidated(validationResults.ValidationResults)); 
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
 }
