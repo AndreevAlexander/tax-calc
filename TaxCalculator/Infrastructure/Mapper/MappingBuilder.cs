@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TaxCalculator.Application.AdditionalSpends.Commands;
 using TaxCalculator.Application.Incomes.Commands;
 using TaxCalculator.Application.Taxes.Commands;
 using TaxCalculator.Application.TaxProfiles.Commands;
@@ -38,5 +39,11 @@ public class MappingBuilder
             .ForMember(x => x.TaxProfile, x => x.Ignore())
             .ForMember(x => x.Value, x => x.MapFrom(y => y.Value))
             .ForMember(x => x.IncomeDate, x => x.Ignore());
+        
+        profile.CreateMap<AddAdditionalSpendCommand, AdditionalSpend>()
+            .ForAllMembers(x => x.MapAtRuntime());
+        
+        profile.CreateMap<UpdateAdditionalSpendCommand, AdditionalSpend>()
+            .ForAllMembers(x => x.MapAtRuntime());
     }
 }
