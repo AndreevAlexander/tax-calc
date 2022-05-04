@@ -6,14 +6,20 @@ namespace TaxCalculator.Validation.Rules;
 
 public class MaxLengthValidationRule : IValidationRule
 {
-    public IEnumerable<ValidationResult> Validate(object data, string propertyName, object? context = null)
+    public IEnumerable<ValidationResult> Validate(object? data, string propertyName, object? context = null)
     {
         var result = new List<ValidationResult>();
-		
-        var maxLength = (int)context;
-        if (data is string s && s.Length > maxLength)
+
+        if (context is int maxLength)
         {
-            result.Add(ValidationResult.Invalid($"Value can not be greater than {maxLength}"));
+            if (data is string s && s.Length > maxLength)
+            {
+                result.Add(ValidationResult.Invalid($"Value can not be greater than {maxLength}"));
+            }
+        }
+        else
+        {
+            throw new Exception("Max length was not set");
         }
 
         return result;

@@ -58,25 +58,25 @@ public class ValidationEngine : IValidationEngine
 		
 		if (configuration.IsRequired)
 		{
-			var requiredRule = (IValidationRule)Activator.CreateInstance(typeof(RequiredValidationRule));
+			var requiredRule = new RequiredValidationRule();
 			SetResults(propertyName, results, requiredRule.Validate(value, propertyName).ToList());
 		}
 
 		if (configuration.MaxLength != null)
 		{
-			var maxLengthRule = (IValidationRule)Activator.CreateInstance(typeof(MaxLengthValidationRule));
+			var maxLengthRule = new MaxLengthValidationRule(); 
 			SetResults(propertyName, results, maxLengthRule.Validate(value, propertyName, configuration.MaxLength).ToList());
 		}
 
 		if (configuration.MinLength != null)
 		{
-			var minLengthRule = (IValidationRule)Activator.CreateInstance(typeof(MinLengthValidationRule));
+			var minLengthRule = new MinLengthValidationRule();
 			SetResults(propertyName, results, minLengthRule.Validate(value, propertyName, configuration.MinLength).ToList());
 		}
 
 		if (configuration.Regex != null)
 		{
-			var regexRule = (IValidationRule)Activator.CreateInstance(typeof(RegexValidationRule));
+			var regexRule = new RegexValidationRule();
 			SetResults(propertyName, results, regexRule.Validate(value, propertyName, configuration.Regex).ToList());
 		}
 		
@@ -97,7 +97,7 @@ public class ValidationEngine : IValidationEngine
 	{
 		if (validationResults.Any())
 		{
-			if (results.TryGetValue(propertyName, out IEnumerable<ValidationResult> existingResults))
+			if (results.TryGetValue(propertyName, out IEnumerable<ValidationResult>? existingResults))
 			{
 				validationResults.AddRange(existingResults);
 				results[propertyName] = validationResults;
