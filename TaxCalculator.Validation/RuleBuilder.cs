@@ -13,6 +13,7 @@ public class RuleBuilder<TModel> : IRuleBuilder<TModel>, IRuleStage where TModel
     
     public RuleBuilder()
     {
+        PropertyName = string.Empty;
         _ruleConfigurations = new Dictionary<string, RuleConfiguration>();
     }
 
