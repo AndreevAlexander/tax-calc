@@ -9,6 +9,4 @@ public class UpdateAdditionalSpendCommand : ICommand
     public decimal Amount { get; set; }
 
     public bool AppliedBeforeTax { get; set; }
-    
-    public Guid TaxProfileId { get; set; }
 }
