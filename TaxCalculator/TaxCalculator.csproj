@@ -10,18 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="11.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TaxCalculator.Application\TaxCalculator.Application.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Cqrs.Contracts\TaxCalculator.Cqrs.Contracts.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Cqrs.Implementation\TaxCalculator.Cqrs.Implementation.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Data\TaxCalculator.Data.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Domain\TaxCalculator.Domain.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Infrastructure\TaxCalculator.Infrastructure.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Validation\TaxCalculator.Validation.csproj" />
     </ItemGroup>
 
 </Project>
