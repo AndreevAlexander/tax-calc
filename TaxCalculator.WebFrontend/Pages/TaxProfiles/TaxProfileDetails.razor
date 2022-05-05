@@ -2,10 +2,12 @@
 
 @using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.Domain.Entities
+@using TaxCalculator.Domain.Services.Identifier
 @using Currency = TaxCalculator.WebFrontend.Models.Currency
 
 @inject WebApi _webApi;
 @inject NavigationManager _navigationManager;
+@inject IIdentifierService _identifierService;
 
 <div>
     <div>
@@ -94,8 +96,6 @@
         var taxes = await _webApi.GetManyAsync<Tax>($"Tax?ProfileId={ProfileId}");
         _taxes.AddRange(taxes);
         
-        var currency = await _webApi.GetOneAsync<Currency>("Currency");
-
-        _currencies = currency.GetType().GetProperties().ToDictionary(x => (Guid)x.GetValue(currency), x => x.Name);
+        _currencies = _identifierService.Currencies.ToDictionary();
     }
 }
