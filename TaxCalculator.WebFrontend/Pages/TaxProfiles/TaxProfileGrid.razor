@@ -1,0 +1,60 @@
+﻿@page "/tax-profile"
+
+@using TaxCalculator.WebFrontend.Data
+@using TaxProfileModel = TaxCalculator.Domain.Entities.TaxProfile;
+
+@inject WebApi _webApi;
+
+
+@if (TaxProfiles == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div>
+        <div style="display: flex; justify-content: space-between;">
+            <h3>Tax Profiles</h3>
+            <NavLink href="tax-profile/create" class="btn btn-primary">Create Profile</NavLink>
+        </div>
+        <div>
+            <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var profile in TaxProfiles)
+                    {
+                        <tr>
+                            <td>@profile.Name</td>
+                            <td>@profile.Description</td>
+                            <td>
+                                <NavLink class="btn btn-info" href="@("tax-profile/details/" + profile.Id)">Details</NavLink>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    
+}
+
+@code {
+    
+    public List<TaxProfileModel>? TaxProfiles { get; set; }
+
+    public bool IsLoaded { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TaxProfiles = (await _webApi.GetManyAsync<TaxProfileModel>("TaxProfile")).ToList();
+        IsLoaded = true;
+    }
+}

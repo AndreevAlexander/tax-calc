@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using TaxCalculator.WebApi.Extensions;
 
+const string CorsPolicy = "local";
+
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
@@ -24,7 +26,7 @@ builder.Services.AddCqrs();
 builder.Services.AddValidation();
 builder.Services.AddCors(x =>
 {
-    x.AddPolicy("local", policy => policy.WithOrigins("https://localhost:7015"));
+    x.AddPolicy(CorsPolicy, policy => policy.WithOrigins("https://localhost:7015").WithHeaders("*"));
 });
 
 var app = builder.Build();
@@ -40,7 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("local");
+app.UseCors(CorsPolicy);
 
 app.UseAuthorization();
 

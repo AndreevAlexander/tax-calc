@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaxCalculator.Application.Taxes.Queries;
 using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Application.TaxProfiles.Queries;
 using TaxCalculator.Cqrs.Contracts.Bus;
@@ -23,6 +24,13 @@ public class TaxProfileController : BaseController
         _validationEngine = validationEngine;
     }
 
+    [HttpGet("one")]
+    public async Task<ActionResult<List<TaxProfile>>> GetProfile([FromQuery] GetTaxProfileByIdQuery query)
+    {
+        var result = await _queryBus.ExecuteAsync<GetTaxProfileByIdQuery, TaxProfile?>(query);
+        return Ok(result);
+    }
+    
     [HttpGet]
     public async Task<ActionResult<List<TaxProfile>>> GetProfiles([FromQuery] GetTaxProfilesQuery query)
     {

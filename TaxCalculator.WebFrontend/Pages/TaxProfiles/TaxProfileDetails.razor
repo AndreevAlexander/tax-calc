@@ -1,0 +1,101 @@
+﻿@page "/tax-profile/details/{ProfileId}"
+
+@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Domain.Entities
+@using Currency = TaxCalculator.WebFrontend.Models.Currency
+
+@inject WebApi _webApi;
+@inject NavigationManager _navigationManager;
+
+<div>
+    <div>
+        <h3>View profile details</h3>
+    </div>
+    <br/>
+    <div>
+        <div>
+            <EditForm Model="@_profile">
+                <div style="margin: 5px; display: flex; justify-content: space-between;">
+                    <h6 style="width: 150px">Name</h6>
+                    <InputText name="name" class="form-control" @bind-Value=_profile.Name disabled/>
+                </div>
+                <br />
+                <div style="margin: 5px; display: flex; justify-content: space-between;">
+                    <h6 style="width: 150px">Description</h6>
+                    <InputTextArea name="description"
+                                   class="form-control"
+                                   cols="30"
+                                   rows="5"
+                                   @bind-Value=_profile.Description
+                                   disabled>
+                    </InputTextArea>
+                </div>
+                <br />
+                <div style="margin: 5px; display: flex; justify-content: space-between;">
+                    <h6 style="width: 150px">Profile currency</h6>
+                    <InputSelect class="form-control" @bind-Value=_profile.ProfileCurrencyId disabled>
+                        <option selected="selected">Select currency</option>
+                        @if (_currencies != null)
+                        {
+                            @foreach (var currency in _currencies)
+                            {
+                                <option value="@currency.Key">@currency.Value</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+                <br />
+                <div style="margin: 5px; display: flex; flex-direction: row-reverse;">
+                    <button type="submit" class="btn btn-primary" disabled>Save</button>
+                </div>
+            </EditForm>
+        </div>
+        <div style="margin-top: 20px">
+            <div style="display: flex; justify-content: space-between;">
+                <h5>Taxes configurations</h5>
+                <NavLink href="#" class="btn btn-primary">Add tax configuration</NavLink>
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Tax Type</th>
+                        <th>Applies Before</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var tax in _taxes)
+                    {
+                        <tr>
+                            <td>@tax.Amount @(tax.IsPercentage ? "%" : "")</td>
+                            <td>@tax.TaxType</td>
+                            <td>@tax.AppliesBefore</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProfileId { get; set; }
+    
+    public TaxProfile _profile = new();
+    private Dictionary<Guid, string>? _currencies;
+    private List<Tax> _taxes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _profile = await _webApi.GetOneAsync<TaxProfile>($"TaxProfile/one?TaxProfileId={ProfileId}");
+        var taxes = await _webApi.GetManyAsync<Tax>($"Tax?ProfileId={ProfileId}");
+        _taxes.AddRange(taxes);
+        
+        var currency = await _webApi.GetOneAsync<Currency>("Currency");
+
+        _currencies = currency.GetType().GetProperties().ToDictionary(x => (Guid)x.GetValue(currency), x => x.Name);
+    }
+}

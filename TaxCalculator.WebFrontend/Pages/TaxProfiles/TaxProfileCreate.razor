@@ -1,0 +1,68 @@
+﻿@page "/tax-profile/create"
+@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Application.TaxProfiles.Commands
+@using TaxCalculator.WebFrontend.Models
+
+@inject WebApi _webApi;
+@inject NavigationManager _navigationManager;
+
+<div>
+    <div>
+        <h3>Create new profile</h3>
+    </div>
+    
+    <div>
+        <EditForm Model="@_createTaxProfileCommand" OnValidSubmit="@HandleSubmitAsync">
+            <div style="margin: 5px">
+                <h6>Name</h6>
+                <InputText name="name" class="form-control" @bind-Value=_createTaxProfileCommand.Name />
+            </div>
+            <div style="margin: 5px">
+                <h6>Description</h6>
+                <InputTextArea name="description"
+                               class="form-control"
+                               cols="30"
+                               rows="5"
+                               @bind-Value=_createTaxProfileCommand.Description>
+                </InputTextArea>
+            </div>
+            <div style="margin: 5px">
+                <h6>Profile currency</h6>
+                <InputSelect class="form-control" @bind-Value=_createTaxProfileCommand.ProfileCurrencyId>
+                    <option selected="selected">Select currency</option>
+                    @if (_currencies != null)
+                    {
+                        @foreach (var currency in _currencies)
+                        {
+                            <option value="@currency.Key">@currency.Value</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+            <div style="margin: 5px">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    public CreateTaxProfileCommand _createTaxProfileCommand = new();
+    private Dictionary<Guid, string>? _currencies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currency = await _webApi.GetOneAsync<Currency>("Currency");
+
+        _currencies = currency.GetType().GetProperties().ToDictionary(x => (Guid)x.GetValue(currency), x => x.Name);
+    }
+    
+    private async Task HandleSubmitAsync()
+    {
+        var result = await _webApi.Create(_createTaxProfileCommand, "TaxProfile");
+        if (result.RecordId != null)
+        {
+            _navigationManager.NavigateTo($"tax-profile/view/{result.RecordId}");
+        }
+    }
+}
