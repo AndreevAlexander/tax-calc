@@ -58,12 +58,13 @@
                 <NavLink href="@("tax/create/" + ProfileId)" class="btn btn-primary">Add tax configuration</NavLink>
             </div>
             <div>
-                <table class="table">
+                <table class="table" style="width: 100%;">
                     <thead>
                     <tr>
                         <th>Amount</th>
                         <th>Tax Type</th>
                         <th>Applies Before</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -73,6 +74,10 @@
                             <td>@tax.Amount @(tax.IsPercentage ? "%" : "")</td>
                             <td>@tax.TaxType</td>
                             <td>@tax.AppliesBefore</td>
+                            <td style="display: flex; justify-content: space-between; width: 120px;">
+                                <NavLink class="btn btn-warning" style="margin-right: 5px;" href="@("tax/edit/" + ProfileId + "/" + tax.Id)">Edit</NavLink>
+                                <button class="btn btn-danger" style="margin-left: 5px;" onclick="@(() => HandleTaxDeleteAsync(tax.Id))">Delete</button>
+                            </td>
                         </tr>
                     }
                     </tbody>
@@ -98,4 +103,15 @@
         
         _currencies = _identifierService.Currencies.ToDictionary();
     }
+
+    private async Task HandleTaxDeleteAsync(Guid id)
+    {
+        var result = await _webApi.Remove($"Tax?TaxId={id}");
+        if (result.RecordId != null)
+        {
+            _taxes = _taxes.Where(x => x.Id != id).ToList();
+            StateHasChanged();
+        }
+    }
+    
 }

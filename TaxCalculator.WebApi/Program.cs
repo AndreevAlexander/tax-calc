@@ -26,7 +26,9 @@ builder.Services.AddCqrs();
 builder.Services.AddValidation();
 builder.Services.AddCors(x =>
 {
-    x.AddPolicy(CorsPolicy, policy => policy.WithOrigins("https://localhost:7015").WithHeaders("*"));
+    x.AddPolicy(CorsPolicy, policy => policy.WithOrigins("https://localhost:7015")
+        .WithHeaders("*")
+        .WithMethods("GET", "POST", "PUT", "DELETE"));
 });
 
 var app = builder.Build();

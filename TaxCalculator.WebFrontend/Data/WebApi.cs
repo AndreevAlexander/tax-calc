@@ -117,4 +117,32 @@ public class WebApi
 
         throw new Exception("Server error");
     }
+
+    public async Task<ValidatedCommandResult> Remove(string url)
+    {
+        var response = await _client.DeleteAsync($"api/{url}");
+        
+        if (response.IsSuccessStatusCode)
+        {
+            var dataString = await response.Content.ReadAsStringAsync();
+
+            var data = JsonConvert.DeserializeObject<ValidatedCommandResult>(dataString);
+            if (data == null)
+            {
+                throw new Exception("Can not deserialize data");
+            }
+
+            return data;
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var dataString = await response.Content.ReadAsStringAsync();
+
+            var data = JsonConvert.DeserializeObject<ValidatedCommandResult>(dataString);
+            return data;
+        }
+
+        throw new Exception("Server error");
+    }
 }

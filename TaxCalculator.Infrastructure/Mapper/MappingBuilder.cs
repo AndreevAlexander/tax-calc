@@ -45,5 +45,8 @@ public class MappingBuilder
         
         profile.CreateMap<UpdateAdditionalSpendCommand, AdditionalSpend>()
             .ForAllMembers(x => x.MapAtRuntime());
+        
+        profile.CreateMap<UpdateTaxProfileCommand, TaxProfile>()
+            .ForAllMembers(x => x.MapAtRuntime());
     }
 }
