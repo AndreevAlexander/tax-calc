@@ -56,7 +56,7 @@ public class WebApi
         throw new Exception("Server error");
     }
 
-    public async Task<ValidatedCommandResult> Create<TModel>(TModel body, string route) where TModel : ICommand
+    public async Task<ValidatedCommandResult> Create<TModel>(TModel body, string route)
     {
         var json = JsonConvert.SerializeObject(body);
 
@@ -87,7 +87,7 @@ public class WebApi
         throw new Exception("Server error");
     }
     
-    public async Task<ValidatedCommandResult> Update<TModel>(TModel body, string route) where TModel : ICommand
+    public async Task<ValidatedCommandResult> Update<TModel>(TModel body, string route)
     {
         var json = JsonConvert.SerializeObject(body);
 

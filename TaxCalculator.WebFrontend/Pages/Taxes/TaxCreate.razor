@@ -1,0 +1,79 @@
+﻿@page "/tax/create/{ProfileId}"
+
+@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.WebFrontend.Models
+@using System.Reflection
+@using TaxCalculator.Domain.Enums
+
+@inject WebApi _webApi
+@inject NavigationManager _navigationManager
+
+<div>
+    <div>
+        <h3>Create tax configuration</h3>
+    </div>
+    <div>
+        <EditForm Model="@CreateTaxModel" OnSubmit="@HandleSubmitAsync">
+            <div style="margin: 5px; display: flex; justify-content: space-between;">
+                <h6 style="width: 150px">Amount</h6>
+                <InputText class="form-control" @bind-Value=CreateTaxModel.Amount />
+            </div>
+            <br />
+            <div style="margin: 5px; display: flex; justify-content: space-between;">
+                <h6 style="width: 150px">Applies before</h6>
+                <InputText class="form-control" @bind-Value=CreateTaxModel.AppliesBefore />
+            </div>
+            <br />
+            <div style="margin: 5px; display: flex; justify-content: flex-start;">
+                <h6 style="width: 150px">Is Percentage</h6>
+                <InputCheckbox @bind-Value=CreateTaxModel.IsPercentage />
+            </div>
+            <br />
+            <div style="margin: 5px; display: flex; justify-content: flex-start;">
+                <h6 style="width: 150px">Tax type</h6>
+                <InputSelect @bind-Value=CreateTaxModel.TaxType class="form-control">
+                    <option value="null" selected="selected" disabled="disabled">Select tax type</option>
+                    @foreach (var type in TaxTypes)
+                    {
+                        <option value="@type.Key">@type.Value</option>
+                    }
+                </InputSelect>
+            </div>
+            <br />
+            <div style="margin: 5px">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </EditForm>  
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string ProfileId { get; set; }
+
+    public CreateTaxModel CreateTaxModel { get; } = new();
+
+    public Dictionary<int, string> TaxTypes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CreateTaxModel.TaxProfileId = Guid.Parse(ProfileId);
+
+        TaxTypes = new Dictionary<int, string>
+        {
+            {(int) TaxType.IncomeTax, "Income tax"},
+            {(int) TaxType.SocialTax, "Social tax"}
+        };
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        var result = await _webApi.Create(CreateTaxModel, "Tax");
+        if (result.RecordId != null)
+        {
+            _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
+        }
+    }
+
+}
