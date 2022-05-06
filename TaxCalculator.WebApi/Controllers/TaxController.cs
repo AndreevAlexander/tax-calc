@@ -62,4 +62,17 @@ public class TaxController : Controller
 
         return BadRequest(validationResults.ValidationResults);
     }
+    
+    [HttpDelete]
+    public async Task<ActionResult<ValidatedCommandResult>> DeleteTax([FromQuery] RemoveTaxCommand command)
+    {
+        var validationResult = _validationEngine.Validate(command);
+        if (!validationResult.HasErrors)
+        {
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResult.ValidationResults)); 
+        }
+
+        return BadRequest(validationResult.ValidationResults);
+    }
 }
