@@ -19,9 +19,9 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
 
         if (taxProfile != null)
         {
-            var incomes = Context.Incomes.Where(x => x.TaxProfileId == taxProfile.Id);
-            var additionalSpends = Context.AdditionalSpends.Where(x => x.TaxProfileId == taxProfile.Id);
-            var taxes = Context.Taxes.Where(x => x.TaxProfileId == taxProfile.Id);
+            var incomes = Context.Incomes.Where(x => x.TaxProfileId == taxProfile.Id && x.Value > 0);
+            var additionalSpends = Context.AdditionalSpends.Where(x => x.TaxProfileId == taxProfile.Id && x.Amount > 0);
+            var taxes = Context.Taxes.Where(x => x.TaxProfileId == taxProfile.Id && x.Amount > 0);
 
             if (period != null)
             {
