@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 using TaxCalculator.Domain.Entities;
 
@@ -37,6 +38,23 @@ public class TaxContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TaxProfile>().HasQueryFilter(x => !x.IsDeleted);
+        modelBuilder.Entity<Tax>().HasQueryFilter(x => !x.IsDeleted);
+        modelBuilder.Entity<AdditionalSpend>().HasQueryFilter(x => !x.IsDeleted);
+        modelBuilder.Entity<Income>().HasQueryFilter(x => !x.IsDeleted);
+        
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    {
+        var deletedEntries = ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted).ToList();
+        foreach (var deletedEntry in deletedEntries)
+        {
+            ((BaseEntity) deletedEntry.Entity).IsDeleted = true;
+            deletedEntry.State = EntityState.Modified;
+        }
+        
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

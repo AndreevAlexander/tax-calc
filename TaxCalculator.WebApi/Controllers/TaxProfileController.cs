@@ -49,4 +49,30 @@ public class TaxProfileController : Controller
         var result = await _queryBus.ExecuteAsync<CalculateTaxesQuery, CalculateTaxesResult>(query);
         return Ok(result);
     }
+
+    [HttpPut]
+    public async Task<ActionResult<ValidatedCommandResult>> UpdateProfile([FromBody] UpdateTaxProfileCommand command)
+    {
+        var validationResult = _validationEngine.Validate(command);
+        if (!validationResult.HasErrors)
+        {
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResult.ValidationResults));
+        }
+
+        return BadRequest(validationResult.ValidationResults);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<ValidatedCommandResult>> DeleteProfile([FromQuery] RemoveTaxProfileCommand command)
+    {
+        var validationResult = _validationEngine.Validate(command);
+        if (!validationResult.HasErrors)
+        {
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResult.ValidationResults)); 
+        }
+
+        return BadRequest(validationResult.ValidationResults);
+    }
 }

@@ -6,6 +6,10 @@ namespace TaxCalculator.Persistence;
 public interface IEntityManager
 {
     IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity;
+    
     void Persist<TEntity>(TEntity entity) where TEntity : BaseEntity;
+    
+    void Remove<TEntity>(Guid id) where TEntity : BaseEntity;
+    
     Task SaveAsync();
 }

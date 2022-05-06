@@ -53,6 +53,15 @@ public class EntityManager : IEntityManager
         }
     }
 
+    public void Remove<TEntity>(Guid id) where TEntity : BaseEntity
+    {
+        var entity = GetRepository<TEntity>().GetMany().FirstOrDefault(x => x.Id == id);
+        if (entity != null)
+        {
+            _context.Remove(entity);
+        }
+    }
+
     public Task SaveAsync()
     {
         return _context.SaveChangesAsync();

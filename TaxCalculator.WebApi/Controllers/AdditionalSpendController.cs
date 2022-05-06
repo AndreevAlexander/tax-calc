@@ -64,4 +64,17 @@ public class AdditionalSpendController : Controller
 
         return BadRequest(validationResults.ValidationResults);
     }
+    
+    [HttpDelete]
+    public async Task<ActionResult<ValidatedCommandResult>> DeleteAdditionalSpend([FromQuery] RemoveAdditionalSpendCommand command)
+    {
+        var validationResult = _validationEngine.Validate(command);
+        if (!validationResult.HasErrors)
+        {
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResult.ValidationResults)); 
+        }
+
+        return BadRequest(validationResult.ValidationResults);
+    }
 }
