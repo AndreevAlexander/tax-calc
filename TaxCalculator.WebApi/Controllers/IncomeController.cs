@@ -64,4 +64,17 @@ public class IncomeController : BaseController
 
         return BadRequest(validationResult);
     }
+    
+    [HttpDelete]
+    public async Task<ActionResult<ValidatedCommandResult>> DeleteIncome([FromQuery] RemoveIncomeCommand command)
+    {
+        var validationResult = _validationEngine.Validate(command);
+        if (!validationResult.HasErrors)
+        {
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResult.ValidationResults)); 
+        }
+
+        return BadRequest(validationResult.ValidationResults);
+    }
 }
