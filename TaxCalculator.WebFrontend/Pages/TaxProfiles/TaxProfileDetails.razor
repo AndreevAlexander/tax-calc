@@ -4,52 +4,28 @@
 @using TaxCalculator.Domain.Entities
 @using TaxCalculator.Domain.Services.Identifier
 @using TaxCalculator.WebFrontend.Pages.Taxes
+@using TaxCalculator.WebFrontend.Shared.FormInputs
 
 @inject WebApi _webApi;
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
 
 <div>
-    <div>
+    <div style="display: flex; justify-content: space-between;">
         <h3>View profile details</h3>
+        <div style="box-sizing: border-box;">
+            <a href="#" class="btn btn-primary">Manage incomes</a>
+            <a href="#" class="btn btn-primary">Manage additional spends</a>
+        </div>
     </div>
     <br/>
     <div>
         <div>
-            <EditForm Model="@_profile">
-                <div style="margin: 5px; display: flex; justify-content: space-between;">
-                    <h6 style="width: 150px">Name</h6>
-                    <InputText name="name" class="form-control" @bind-Value=_profile.Name disabled/>
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; justify-content: space-between;">
-                    <h6 style="width: 150px">Description</h6>
-                    <InputTextArea name="description"
-                                   class="form-control"
-                                   cols="30"
-                                   rows="5"
-                                   @bind-Value=_profile.Description
-                                   disabled>
-                    </InputTextArea>
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; justify-content: space-between;">
-                    <h6 style="width: 150px">Profile currency</h6>
-                    <InputSelect class="form-control" @bind-Value=_profile.ProfileCurrencyId disabled>
-                        <option selected="selected">Select currency</option>
-                        @if (_currencies != null)
-                        {
-                            @foreach (var currency in _currencies)
-                            {
-                                <option value="@currency.Key">@currency.Value</option>
-                            }
-                        }
-                    </InputSelect>
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; flex-direction: row-reverse;">
-                    <button type="submit" class="btn btn-primary" disabled>Save</button>
-                </div>
+            <EditForm Model="@Profile">
+                <TextInput Label="Name" @bind-Value="Profile.Name" IsEnabled="IsFormEnabled"/>
+                <TextAreaInput Label="Description" @bind-Value="Profile.Description" IsEnabled="IsFormEnabled"/>
+                <SelectInput Label="Profile currency" DefaultOption="Select currency" Data="Currencies" @bind-Value="CurrencyId" IsEnabled="IsFormEnabled"/>
+                <ButtonSubmit IsEnabled="IsFormEnabled"/>
             </EditForm>
         </div>
         <TaxGrid ProfileId="@ProfileId" />
@@ -60,12 +36,15 @@
     [Parameter]
     public string ProfileId { get; set; }
     
-    public TaxProfile _profile = new();
-    private Dictionary<Guid, string>? _currencies;
-
+    private TaxProfile Profile { get; set; } = new();
+    private Dictionary<Guid, string>? Currencies { get; set; } = new();
+    private Guid CurrencyId { get; set; }
+    private bool IsFormEnabled { get; set; } = false;
+    
     protected override async Task OnInitializedAsync()
     {
-        _profile = await _webApi.GetOneAsync<TaxProfile>($"TaxProfile/one?TaxProfileId={ProfileId}");
-        _currencies = _identifierService.Currencies.ToDictionary();
+        Profile = await _webApi.GetOneAsync<TaxProfile>($"TaxProfile/one?TaxProfileId={ProfileId}");
+        Currencies = _identifierService.Currencies.ToDictionary();
+        CurrencyId = Profile.ProfileCurrencyId.Value;
     }
 }

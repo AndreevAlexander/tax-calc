@@ -1,6 +1,6 @@
 ﻿<div style="margin: 5px; display: flex; justify-content: flex-start; align-items: baseline;">
     <h6 style="width: 150px">@Label</h6>
-    <InputCheckbox @bind-Value=@Value />
+    <InputCheckbox @bind-Value=@Value disabled="@(!IsEnabled)" />
 </div>
 <br />
 
@@ -29,4 +29,7 @@
     
     [Parameter]
     public EventCallback<bool> ValueChanged { get; set; }
+    
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
 }

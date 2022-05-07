@@ -1,35 +1,42 @@
 ﻿<div style="margin: 5px; display: flex; justify-content: space-between; align-items: baseline;">
     <h6 style="width: 150px">@Label</h6>
-    <InputText class="form-control" @bind-Value=@Value disabled="@(!IsEnabled)" />
+    <InputTextArea class="form-control"
+                   cols="30"
+                   rows="5"
+                   @bind-Value="Value"
+                   disabled="@(!IsEnabled)">
+    </InputTextArea>
 </div>
-<br/>
+<br />
 
 @code {
     private string _value;
     
     [Parameter]
     public string Label { get; set; }
-    
-    [Parameter] 
-    public string Value 
-    { 
-        get => _value; 
+
+    [Parameter]
+    public string Value
+    {
+        get => _value;
         set
         {
-            if(value == _value)
+            if (value == _value)
+            {
                 return;
+            }
 
-            _value = value;  
-            if(ValueChanged.HasDelegate)
+            _value = value;
+            if (ValueChanged.HasDelegate)
             {
                 ValueChanged.InvokeAsync(_value);
-            }  
+            }
         }
     }
-    
+
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
-
+    
     [Parameter]
     public bool IsEnabled { get; set; } = true;
 }

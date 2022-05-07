@@ -25,9 +25,9 @@
                     <td>@tax.Amount @(tax.IsPercentage ? "%" : "")</td>
                     <td>@tax.TaxType</td>
                     <td>@tax.AppliesBefore</td>
-                    <td style="display: flex; justify-content: space-between; width: 120px;">
-                        <NavLink class="btn btn-warning" style="margin-right: 5px;" href="@("tax/edit/" + ProfileId + "/" + tax.Id)">Edit</NavLink>
-                        <button class="btn btn-danger" style="margin-left: 5px;" onclick="@(() => HandleTaxDeleteAsync(tax.Id))">Delete</button>
+                    <td style="box-sizing: border-box;">
+                        <NavLink class="btn btn-warning" href="@("tax/edit/" + ProfileId + "/" + tax.Id)">Edit</NavLink>
+                        <button class="btn btn-danger" onclick="@(() => HandleTaxDeleteAsync(tax.Id))">Delete</button>
                     </td>
                 </tr>
             }
