@@ -1,0 +1,60 @@
+﻿@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Domain.Entities
+
+@inject WebApi _webApi
+
+<div style="margin-top: 20px">
+    <div style="display: flex; justify-content: space-between;">
+        <h5>Taxes configurations</h5>
+        <NavLink href="@("tax/create/" + ProfileId)" class="btn btn-primary">Add tax configuration</NavLink>
+    </div>
+    <div>
+        <table class="table" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Tax Type</th>
+                <th>Applies Before</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var tax in Taxes)
+            {
+                <tr>
+                    <td>@tax.Amount @(tax.IsPercentage ? "%" : "")</td>
+                    <td>@tax.TaxType</td>
+                    <td>@tax.AppliesBefore</td>
+                    <td style="display: flex; justify-content: space-between; width: 120px;">
+                        <NavLink class="btn btn-warning" style="margin-right: 5px;" href="@("tax/edit/" + ProfileId + "/" + tax.Id)">Edit</NavLink>
+                        <button class="btn btn-danger" style="margin-left: 5px;" onclick="@(() => HandleTaxDeleteAsync(tax.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProfileId { get; set; }
+
+    public List<Tax> Taxes { get; set; } = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var taxes = await _webApi.GetManyAsync<Tax>($"Tax?ProfileId={ProfileId}");
+        Taxes.AddRange(taxes);
+    }
+    
+    private async Task HandleTaxDeleteAsync(Guid id)
+    {
+        var result = await _webApi.Remove($"Tax?TaxId={id}");
+        if (result.RecordId != null)
+        {
+            Taxes = Taxes.Where(x => x.Id != id).ToList();
+            StateHasChanged();
+        }
+    }
+}

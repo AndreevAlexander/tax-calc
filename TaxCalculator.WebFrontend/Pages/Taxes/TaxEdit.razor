@@ -66,7 +66,7 @@ else
 
     public UpdateTaxModel Tax { get; set; } = new();
 
-    public Dictionary<int, string>? TaxTypes { get; set; }
+    public Dictionary<TaxType, string>? TaxTypes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,10 +77,10 @@ else
         Tax.AppliesBefore = tax.AppliesBefore != null ? tax.AppliesBefore.ToString() : null;
         Tax.TaxType = tax.TaxType;
         
-        TaxTypes = new Dictionary<int, string>
+        TaxTypes = new Dictionary<TaxType, string>
         {
-            {(int) TaxType.IncomeTax, "Income tax"},
-            {(int) TaxType.SocialTax, "Social tax"}
+            {TaxType.IncomeTax, "Income tax"},
+            {TaxType.SocialTax, "Social tax"}
         };
     }
 
