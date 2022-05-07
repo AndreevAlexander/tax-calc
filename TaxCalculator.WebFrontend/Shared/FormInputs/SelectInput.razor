@@ -1,0 +1,46 @@
+﻿@typeparam TKey
+
+<div style="margin: 5px; display: flex; justify-content: flex-start; align-items: baseline">
+    <h6 style="width: 150px">@Label</h6>
+    <InputSelect @bind-Value=@Value class="form-control">
+        <option value="null" selected="selected" disabled="disabled">@DefaultOption</option>
+        @foreach (var item in Data)
+        {
+            <option value="@item.Key">@item.Value</option>
+        }
+    </InputSelect>
+</div>
+<br />
+
+@code {
+    private TKey _value;
+    
+    [Parameter]
+    public string Label { get; set; }
+    
+    [Parameter]
+    public string DefaultOption { get; set; }
+
+    [Parameter]
+    public Dictionary<TKey, string> Data { get; set; }
+
+    [Parameter] 
+    public TKey Value 
+    { 
+        get => _value; 
+        set
+        {
+            if(value.Equals(_value))
+                return;
+
+            _value = value;  
+            if(ValueChanged.HasDelegate)
+            {
+                ValueChanged.InvokeAsync(_value);
+            }  
+        }
+    }
+    
+    [Parameter]
+    public EventCallback<TKey> ValueChanged { get; set; }
+}

@@ -1,0 +1,32 @@
+﻿<div style="margin: 5px; display: flex; justify-content: flex-start; align-items: baseline;">
+    <h6 style="width: 150px">@Label</h6>
+    <InputCheckbox @bind-Value=@Value />
+</div>
+<br />
+
+@code {
+    private bool _value;
+    
+    [Parameter]
+    public string Label { get; set; }
+    
+    [Parameter] 
+    public bool Value 
+    { 
+        get => _value; 
+        set
+        {
+            if(value == _value)
+                return;
+
+            _value = value;  
+            if(ValueChanged.HasDelegate)
+            {
+                ValueChanged.InvokeAsync(_value);
+            }  
+        }
+    }
+    
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+}

@@ -1,0 +1,9 @@
+﻿<div style="margin: 5px">
+    <button type="submit" class="btn btn-primary">@(Label ?? "Save")</button>
+</div>
+
+@code {
+    
+    [Parameter]
+    public string? Label { get; set; }
+}

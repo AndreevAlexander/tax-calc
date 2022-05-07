@@ -2,6 +2,7 @@
 
 @using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Shared.FormInputs
 @using TaxCalculator.Domain.Enums
 @using TaxCalculator.Domain.Entities
 
@@ -20,37 +21,14 @@ else
         <div>
             <h3>Edit tax configuration</h3>
         </div>
+        <br/> 
         <div>
             <EditForm Model="@Tax" OnSubmit="@HandleSubmitAsync">
-                <div style="margin: 5px; display: flex; justify-content: space-between;">
-                    <h6 style="width: 150px">Amount</h6>
-                    <InputText class="form-control" @bind-Value=Tax.Amount />
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; justify-content: space-between;">
-                    <h6 style="width: 150px">Applies before</h6>
-                    <InputText class="form-control" @bind-Value=Tax.AppliesBefore />
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; justify-content: flex-start;">
-                    <h6 style="width: 150px">Is Percentage</h6>
-                    <InputCheckbox @bind-Value=Tax.IsPercentage />
-                </div>
-                <br />
-                <div style="margin: 5px; display: flex; justify-content: flex-start;">
-                    <h6 style="width: 150px">Tax type</h6>
-                    <InputSelect @bind-Value=Tax.TaxType class="form-control">
-                        <option value="null" selected="selected" disabled="disabled">Select tax type</option>
-                        @foreach (var type in TaxTypes)
-                        {
-                            <option value="@type.Key">@type.Value</option>
-                        }
-                    </InputSelect>
-                </div>
-                <br />
-                <div style="margin: 5px">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
+                <TextInput Label="Amount" @bind-Value="Tax.Amount" />
+                <TextInput Label="Applies before" @bind-Value="Tax.AppliesBefore" />
+                <CheckBoxInput Label="Is Percentage" @bind-Value="Tax.IsPercentage"/>
+                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="@Tax.TaxType" />
+                <ButtonSubmit />
             </EditForm>  
         </div>
     </div>
