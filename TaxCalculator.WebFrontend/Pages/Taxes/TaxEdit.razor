@@ -24,14 +24,24 @@ else
         <br/> 
         <div>
             <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
-                <Validator TModel="UpdateTaxModel" 
-                           OnValidation="@(() => this.ValidationStateChanged())"/>
-                <ValidationSummary />
-                <ValidationMessage For="@(() => Tax.Amount)"/>
-                <TextInput Label="Amount" @bind-Value="Tax.Amount"/>
-                <TextInput Label="Applies before" @bind-Value="Tax.AppliesBefore"/>
-                <CheckBoxInput Label="Is Percentage" @bind-Value="Tax.IsPercentage"/>
-                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="@Tax.TaxType"/>
+                <Validator TModel="UpdateTaxModel" />
+                
+                <TextInput Label="Amount" 
+                           @bind-Value="Tax.Amount"
+                           MessageFor="@(() => Tax.Amount)"/>
+
+                <TextInput Label="Applies before" 
+                           @bind-Value="Tax.AppliesBefore" />
+                
+                <CheckBoxInput Label="Is Percentage" 
+                               @bind-Value="Tax.IsPercentage" />
+                
+                <SelectInput Label="Tax type"
+                             DefaultOption="Select tax type"
+                             Data="@TaxTypes"
+                             @bind-Value="@Tax.TaxType"
+                             MessageFor="@(() => Tax.TaxType)" />
+
                 <ButtonSubmit IsEnabled="@IsValid"/>
             </EditForm>  
         </div>
@@ -86,10 +96,5 @@ else
                 _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
             }
         }
-    }
-
-    private void ValidationStateChanged()
-    {
-        StateHasChanged();
     }
 }

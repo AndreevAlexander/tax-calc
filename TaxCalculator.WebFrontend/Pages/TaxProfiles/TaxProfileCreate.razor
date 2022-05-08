@@ -16,9 +16,16 @@
     <br />
     <div>
         <EditForm Model="@_createTaxProfileCommand" OnValidSubmit="@HandleSubmitAsync">
-            <TextInput Label="Name" @bind-Value="_createTaxProfileCommand.Name" />
-            <TextAreaInput Label="Description" @bind-Value="_createTaxProfileCommand.Description"/>
-            <SelectInput Label="Profile currency" DefaultOption="Select currency" Data="_currencies" @bind-Value="_createTaxProfileCommand.ProfileCurrencyId"/>
+            <TextInput Label="Name"
+                       @bind-Value="_createTaxProfileCommand.Name"/>
+            
+            <TextAreaInput Label="Description"
+                           @bind-Value="_createTaxProfileCommand.Description"/>
+            
+            <SelectInput Label="Profile currency" 
+                         DefaultOption="Select currency"
+                         Data="_currencies"
+                         @bind-Value="_createTaxProfileCommand.ProfileCurrencyId"/>
             <ButtonSubmit />
         </EditForm>
     </div>

@@ -1,23 +1,34 @@
-﻿@typeparam TKey
+﻿@inherits InputSelect<TValue>
+
+@using System.Linq.Expressions
+@typeparam TValue
 
 <div style="margin: 5px; display: flex; justify-content: flex-start; align-items: baseline">
     <h6 style="width: 150px">@Label</h6>
-    <InputSelect @bind-Value=@Value class="form-control" disabled="@(!IsEnabled)">
-        <option value="null" selected="selected" disabled="disabled">@DefaultOption</option>
-        @if (Data != null && Data.Any())
-        {
-            @foreach (var item in Data)
+    <div style="width: 100%">
+        <select @bind=@Value
+                @bind:event="oninput"
+                @attributes="AdditionalAttributes"
+                class="form-control"
+                disabled="@(!IsEnabled)">
+            <option value="null" selected="selected" disabled="disabled">@DefaultOption</option>
+            @if (Data != null && Data.Any())
             {
-                <option value="@item.Key">@item.Value</option>
+                @foreach (var item in Data)
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
             }
+        </select>
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
         }
-    </InputSelect>
+    </div>
 </div>
 <br />
 
 @code {
-    private TKey _value;
-    
     [Parameter]
     public string Label { get; set; }
     
@@ -25,28 +36,11 @@
     public string DefaultOption { get; set; }
 
     [Parameter]
-    public Dictionary<TKey, string>? Data { get; set; }
+    public Dictionary<TValue, string>? Data { get; set; }
 
-    [Parameter] 
-    public TKey Value 
-    { 
-        get => _value; 
-        set
-        {
-            if(value.Equals(_value))
-                return;
-
-            _value = value;  
-            if(ValueChanged.HasDelegate)
-            {
-                ValueChanged.InvokeAsync(_value);
-            }  
-        }
-    }
-    
-    [Parameter]
-    public EventCallback<TKey> ValueChanged { get; set; }
-    
     [Parameter]
     public bool IsEnabled { get; set; } = true;
+    
+    [Parameter]
+    public Expression<Func<TValue>>? MessageFor { get; set; }
 }

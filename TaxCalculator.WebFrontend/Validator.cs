@@ -18,9 +18,6 @@ public class Validator<TModel> : ComponentBase
     [Parameter]
     public Type ModelType { get; set; }
 
-    [Parameter]
-    public Action? OnValidation { get; set; }
-
     [Inject]
     public IValidationEngine ValidationEngine { get; set; }
     
@@ -32,7 +29,6 @@ public class Validator<TModel> : ComponentBase
 
         EditContext.OnFieldChanged += OnFieldChanged;
         EditContext.OnValidationRequested += OnValidationRequested;
-        EditContext.OnValidationStateChanged += OnValidationStateChanged;
     }
 
     private void ValidateModel()
@@ -65,10 +61,5 @@ public class Validator<TModel> : ComponentBase
     private void OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         ValidateModel();
-    }
-    
-    private void OnValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
-    {
-        OnValidation?.Invoke();
     }
 }

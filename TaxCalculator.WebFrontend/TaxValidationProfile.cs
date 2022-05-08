@@ -11,6 +11,9 @@ public class TaxValidationProfile : ValidationProfile
         {
             b.Property(p => p.Amount)
                 .Required();
+
+            b.Property(p => p.TaxType)
+                .Required();
         });
     }
     

@@ -22,9 +22,16 @@
     <div>
         <div>
             <EditForm Model="@Profile">
-                <TextInput Label="Name" @bind-Value="Profile.Name" IsEnabled="IsFormEnabled"/>
-                <TextAreaInput Label="Description" @bind-Value="Profile.Description" IsEnabled="IsFormEnabled"/>
+                <TextInput Label="Name" @bind-Value="Profile.Name"
+                           IsEnabled="IsFormEnabled"
+                           TValue="string" />
+                
+                <TextAreaInput Label="Description" 
+                               @bind-Value="Profile.Description"
+                               IsEnabled="IsFormEnabled"/>
+                
                 <SelectInput Label="Profile currency" DefaultOption="Select currency" Data="Currencies" @bind-Value="CurrencyId" IsEnabled="IsFormEnabled"/>
+                
                 <ButtonSubmit IsEnabled="IsFormEnabled"/>
             </EditForm>
         </div>

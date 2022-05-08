@@ -15,11 +15,12 @@
     <br />
     <div>
         <EditForm Model="@CreateTaxModel" OnSubmit="@HandleSubmitAsync">
-            <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount"/>
-            <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"/>
-            <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage"/>
+            <Validator TModel="CreateTaxModel" />
+            <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
+            <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
+            <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
             <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" />
-            <ButtonSubmit />
+            <ButtonSubmit/>
         </EditForm>  
     </div>
 </div>

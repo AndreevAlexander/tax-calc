@@ -1,42 +1,34 @@
-﻿<div style="margin: 5px; display: flex; justify-content: space-between; align-items: baseline;">
+﻿@using System.Linq.Expressions
+
+@inherits InputTextArea
+
+<div style="margin: 5px; display: flex; justify-content: space-between; align-items: baseline;">
     <h6 style="width: 150px">@Label</h6>
-    <InputTextArea class="form-control"
-                   cols="30"
-                   rows="5"
-                   @bind-Value="Value"
-                   disabled="@(!IsEnabled)">
-    </InputTextArea>
+    <div style="width: 100%">
+        <textarea class="form-control"
+                  cols="30"
+                  rows="5"
+                  @bind=@CurrentValueAsString
+                  @bind:event="oninput"
+                  @attributes="AdditionalAttributes"
+                  disabled="@(!IsEnabled)">
+        </textarea>
+        
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
+        }
+    </div>
 </div>
 <br />
 
 @code {
-    private string _value;
-    
     [Parameter]
     public string Label { get; set; }
 
     [Parameter]
-    public string Value
-    {
-        get => _value;
-        set
-        {
-            if (value == _value)
-            {
-                return;
-            }
-
-            _value = value;
-            if (ValueChanged.HasDelegate)
-            {
-                ValueChanged.InvokeAsync(_value);
-            }
-        }
-    }
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
+    public bool IsEnabled { get; set; } = true;
     
     [Parameter]
-    public bool IsEnabled { get; set; } = true;
+    public Expression<Func<string>>? MessageFor { get; set; }
 }
