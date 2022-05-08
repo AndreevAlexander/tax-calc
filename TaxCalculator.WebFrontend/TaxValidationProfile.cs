@@ -16,6 +16,16 @@ public class TaxValidationProfile : ValidationProfile
             b.Property(p => p.TaxType)
                 .Required();
         });
+        
+        ForModel<CreateTaxModel>(b =>
+        {
+            b.Property(p => p.Amount)
+                .Required()
+                .IsNumeric();
+
+            b.Property(p => p.TaxType)
+                .Required();
+        });
     }
     
 }

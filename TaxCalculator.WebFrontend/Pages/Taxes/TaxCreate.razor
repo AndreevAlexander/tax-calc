@@ -19,7 +19,7 @@
             <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
             <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
             <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
-            <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" />
+            <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="CreateTaxModel.TaxType" />
             <ButtonSubmit/>
         </EditForm>  
     </div>
@@ -32,16 +32,16 @@
 
     public CreateTaxModel CreateTaxModel { get; } = new();
 
-    public Dictionary<int, string> TaxTypes { get; set; }
+    public Dictionary<TaxType, string> TaxTypes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         CreateTaxModel.TaxProfileId = Guid.Parse(ProfileId);
 
-        TaxTypes = new Dictionary<int, string>
+        TaxTypes = new Dictionary<TaxType, string>
         {
-            {(int) TaxType.IncomeTax, "Income tax"},
-            {(int) TaxType.SocialTax, "Social tax"}
+            {TaxType.IncomeTax, "Income tax"},
+            {TaxType.SocialTax, "Social tax"}
         };
     }
 

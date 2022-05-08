@@ -1,0 +1,70 @@
+﻿@page "/income/{ProfileId}"
+
+@using TaxCalculator.Domain.Entities
+@using TaxCalculator.WebFrontend.Data
+
+@inject WebApi _webApi
+
+@if (!Incomes.Any())
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div>
+        <div style="display: flex; justify-content: space-between">
+            <h3>Manage incomes</h3>
+            <NavLink href="#" class="btn btn-primary">Add income</NavLink>
+        </div>
+        <br />
+        <div>
+            <table class="table" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Income Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach (var income in Incomes)
+                    {
+                        <tr>
+                            <td>@income.Value</td>
+                            <td>@income.IncomeDate.ToString("dd/MM/yyyy")</td>
+                            <td style="box-sizing: border-box">
+                                <NavLink href="#" class="btn btn-warning">Edit</NavLink>
+                                <button class="btn btn-danger" onclick="@(() => HandleDeleteAsync(income.Id))">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string ProfileId { get; set; }
+
+    public List<Income> Incomes { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var incomes = await _webApi.GetManyAsync<Income>($"Income?ProfileId={ProfileId}");
+        Incomes.AddRange(incomes);
+    }
+
+    private async Task HandleDeleteAsync(Guid incomeId)
+    {
+        var result = await _webApi.Remove($"Income?IncomeId={incomeId}");
+        if (result.RecordId != null)
+        {
+            Incomes = Incomes.Where(x => x.Id != incomeId).ToList();
+            StateHasChanged();
+        }
+    }
+}

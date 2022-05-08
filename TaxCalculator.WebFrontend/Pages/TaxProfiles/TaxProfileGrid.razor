@@ -21,26 +21,26 @@ else
         </div>
         <div>
             <table class="table">
-                    <thead>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var profile in TaxProfiles)
+                {
                     <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Actions</th>
+                        <td>@profile.Name</td>
+                        <td>@profile.Description</td>
+                        <td>
+                            <NavLink class="btn btn-info" href="@("tax-profile/details/" + profile.Id)">Details</NavLink>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var profile in TaxProfiles)
-                    {
-                        <tr>
-                            <td>@profile.Name</td>
-                            <td>@profile.Description</td>
-                            <td>
-                                <NavLink class="btn btn-info" href="@("tax-profile/details/" + profile.Id)">Details</NavLink>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
     
