@@ -17,6 +17,7 @@ builder.Services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
 {
     var engine = new ValidationEngine(t => (IValidationRule) ActivatorUtilities.GetServiceOrCreateInstance(provider, t));
     engine.RegisterValidationProfile<TaxValidationProfile>();
+    engine.RegisterValidationProfile<IncomeValidationProfile>();
 
     return engine;
 });
