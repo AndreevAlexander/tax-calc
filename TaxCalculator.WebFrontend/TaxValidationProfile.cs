@@ -10,7 +10,8 @@ public class TaxValidationProfile : ValidationProfile
         ForModel<UpdateTaxModel>(b =>
         {
             b.Property(p => p.Amount)
-                .Required();
+                .Required()
+                .IsNumeric();
 
             b.Property(p => p.TaxType)
                 .Required();

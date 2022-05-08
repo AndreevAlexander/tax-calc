@@ -79,6 +79,12 @@ public class ValidationEngine : IValidationEngine
 			var regexRule = new RegexValidationRule();
 			SetResults(propertyName, results, regexRule.Validate(value, propertyName, configuration.Regex).ToList());
 		}
+
+		if (configuration.IsNumeric)
+		{
+			var numericRule = new NumericValidationRule();
+			SetResults(propertyName, results, numericRule.Validate(value, propertyName, configuration.Regex).ToList());
+		}
 		
 		if (configuration.CustomValidators.Any())
 		{

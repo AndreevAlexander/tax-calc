@@ -12,7 +12,9 @@ public class RuleConfiguration
     public int? MinLength { get; set; }
 	
     public string? Regex { get; set; }
-	
+
+    public bool IsNumeric { get; set; }
+    
     public List<Type> CustomValidators { get; }
 
     public RuleConfiguration()

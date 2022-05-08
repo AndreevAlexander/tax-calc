@@ -50,6 +50,12 @@ public class RuleBuilder<TModel> : IRuleBuilder<TModel>, IRuleStage where TModel
         return this;
     }
 
+    public IRuleStage IsNumeric()
+    {
+        _ruleConfigurations[PropertyName].IsNumeric = true;
+        return this;
+    }
+
     public IRuleStage WithCustomRule<TCustomRule>() where TCustomRule : IValidationRule
     {
         _ruleConfigurations[PropertyName].CustomValidators.Add(typeof(TCustomRule));
