@@ -9,7 +9,7 @@
 @inject WebApi _webApi
 @inject NavigationManager _navigationManager
 
-@if (TaxTypes == null)
+@if (!IsInitialized)
 {
     <p>
         <em>Loading...</em>
@@ -23,12 +23,16 @@ else
         </div>
         <br/> 
         <div>
-            <EditForm Model="@Tax" OnSubmit="@HandleSubmitAsync">
-                <TextInput Label="Amount" @bind-Value="Tax.Amount" />
-                <TextInput Label="Applies before" @bind-Value="Tax.AppliesBefore" />
+            <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
+                <Validator TModel="UpdateTaxModel" 
+                           OnValidation="@(() => this.ValidationStateChanged())"/>
+                <ValidationSummary />
+                <ValidationMessage For="@(() => Tax.Amount)"/>
+                <TextInput Label="Amount" @bind-Value="Tax.Amount"/>
+                <TextInput Label="Applies before" @bind-Value="Tax.AppliesBefore"/>
                 <CheckBoxInput Label="Is Percentage" @bind-Value="Tax.IsPercentage"/>
-                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="@Tax.TaxType" />
-                <ButtonSubmit />
+                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="@Tax.TaxType"/>
+                <ButtonSubmit IsEnabled="@IsValid"/>
             </EditForm>  
         </div>
     </div>
@@ -46,6 +50,12 @@ else
 
     public Dictionary<TaxType, string>? TaxTypes { get; set; }
 
+    public EditContext EditContext { get; set; }
+
+    public bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    public bool IsInitialized { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
         var tax = await _webApi.GetOneAsync<Tax>($"Tax/one?TaxId={TaxId}");
@@ -54,21 +64,32 @@ else
         Tax.Amount = tax.Amount.ToString();
         Tax.AppliesBefore = tax.AppliesBefore != null ? tax.AppliesBefore.ToString() : null;
         Tax.TaxType = tax.TaxType;
+
+        EditContext = new EditContext(Tax);
         
         TaxTypes = new Dictionary<TaxType, string>
         {
             {TaxType.IncomeTax, "Income tax"},
             {TaxType.SocialTax, "Social tax"}
         };
+
+        IsInitialized = true;
     }
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Update(Tax, "Tax");
-        if (result.RecordId != null)
+        if (IsValid)
         {
-            _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
+            var result = await _webApi.Update(Tax, "Tax");
+            if (result.RecordId != null)
+            {
+                _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
+            }
         }
     }
 
+    private void ValidationStateChanged()
+    {
+        StateHasChanged();
+    }
 }

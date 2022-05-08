@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
@@ -55,7 +53,7 @@ public class RequiredValidationRule : IValidationRule
         
         if (hasErrors)
         {
-            results.Add(ValidationResult.Invalid("Value is required"));
+            results.Add(ValidationResult.Invalid($"{propertyName} is required"));
         }
 
         return results;
