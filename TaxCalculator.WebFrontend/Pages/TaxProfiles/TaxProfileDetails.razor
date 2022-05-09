@@ -3,54 +3,100 @@
 @using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.Domain.Entities
 @using TaxCalculator.Domain.Services.Identifier
+@using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Pages.Taxes
 @using TaxCalculator.WebFrontend.Shared.FormInputs
+@using TaxCalculator.WebFrontend.Validation
 
 @inject WebApi _webApi;
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
+@inject IJSRuntime _jsRuntime;
 
-<div>
-    <div style="display: flex; justify-content: space-between;">
-        <h3>View profile details</h3>
-        <div style="box-sizing: border-box;">
-            <NavLink href="@("manage-incomes/" + ProfileId)" class="btn btn-primary">Manage incomes</NavLink>
-            <NavLink href="@("/manage-additional-spends/" + ProfileId)" class="btn btn-primary">Manage additional spends</NavLink>
-        </div>
-    </div>
-    <br/>
+@if (!IsLoaded)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
     <div>
-        <div>
-            <EditForm Model="@Profile">
-                <TextInput Label="Name" @bind-Value="Profile.Name"
-                           IsEnabled="IsFormEnabled" />
-                
-                <TextAreaInput Label="Description" 
-                               @bind-Value="Profile.Description"
-                               IsEnabled="IsFormEnabled"/>
-                
-                <SelectInput Label="Profile currency" DefaultOption="Select currency" Data="Currencies" @bind-Value="CurrencyId" IsEnabled="IsFormEnabled"/>
-                
-                <ButtonSubmit IsEnabled="IsFormEnabled"/>
-            </EditForm>
+        <div style="display: flex; justify-content: space-between;">
+            <h3>View profile details</h3>
+            <div style="box-sizing: border-box;">
+                <NavLink href="@("manage-incomes/" + ProfileId)" class="btn btn-primary">Manage incomes</NavLink>
+                <NavLink href="@("/manage-additional-spends/" + ProfileId)" class="btn btn-primary">Manage additional spends</NavLink>
+            </div>
         </div>
-        <TaxGrid ProfileId="@ProfileId" />
+        <br/>
+        <div>
+            <div>
+                <EditForm EditContext="@EditContext" OnSubmit="@HandleProfileUpdate">
+                    <Validator TModel="UpdateTaxProfileModel"/>
+                    
+                    <TextInput Label="Name" 
+                               MessageFor="@(() => UpdateTaxProfileModel.Name)"
+                               @bind-Value="UpdateTaxProfileModel.Name" />
+
+                    <TextAreaInput Label="Description"
+                                   MessageFor="@(() => UpdateTaxProfileModel.Description)"
+                                   @bind-Value="UpdateTaxProfileModel.Description" />
+
+                    <SelectInput Label="Profile currency" 
+                                 DefaultOption="Select currency"
+                                 Data="Currencies"
+                                 @bind-Value="CurrencyId"
+                                 IsEnabled="false"/>
+
+                    <ButtonSubmit IsEnabled="@IsValid"/>
+                </EditForm>
+            </div>
+            <TaxGrid ProfileId="@ProfileId" />
+        </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter]
     public string ProfileId { get; set; }
     
-    private TaxProfile Profile { get; set; } = new();
+    private UpdateTaxProfileModel UpdateTaxProfileModel { get; set; } = new();
+    
     private Dictionary<Guid, string>? Currencies { get; set; } = new();
+    
     private Guid CurrencyId { get; set; }
-    private bool IsFormEnabled { get; set; } = false;
+    
+    private bool IsLoaded { get; set; }
+
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+    
+    private EditContext EditContext { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
-        Profile = await _webApi.GetOneAsync<TaxProfile>($"TaxProfile/one?TaxProfileId={ProfileId}");
-        Currencies = _identifierService.Currencies.ToDictionary();
-        CurrencyId = Profile.ProfileCurrencyId.Value;
+        var profile = await _webApi.GetOneAsync<TaxProfile?>($"TaxProfile/one?TaxProfileId={ProfileId}");
+
+        if (profile != null)
+        {
+            UpdateTaxProfileModel.Name = profile.Name;
+            UpdateTaxProfileModel.Description = profile.Description;
+            UpdateTaxProfileModel.TaxProfileId = ProfileId;
+            
+            Currencies = _identifierService.Currencies.ToDictionary();
+            CurrencyId = profile.ProfileCurrencyId.Value;
+        }
+
+        EditContext = new EditContext(UpdateTaxProfileModel);
+        IsLoaded = true;
+    }
+
+    private async Task HandleProfileUpdate()
+    {
+        var result = await _webApi.Update(UpdateTaxProfileModel, "TaxProfile");
+        if (result.RecordId != null)
+        {
+            await _jsRuntime.InvokeVoidAsync("alert", "Profile updated");
+        }
     }
 }

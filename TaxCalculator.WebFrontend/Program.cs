@@ -20,6 +20,7 @@ builder.Services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
     engine.RegisterValidationProfile<TaxValidationProfile>();
     engine.RegisterValidationProfile<IncomeValidationProfile>();
     engine.RegisterValidationProfile<AdditionalSpendsValidationProfile>();
+    engine.RegisterValidationProfile<TaxProfileValidationProfile>();
 
     return engine;
 });

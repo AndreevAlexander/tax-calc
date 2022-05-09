@@ -1,8 +1,9 @@
 ﻿@page "/tax-profile/create"
 
 @using TaxCalculator.WebFrontend.Data
-@using TaxCalculator.Application.TaxProfiles.Commands
+@using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.Domain.Services.Identifier
+@using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Shared.FormInputs
 
 @inject WebApi _webApi;
@@ -15,34 +16,41 @@
     </div>
     <br />
     <div>
-        <EditForm Model="@_createTaxProfileCommand" OnValidSubmit="@HandleSubmitAsync">
+        <EditForm Model="@CreateTaxProfileModel" OnValidSubmit="@HandleSubmitAsync">
+            <Validator TModel="CreateTaxProfileModel" />
+            
             <TextInput Label="Name"
-                       @bind-Value="_createTaxProfileCommand.Name"/>
-            
+                       @bind-Value="CreateTaxProfileModel.Name"
+                       MessageFor="@(() => CreateTaxProfileModel.Name)"/>
+
             <TextAreaInput Label="Description"
-                           @bind-Value="_createTaxProfileCommand.Description"/>
-            
-            <SelectInput Label="Profile currency" 
+                           @bind-Value="CreateTaxProfileModel.Description"
+                           MessageFor="@(() => CreateTaxProfileModel.Description)"/>
+
+            <SelectInput Label="Profile currency"
                          DefaultOption="Select currency"
                          Data="_currencies"
-                         @bind-Value="_createTaxProfileCommand.ProfileCurrencyId"/>
-            <ButtonSubmit />
+                         @bind-Value="CreateTaxProfileModel.ProfileCurrencyId"
+                         MessageFor="@(() => CreateTaxProfileModel.ProfileCurrencyId)"/>
+            <ButtonSubmit/>
         </EditForm>
     </div>
 </div>
 
 @code {
-    public CreateTaxProfileCommand _createTaxProfileCommand = new();
-    private Dictionary<Guid, string>? _currencies;
+    private CreateTaxProfileModel CreateTaxProfileModel { get; set; } = new();
+    
+    private Dictionary<string, string>? _currencies;
 
     protected override async Task OnInitializedAsync()
     {
-        _currencies = _identifierService.Currencies.ToDictionary();
+        _currencies = _identifierService.Currencies.ToDictionary()
+            .ToDictionary(x => x.Key.ToString(), x => x.Value);
     }
     
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Create(_createTaxProfileCommand, "TaxProfile");
+        var result = await _webApi.Create(CreateTaxProfileModel, "TaxProfile");
         if (result.RecordId != null)
         {
             _navigationManager.NavigateTo($"tax-profile/details/{result.RecordId}");
