@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using TaxCalculator.Validation;
 using TaxCalculator.Validation.Contracts;
-using TaxCalculator.WebFrontend.Models;
 
-namespace TaxCalculator.WebFrontend;
+namespace TaxCalculator.WebFrontend.Validation;
 
 public class Validator<TModel> : ComponentBase 
     where TModel : class

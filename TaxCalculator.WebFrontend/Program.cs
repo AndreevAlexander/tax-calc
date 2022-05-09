@@ -5,6 +5,7 @@ using TaxCalculator.Validation;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.WebFrontend;
 using TaxCalculator.WebFrontend.Data;
+using TaxCalculator.WebFrontend.Validation;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
