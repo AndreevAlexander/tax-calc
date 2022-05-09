@@ -33,8 +33,9 @@ else
                     <tr>
                         <td>@profile.Name</td>
                         <td>@profile.Description</td>
-                        <td>
+                        <td style="box-sizing: border-box;">
                             <NavLink class="btn btn-info" href="@("tax-profile/details/" + profile.Id)">Details</NavLink>
+                            <button class="btn btn-danger" onclick="@(() => HandleDeleteAsync(profile.Id))">Delete</button>
                         </td>
                     </tr>
                 }
@@ -46,13 +47,23 @@ else
 
 @code {
     
-    public List<TaxProfileModel>? TaxProfiles { get; set; }
+    private List<TaxProfileModel>? TaxProfiles { get; set; }
 
-    public bool IsLoaded { get; set; }
+    private bool IsLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         TaxProfiles = (await _webApi.GetManyAsync<TaxProfileModel>("TaxProfile")).ToList();
         IsLoaded = true;
+    }
+
+    private async Task HandleDeleteAsync(Guid id)
+    {
+        var result = await _webApi.Remove($"TaxProfile?TaxProfileId={id}");
+        if (result.RecordId != null)
+        {
+            TaxProfiles = TaxProfiles?.Where(x => x.Id != id).ToList();
+            StateHasChanged();
+        }
     }
 }
