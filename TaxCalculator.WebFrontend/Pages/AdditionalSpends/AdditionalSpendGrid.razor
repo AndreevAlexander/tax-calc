@@ -35,7 +35,10 @@ else
                             <td>@additionalSpend.Amount</td>
                             <td>@(additionalSpend.AppliedBeforeTax ? "Yes" : "No")</td>
                             <td style="box-sizing: border-box">
-                                <NavLink href="#" class="btn btn-warning">Edit</NavLink>
+                                <NavLink href="@("/manage-additional-spends/" + ProfileId + "/edit/" + additionalSpend.Id)"
+                                         class="btn btn-warning">
+                                    Edit
+                                </NavLink>
                                 <button class="btn btn-danger"
                                         onclick="@(() => HandleDeleteAsync(additionalSpend.Id))">
                                     Delete

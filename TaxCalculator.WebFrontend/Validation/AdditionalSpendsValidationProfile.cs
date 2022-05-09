@@ -13,5 +13,12 @@ public class AdditionalSpendsValidationProfile : ValidationProfile
                 .Required()
                 .IsNumeric();
         });
+        
+        ForModel<UpdateAdditionalSpendModel>(b =>
+        {
+            b.Property(p => p.Amount)
+                .Required()
+                .IsNumeric();
+        });
     }
 }
