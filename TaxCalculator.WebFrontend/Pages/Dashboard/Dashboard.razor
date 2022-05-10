@@ -1,0 +1,120 @@
+﻿@page "/dashboard"
+
+@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Shared.FormInputs
+@using TaxCalculator.WebFrontend.Validation
+@using TaxCalculator.Domain.Entities
+
+@inject WebApi _webApi
+
+@if (TaxProfiles == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div>
+        <div>
+            <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+                <Validator TModel="TaxProfileDropdown" />
+                
+                <SelectInput DefaultOption="Select tax profile"
+                             Data="TaxProfiles"
+                             @bind-Value="@SelectedProfile.Id" 
+                             MessageFor="@(() => SelectedProfile.Id)"/>
+                
+                <ButtonSubmit IsEnabled="@IsValid" Label="Select" />
+            </EditForm>
+        </div>
+        <br />
+        <div>
+            <table class="table" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Income Tax</th>
+                    <th>Social Tax</th>
+                    <th>Income Gross @(CalculateTaxesModel?.Currency != null ? $"({CalculateTaxesModel?.Currency})" : "")</th>
+                    <th>Income Net @(CalculateTaxesModel?.Currency != null ? $"({CalculateTaxesModel?.Currency})" : "")</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (CalculateTaxesModel != null)
+                {
+                    @foreach (var information in CalculateTaxesModel.TaxInformation)
+                    {
+                        <tr>
+                            <td>@information.Month</td>
+                            <td>@information.IncomeTax</td>
+                            <td>@information.SocialTax</td>
+                            <td>@information.IncomeGross</td>
+                            <td>@information.IncomeNet</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>
+                        <em>Loading...</em>
+                    </p>
+                }
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Total (gross/net):</td>
+                    <td>@CalculateTaxesModel?.IncomeTotal?.TotalGross</td>
+                    <td>@CalculateTaxesModel?.IncomeTotal?.TotalNet</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+
+    private CalculateTaxesModel? CalculateTaxesModel { get; set; }
+    
+    private Dictionary<string, string>? TaxProfiles { get; set; }
+
+    private TaxProfileDropdown SelectedProfile { get; set; } = new();
+
+    public EditContext EditContext { get; set; }
+
+    public bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    protected override async Task OnInitializedAsync()
+    {
+        TaxProfiles = (await _webApi.GetManyAsync<TaxProfile>("TaxProfile"))
+            .ToDictionary(x => x.Id.ToString(), x => x.Name);
+
+        EditContext = new EditContext(SelectedProfile);
+        EditContext.Validate();
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        ClearDisplay();
+        
+        var result = EditContext.Validate();
+        if (result)
+        {
+            CalculateTaxesModel = await _webApi.GetOneAsync<CalculateTaxesModel?>($"TaxProfile/CalculateTaxes?ProfileId={SelectedProfile.Id}"); 
+        }
+    }
+
+    private void ClearDisplay()
+    {
+        if (CalculateTaxesModel != null)
+        {
+            CalculateTaxesModel.TaxInformation.Clear();
+            CalculateTaxesModel.IncomeTotal = null;
+            StateHasChanged();
+        }
+    }
+}
