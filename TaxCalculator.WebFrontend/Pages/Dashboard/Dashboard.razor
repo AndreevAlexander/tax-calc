@@ -101,8 +101,8 @@ else
     {
         ClearDisplay();
         
-        var result = EditContext.Validate();
-        if (result)
+        EditContext.Validate();
+        if (IsValid)
         {
             CalculateTaxesModel = await _webApi.GetOneAsync<CalculateTaxesModel?>($"TaxProfile/CalculateTaxes?ProfileId={SelectedProfile.Id}"); 
         }
