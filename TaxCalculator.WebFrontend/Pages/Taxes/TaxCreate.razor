@@ -9,31 +9,46 @@
 @inject WebApi _webApi
 @inject NavigationManager _navigationManager
 
-<div>
+@if (Initializing)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
     <div>
-        <h3>Create tax configuration</h3>
+        <div>
+            <h3>Create tax configuration</h3>
+        </div>
+        <br />
+        <div>
+            <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+                <Validator TModel="CreateTaxModel" />
+                <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
+                <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
+                <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
+                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="CreateTaxModel.TaxType" />
+                <ButtonSubmit IsEnabled="@IsValid" />
+            </EditForm>  
+        </div>
     </div>
-    <br />
-    <div>
-        <EditForm Model="@CreateTaxModel" OnSubmit="@HandleSubmitAsync">
-            <Validator TModel="CreateTaxModel" />
-            <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
-            <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
-            <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
-            <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="CreateTaxModel.TaxType" />
-            <ButtonSubmit/>
-        </EditForm>  
-    </div>
-</div>
+}
 
 @code {
 
     [Parameter]
     public string ProfileId { get; set; }
 
-    public CreateTaxModel CreateTaxModel { get; } = new();
+    private CreateTaxModel CreateTaxModel { get; } = new();
 
-    public Dictionary<TaxType, string> TaxTypes { get; set; }
+    private Dictionary<TaxType, string> TaxTypes { get; set; }
+    
+    private EditContext EditContext { get; set; }
+    
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    private bool Initializing { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,6 +59,9 @@
             {TaxType.IncomeTax, "Income tax"},
             {TaxType.SocialTax, "Social tax"}
         };
+
+        EditContext = new EditContext(CreateTaxModel);
+        Initializing = false;
     }
 
     private async Task HandleSubmitAsync()
@@ -54,5 +72,4 @@
             _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
         }
     }
-
 }

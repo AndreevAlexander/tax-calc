@@ -1,12 +1,13 @@
 ﻿@inherits InputSelect<TValue>
 
 @using System.Linq.Expressions
+
 @typeparam TValue
 
 <div style="margin: 5px; display: flex; justify-content: space-between; align-items: baseline">
     <h6 style="width: 150px">@Label</h6>
     <div style="width: 100%">
-        <select @bind=@Value
+        <select @bind=@CurrentValueAsString
                 @bind:event="oninput"
                 @attributes="AdditionalAttributes"
                 class="form-control"

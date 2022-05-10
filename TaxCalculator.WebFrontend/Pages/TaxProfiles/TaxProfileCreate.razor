@@ -10,42 +10,59 @@
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
 
-<div>
+@if (!IsInitialized)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
     <div>
-        <h3>Create new profile</h3>
-    </div>
-    <br />
-    <div>
-        <EditForm Model="@CreateTaxProfileModel" OnValidSubmit="@HandleSubmitAsync">
-            <Validator TModel="CreateTaxProfileModel" />
+        <div>
+            <h3>Create new profile</h3>
+        </div>
+        <br />
+        <div>
+            <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+                <Validator TModel="CreateTaxProfileModel" />
             
-            <TextInput Label="Name"
-                       @bind-Value="CreateTaxProfileModel.Name"
-                       MessageFor="@(() => CreateTaxProfileModel.Name)"/>
+                <TextInput Label="Name"
+                           @bind-Value="CreateTaxProfileModel.Name"
+                           MessageFor="@(() => CreateTaxProfileModel.Name)"/>
 
-            <TextAreaInput Label="Description"
-                           @bind-Value="CreateTaxProfileModel.Description"
-                           MessageFor="@(() => CreateTaxProfileModel.Description)"/>
+                <TextAreaInput Label="Description"
+                               @bind-Value="CreateTaxProfileModel.Description"
+                               MessageFor="@(() => CreateTaxProfileModel.Description)"/>
 
-            <SelectInput Label="Profile currency"
-                         DefaultOption="Select currency"
-                         Data="_currencies"
-                         @bind-Value="CreateTaxProfileModel.ProfileCurrencyId"
-                         MessageFor="@(() => CreateTaxProfileModel.ProfileCurrencyId)"/>
-            <ButtonSubmit/>
-        </EditForm>
+                <SelectInput Label="Profile currency"
+                             DefaultOption="Select currency"
+                             Data="Currencies"
+                             @bind-Value="CreateTaxProfileModel.ProfileCurrencyId"/>
+                
+                <ButtonSubmit IsEnabled="@IsValid" />
+            </EditForm>
+        </div>
     </div>
-</div>
+}
 
 @code {
-    private CreateTaxProfileModel CreateTaxProfileModel { get; set; } = new();
+    private CreateTaxProfileModel CreateTaxProfileModel { get; } = new();
     
-    private Dictionary<string, string>? _currencies;
+    private EditContext EditContext { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private Dictionary<string, string>? Currencies { get; set; }
+
+    private bool IsInitialized { get; set; }
+
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    protected override void OnInitialized()
     {
-        _currencies = _identifierService.Currencies.ToDictionary()
-            .ToDictionary(x => x.Key.ToString(), x => x.Value);
+        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => x.Key.ToString(), x => x.Value);
+        EditContext = new EditContext(CreateTaxProfileModel);
+
+        IsInitialized = true;
     }
     
     private async Task HandleSubmitAsync()
