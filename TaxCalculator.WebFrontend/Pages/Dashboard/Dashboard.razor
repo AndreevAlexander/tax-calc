@@ -8,6 +8,8 @@
 
 @inject WebApi _webApi
 
+<PageTitle>Dashboard</PageTitle>
+
 @if (TaxProfiles == null)
 {
     <p>
@@ -57,9 +59,12 @@ else
                 }
                 else
                 {
-                    <p>
-                        <em>Loading...</em>
-                    </p>
+                    @if (IsTaxLoading)
+                    {
+                        <p>
+                            <em>Loading...</em>
+                        </p>
+                    }
                 }
                 </tbody>
                 <tfoot>
@@ -84,9 +89,11 @@ else
 
     private TaxProfileDropdown SelectedProfile { get; set; } = new();
 
-    public EditContext EditContext { get; set; }
+    private EditContext EditContext { get; set; }
 
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+    
+    private bool IsTaxLoading { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,6 +106,7 @@ else
 
     private async Task HandleSubmitAsync()
     {
+        IsTaxLoading = true;
         ClearDisplay();
         
         EditContext.Validate();
