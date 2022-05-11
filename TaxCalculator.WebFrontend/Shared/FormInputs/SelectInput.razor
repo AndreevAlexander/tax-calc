@@ -15,7 +15,7 @@
                 @attributes="AdditionalAttributes"
                 class="form-control"
                 disabled="@(!IsEnabled)">
-            <option value="null" selected="selected" disabled="disabled">@DefaultOption</option>
+            <option selected="selected" disabled="disabled">@DefaultOption</option>
             @if (Data != null && Data.Any())
             {
                 @foreach (var item in Data)

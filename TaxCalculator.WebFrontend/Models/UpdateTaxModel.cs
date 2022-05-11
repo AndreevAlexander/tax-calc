@@ -12,5 +12,5 @@ public class UpdateTaxModel
     
     public string AppliesBefore { get; set; }
 
-    public TaxType TaxType { get; set; }
+    public string TaxType { get; set; }
 }

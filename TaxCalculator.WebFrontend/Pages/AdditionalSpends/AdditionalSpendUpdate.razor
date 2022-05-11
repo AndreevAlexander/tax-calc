@@ -26,7 +26,7 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="UpdateAdditionalSpendModel" />
+                <Validator TModel="UpdateAdditionalSpendModel" OnValidated="@(() => this.StateHasChanged())" />
             
                 <TextInput Label="Amount" 
                            @bind-Value="@UpdateAdditionalSpendModel.Amount"

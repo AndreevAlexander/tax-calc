@@ -26,12 +26,12 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="CreateTaxModel" />
+                <Validator TModel="CreateTaxModel" OnValidated="@(() => this.StateHasChanged())" />
                 <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
                 <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
                 <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
                 <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="CreateTaxModel.TaxType" />
-                <ButtonSubmit IsEnabled="@IsValid" />
+                <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" />
             </EditForm>  
         </div>
     </div>
@@ -44,11 +44,13 @@ else
 
     private CreateTaxModel CreateTaxModel { get; } = new();
 
-    private Dictionary<TaxType, string> TaxTypes { get; set; }
+    private Dictionary<string, string> TaxTypes { get; set; }
     
     private EditContext EditContext { get; set; }
     
     private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    private bool CanExecute => !string.IsNullOrEmpty(CreateTaxModel.TaxType);
 
     private bool Initializing { get; set; } = true;
 
@@ -56,10 +58,10 @@ else
     {
         CreateTaxModel.TaxProfileId = Guid.Parse(ProfileId);
 
-        TaxTypes = new Dictionary<TaxType, string>
+        TaxTypes = new Dictionary<string, string>
         {
-            {TaxType.IncomeTax, "Income tax"},
-            {TaxType.SocialTax, "Social tax"}
+            {nameof(TaxType.IncomeTax), "Income tax"},
+            {nameof(TaxType.SocialTax), "Social tax"}
         };
 
         EditContext = new EditContext(CreateTaxModel);

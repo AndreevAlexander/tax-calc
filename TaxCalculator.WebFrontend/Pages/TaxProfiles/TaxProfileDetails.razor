@@ -35,7 +35,7 @@ else
         <div>
             <div>
                 <EditForm EditContext="@EditContext" OnSubmit="@HandleProfileUpdate">
-                    <Validator TModel="UpdateTaxProfileModel"/>
+                    <Validator TModel="UpdateTaxProfileModel" OnValidated="@(() => this.StateHasChanged())"/>
                     
                     <TextInput Label="Name" 
                                MessageFor="@(() => UpdateTaxProfileModel.Name)"

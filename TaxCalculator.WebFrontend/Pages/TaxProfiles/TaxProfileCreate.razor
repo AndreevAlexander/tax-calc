@@ -27,7 +27,7 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="CreateTaxProfileModel" />
+                <Validator TModel="CreateTaxProfileModel" OnValidated="@(() => this.StateHasChanged())" />
             
                 <TextInput Label="Name"
                            @bind-Value="CreateTaxProfileModel.Name"
@@ -42,7 +42,7 @@ else
                              Data="Currencies"
                              @bind-Value="CreateTaxProfileModel.ProfileCurrencyId"/>
                 
-                <ButtonSubmit IsEnabled="@IsValid" />
+                <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" />
             </EditForm>
         </div>
     </div>
@@ -58,6 +58,8 @@ else
     private bool IsInitialized { get; set; }
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    private bool CanExecute => !string.IsNullOrEmpty(CreateTaxProfileModel.ProfileCurrencyId);
 
     protected override void OnInitialized()
     {

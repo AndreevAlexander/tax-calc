@@ -17,7 +17,7 @@
     <br />
     <div>
         <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
-            <Validator TModel="CreateIncomeModel" />
+            <Validator TModel="CreateIncomeModel" OnValidated="@(() => this.StateHasChanged())" />
             
             <TextInput Label="Amount"
                        MessageFor="@(() => CreateIncomeModel.Value)"

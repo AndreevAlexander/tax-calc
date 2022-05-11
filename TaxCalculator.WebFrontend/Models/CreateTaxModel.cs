@@ -12,5 +12,5 @@ public class CreateTaxModel
 
     public Guid TaxProfileId { get; set; }
 
-    public TaxType TaxType { get; set; }
+    public string TaxType { get; set; }
 }
