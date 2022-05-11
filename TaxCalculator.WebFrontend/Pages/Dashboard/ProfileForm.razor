@@ -1,0 +1,57 @@
+﻿@using TaxCalculator.WebFrontend.Validation;
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Shared.FormInputs
+@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Domain.Entities
+
+@inject WebApi _webApi;
+
+@if (Initializing)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+        <SelectInput DefaultOption="Select tax profile"
+                     Data="TaxProfiles"
+                     @bind-Value="@SelectedProfileId" />
+                
+        <ButtonSubmit IsEnabled="@IsValid" Label="Select" />
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<Guid?> OnSubmit { get; set; }
+    
+    private EditContext? EditContext { get; set; }
+    
+    private bool IsValid => !string.IsNullOrEmpty(SelectedProfileId);
+
+    private string SelectedProfileId { get; set; } = string.Empty;
+    
+    private Dictionary<string, string>? TaxProfiles { get; set; }
+
+    private bool Initializing { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TaxProfiles = (await _webApi.GetManyAsync<TaxProfile>("TaxProfile"))
+            .ToDictionary(x => x.Id.ToString(), x => x.Name);
+
+        EditContext = new EditContext(SelectedProfileId);
+        
+        Initializing = false;
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        if (IsValid && OnSubmit.HasDelegate)
+        {
+            await OnSubmit.InvokeAsync(Guid.Parse(SelectedProfileId));
+        }
+    }
+}
