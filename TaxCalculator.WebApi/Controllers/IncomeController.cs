@@ -42,7 +42,7 @@ public class IncomeController : BaseController
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> CreateIncome([FromBody] AddIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -55,7 +55,7 @@ public class IncomeController : BaseController
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateIncome([FromBody] UpdateIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -68,7 +68,7 @@ public class IncomeController : BaseController
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteIncome([FromQuery] RemoveIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

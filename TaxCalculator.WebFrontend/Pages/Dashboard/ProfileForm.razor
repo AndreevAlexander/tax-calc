@@ -15,11 +15,14 @@
 else
 {
     <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+        <Validator TModel="TaxProfileDropdown" OnValidated="@(() => this.StateHasChanged())"/>
+        
         <SelectInput DefaultOption="Select tax profile"
                      Data="TaxProfiles"
-                     @bind-Value="@SelectedProfileId" />
-                
-        <ButtonSubmit IsEnabled="@IsValid" Label="Select" />
+                     @bind-Value="@TaxProfileDropdown.Id"
+                     MessageFor="@(() => TaxProfileDropdown.Id)"/>
+
+        <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" Label="Select"/>
     </EditForm>
 }
 
@@ -27,11 +30,13 @@ else
     [Parameter]
     public EventCallback<Guid?> OnSubmit { get; set; }
     
-    private EditContext? EditContext { get; set; }
-    
-    private bool IsValid => !string.IsNullOrEmpty(SelectedProfileId);
+    private EditContext EditContext { get; set; }
 
-    private string SelectedProfileId { get; set; } = string.Empty;
+    private bool CanExecute => !string.IsNullOrEmpty(TaxProfileDropdown.Id);
+
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    private TaxProfileDropdown TaxProfileDropdown { get; set; } = new();
     
     private Dictionary<string, string>? TaxProfiles { get; set; }
 
@@ -42,7 +47,7 @@ else
         TaxProfiles = (await _webApi.GetManyAsync<TaxProfile>("TaxProfile"))
             .ToDictionary(x => x.Id.ToString(), x => x.Name);
 
-        EditContext = new EditContext(SelectedProfileId);
+        EditContext = new EditContext(TaxProfileDropdown);
         
         Initializing = false;
     }
@@ -51,7 +56,7 @@ else
     {
         if (IsValid && OnSubmit.HasDelegate)
         {
-            await OnSubmit.InvokeAsync(Guid.Parse(SelectedProfileId));
+            await OnSubmit.InvokeAsync(Guid.Parse(TaxProfileDropdown.Id));
         }
     }
 }

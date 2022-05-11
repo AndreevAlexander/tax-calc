@@ -24,5 +24,11 @@ public class TaxProfileValidationProfile : ValidationProfile
             b.Property(p => p.Description)
                 .Required();
         });
+        
+        ForModel<TaxProfileDropdown>(b =>
+        {
+            b.Property(p => p.Id)
+                .WithCustomRule<TaxProfileDropdownValidationRule>();
+        });
     }
 }

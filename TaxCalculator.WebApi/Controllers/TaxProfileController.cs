@@ -41,7 +41,7 @@ public class TaxProfileController : BaseController
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> CreateProfile([FromBody] CreateTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -61,7 +61,7 @@ public class TaxProfileController : BaseController
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateProfile([FromBody] UpdateTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -74,7 +74,7 @@ public class TaxProfileController : BaseController
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteProfile([FromQuery] RemoveTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

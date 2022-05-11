@@ -16,6 +16,9 @@ public class Validator<TModel> : ComponentBase
     [Parameter]
     public Type ModelType { get; set; }
 
+    [Parameter]
+    public Action? OnValidated { get; set; }
+
     [Inject]
     public IValidationEngine ValidationEngine { get; set; }
     
@@ -29,11 +32,11 @@ public class Validator<TModel> : ComponentBase
         EditContext.OnValidationRequested += OnValidationRequested;
     }
 
-    private void ValidateModel()
+    private async Task ValidateModelAsync()
     {
         ValidationMessageStore.Clear();
         
-        var result = ValidationEngine.Validate((TModel)EditContext.Model, ValidationContext);
+        var result = await ValidationEngine.ValidateAsync((TModel)EditContext.Model, ValidationContext);
 
         if (result.HasErrors)
         {
@@ -51,13 +54,15 @@ public class Validator<TModel> : ComponentBase
         EditContext.NotifyValidationStateChanged();
     }
 
-    private void OnValidationRequested(object? sender, ValidationRequestedEventArgs e)
-    { 
-        ValidateModel();
+    private async void OnValidationRequested(object? sender, ValidationRequestedEventArgs e)
+    {
+        await ValidateModelAsync();
+        OnValidated?.Invoke();
     }
 
-    private void OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    private async void OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
-        ValidateModel();
+        await ValidateModelAsync();
+        OnValidated?.Invoke();
     }
 }

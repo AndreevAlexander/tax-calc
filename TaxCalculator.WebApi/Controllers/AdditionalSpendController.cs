@@ -42,7 +42,7 @@ public class AdditionalSpendController : BaseController
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> AddSpend([FromBody] AddAdditionalSpendCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -55,7 +55,7 @@ public class AdditionalSpendController : BaseController
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateSpend([FromBody] UpdateAdditionalSpendCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -68,7 +68,7 @@ public class AdditionalSpendController : BaseController
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteAdditionalSpend([FromQuery] RemoveAdditionalSpendCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

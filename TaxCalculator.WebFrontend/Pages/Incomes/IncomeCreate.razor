@@ -35,9 +35,10 @@
     [Parameter]
     public string ProfileId { get; set; }
 
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
     
     private CreateIncomeModel CreateIncomeModel { get; } = new();
+    
     private EditContext EditContext { get; set; }
 
     protected override void OnInitialized()

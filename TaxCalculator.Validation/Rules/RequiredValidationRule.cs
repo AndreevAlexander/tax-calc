@@ -6,7 +6,7 @@ namespace TaxCalculator.Validation.Rules;
 
 public class RequiredValidationRule : IValidationRule
 {
-    public IEnumerable<ValidationResult> Validate(object? data, string propertyName, object? context = null)
+    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
     {
         var hasErrors = false;
         var results = new List<ValidationResult>();

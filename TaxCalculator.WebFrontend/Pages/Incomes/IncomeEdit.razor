@@ -49,9 +49,10 @@ else
     [Parameter]
     public string IncomeId { get; set; }
     
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
     
     private UpdateIncomeModel UpdateIncomeModel { get; } = new();
+    
     private EditContext EditContext { get; set; }
 
     protected override async Task OnInitializedAsync()

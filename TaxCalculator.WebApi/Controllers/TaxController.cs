@@ -40,7 +40,7 @@ public class TaxController : BaseController
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> CreateTax([FromBody] CreateTaxCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -53,7 +53,7 @@ public class TaxController : BaseController
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateTax([FromBody] UpdateTaxCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -66,7 +66,7 @@ public class TaxController : BaseController
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteTax([FromQuery] RemoveTaxCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
