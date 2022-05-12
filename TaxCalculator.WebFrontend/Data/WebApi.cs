@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text;
 using Newtonsoft.Json;
-using TaxCalculator.Cqrs.Contracts;
 
 namespace TaxCalculator.WebFrontend.Data;
 
