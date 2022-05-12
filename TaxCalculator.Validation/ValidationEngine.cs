@@ -64,19 +64,19 @@ public class ValidationEngine : IValidationEngine
 
 		if (configuration.MaxLength != null)
 		{
-			var validationResults = await new MaxLengthValidationRule().ValidateAsync(value, propertyName, context);
+			var validationResults = await new MaxLengthValidationRule().ValidateAsync(value, propertyName, configuration.MaxLength);
 			SetResults(propertyName, results, validationResults.ToList());
 		}
 
 		if (configuration.MinLength != null)
 		{
-			var validationResults = await new MinLengthValidationRule().ValidateAsync(value, propertyName, context);
+			var validationResults = await new MinLengthValidationRule().ValidateAsync(value, propertyName, configuration.MinLength);
 			SetResults(propertyName, results, validationResults.ToList());
 		}
 
 		if (configuration.Regex != null)
 		{
-			var validationResults = await new RegexValidationRule().ValidateAsync(value, propertyName, context);
+			var validationResults = await new RegexValidationRule().ValidateAsync(value, propertyName, configuration.Regex);
 			SetResults(propertyName, results, validationResults.ToList());
 		}
 

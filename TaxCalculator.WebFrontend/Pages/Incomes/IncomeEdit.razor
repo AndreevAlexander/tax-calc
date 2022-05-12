@@ -3,10 +3,13 @@
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Shared.FormInputs
 @using TaxCalculator.WebFrontend.Validation
-@using TaxCalculator.WebFrontend.Data
-@using TaxCalculator.Domain.Entities
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.Incomes.Commands
+@using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.WebFrontend.Pages.Incomes.Query
 
-@inject WebApi _webApi
+@inject IQueryBus _queryBus
+@inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
 
 <PageTitle>Edit Income</PageTitle>
@@ -57,7 +60,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var income = await _webApi.GetOneAsync<Income>($"Income/one?IncomeId={IncomeId}");
+        var income = await _queryBus.ExecuteAsync<GetIncomeByIdQuery, IncomeModel>(new GetIncomeByIdQuery
+        {
+            IncomeId = Guid.Parse(IncomeId)
+        });
 
         UpdateIncomeModel.Value = income.Value.ToString();
         UpdateIncomeModel.IncomeDate = income.IncomeDate.ToString("yyyy-MM-dd");
@@ -68,8 +74,14 @@ else
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Update(UpdateIncomeModel, "Income");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new UpdateIncomeCommand
+        {
+            IncomeId = Guid.Parse(UpdateIncomeModel.IncomeId),
+            Value = decimal.Parse(UpdateIncomeModel.Value),
+            IncomeDate = DateTime.Parse(UpdateIncomeModel.IncomeDate)
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             _navigationManager.NavigateTo($"/manage-incomes/{ProfileId}");
         }

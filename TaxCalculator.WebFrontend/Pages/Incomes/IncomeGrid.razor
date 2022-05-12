@@ -1,9 +1,13 @@
 ﻿@page "/manage-incomes/{ProfileId}"
 
-@using TaxCalculator.Domain.Entities
-@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Pages.Incomes.Commands
+@using TaxCalculator.WebFrontend.Pages.Incomes.Query
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi
+@inject IQueryBus _queryBus
+@inject ICommandBus _commandBus
 
 <PageTitle>Manage Incomes</PageTitle>
 
@@ -52,18 +56,26 @@ else
     [Parameter]
     public string ProfileId { get; set; }
 
-    public List<Income> Incomes { get; set; } = new();
+    private List<IncomeModel> Incomes { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var incomes = await _webApi.GetManyAsync<Income>($"Income?ProfileId={ProfileId}");
+        var incomes = await _queryBus.ExecuteAsync<GetIncomesQuery, List<IncomeModel>>(new GetIncomesQuery
+        {
+            TaxProfileId = Guid.Parse(ProfileId)
+        });
+        
         Incomes.AddRange(incomes);
     }
 
     private async Task HandleDeleteAsync(Guid incomeId)
     {
-        var result = await _webApi.Remove($"Income?IncomeId={incomeId}");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new RemoveIncomeCommand
+        {
+            IncomeId = incomeId
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             Incomes = Incomes.Where(x => x.Id != incomeId).ToList();
             StateHasChanged();
