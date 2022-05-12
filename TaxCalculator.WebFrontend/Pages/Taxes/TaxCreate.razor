@@ -1,12 +1,14 @@
 ﻿@page "/tax/create/{ProfileId}"
 
-@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Shared.FormInputs
 @using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.Domain.Enums
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.Taxes.Commands
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi
+@inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
 
 <PageTitle>Create Tax Configuration</PageTitle>
@@ -70,8 +72,17 @@ else
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Create(CreateTaxModel, "Tax");
-        if (result.RecordId != null)
+        Enum.TryParse(CreateTaxModel.TaxType, false, out TaxType type);
+        var result = await _commandBus.DispatchAsync(new CreateTaxCommand
+        {
+            Amount = double.Parse(CreateTaxModel.Amount),
+            AppliesBefore = CreateTaxModel.AppliesBefore != null ? decimal.Parse(CreateTaxModel.AppliesBefore) : null,
+            IsPercentage = CreateTaxModel.IsPercentage,
+            TaxProfileId = CreateTaxModel.TaxProfileId,
+            TaxType = type
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             _navigationManager.NavigateTo($"tax-profile/details/{ProfileId}");
         }

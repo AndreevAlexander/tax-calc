@@ -1,17 +1,18 @@
-﻿using TaxCalculator.Domain.Entities;
+﻿using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
-using TaxCalculator.WebFrontend.Data;
+using TaxCalculator.WebFrontend.Models;
+using TaxCalculator.WebFrontend.Pages.Taxes.Queries;
 
 namespace TaxCalculator.WebFrontend.Validation;
 
 public class TaxProfileDropdownValidationRule : IValidationRule
 {
-    private readonly WebApi _webApi;
+    private readonly IQueryBus _queryBus;
 
-    public TaxProfileDropdownValidationRule(WebApi webApi)
+    public TaxProfileDropdownValidationRule(IQueryBus queryBus)
     {
-        _webApi = webApi;
+        _queryBus = queryBus;
     }
     
     public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
@@ -20,7 +21,9 @@ public class TaxProfileDropdownValidationRule : IValidationRule
         
         var profileId = (string) data;
 
-        var taxes = await _webApi.GetManyAsync<Tax>($"Tax?ProfileId={profileId}");
+        var taxes = await _queryBus.ExecuteAsync<GetTaxesQuery, List<TaxModel>>(new GetTaxesQuery
+            {ProfileId = Guid.Parse(profileId)});
+        
         if (!taxes.Any())
         {
             results.Add(ValidationResult.Invalid("This profile misses tax configuration"));

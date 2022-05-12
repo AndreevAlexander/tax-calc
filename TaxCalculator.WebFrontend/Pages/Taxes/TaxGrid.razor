@@ -1,7 +1,13 @@
 ﻿@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.Domain.Entities
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Pages.Taxes.Commands
+@using TaxCalculator.WebFrontend.Pages.Taxes.Queries
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi
+@inject IQueryBus _queryBus
+@inject ICommandBus _commandBus
 
 <div style="margin-top: 20px">
     <div style="display: flex; justify-content: space-between;">
@@ -40,18 +46,26 @@
     [Parameter]
     public string ProfileId { get; set; }
 
-    public List<Tax> Taxes { get; set; } = new();
+    private List<TaxModel> Taxes { get; set; } = new();
     
     protected override async Task OnInitializedAsync()
     {
-        var taxes = await _webApi.GetManyAsync<Tax>($"Tax?ProfileId={ProfileId}");
+        var taxes = await _queryBus.ExecuteAsync<GetTaxesQuery, List<TaxModel>>(new GetTaxesQuery
+        {
+            ProfileId = Guid.Parse(ProfileId)
+        });
+        
         Taxes.AddRange(taxes);
     }
     
     private async Task HandleTaxDeleteAsync(Guid id)
     {
-        var result = await _webApi.Remove($"Tax?TaxId={id}");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new RemoveTaxCommand
+        {
+            TaxId = id
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             Taxes = Taxes.Where(x => x.Id != id).ToList();
             StateHasChanged();
