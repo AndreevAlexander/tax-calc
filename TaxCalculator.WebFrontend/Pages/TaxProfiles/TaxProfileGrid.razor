@@ -1,9 +1,13 @@
 ﻿@page "/tax-profile"
 
-@using TaxCalculator.WebFrontend.Data
-@using TaxProfileModel = TaxCalculator.Domain.Entities.TaxProfile;
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Queries
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi;
+@inject IQueryBus _queryBus
+@inject ICommandBus _commandBus
 
 <PageTitle>Tax Profiles</PageTitle>
 
@@ -55,14 +59,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        TaxProfiles = (await _webApi.GetManyAsync<TaxProfileModel>("TaxProfile")).ToList();
+        TaxProfiles = await _queryBus.ExecuteAsync<GetTaxProfilesQuery, List<TaxProfileModel>>(new GetTaxProfilesQuery());
         IsLoaded = true;
     }
 
     private async Task HandleDeleteAsync(Guid id)
     {
-        var result = await _webApi.Remove($"TaxProfile?TaxProfileId={id}");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new RemoveTaxProfileCommand {ProfileId = id});
+        if (result.Status == CommandStatus.Success)
         {
             TaxProfiles = TaxProfiles?.Where(x => x.Id != id).ToList();
             StateHasChanged();

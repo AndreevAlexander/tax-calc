@@ -1,14 +1,18 @@
 ﻿@page "/tax-profile/details/{ProfileId}"
 
-@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.Domain.Entities
 @using TaxCalculator.Domain.Services.Identifier
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Pages.Taxes
 @using TaxCalculator.WebFrontend.Shared.FormInputs
 @using TaxCalculator.WebFrontend.Validation
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands
+@using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Queries
 
-@inject WebApi _webApi;
+@inject ICommandBus _commandBus;
+@inject IQueryBus _queryBus;
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
 @inject IJSRuntime _jsRuntime;
@@ -77,7 +81,10 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        var profile = await _webApi.GetOneAsync<TaxProfile?>($"TaxProfile/one?TaxProfileId={ProfileId}");
+        var profile = await _queryBus.ExecuteAsync<GetTaxProfileByIdQuery, TaxProfileModel?>(new GetTaxProfileByIdQuery
+        {
+            TaxProfileId = Guid.Parse(ProfileId)
+        });
 
         if (profile != null)
         {
@@ -95,8 +102,14 @@ else
 
     private async Task HandleProfileUpdate()
     {
-        var result = await _webApi.Update(UpdateTaxProfileModel, "TaxProfile");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new UpdateTaxProfileCommand
+        {
+            Description = UpdateTaxProfileModel.Description,
+            Name = UpdateTaxProfileModel.Name,
+            TaxProfileId = Guid.Parse(UpdateTaxProfileModel.TaxProfileId)
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             await _jsRuntime.InvokeVoidAsync("alert", "Profile updated");
         }

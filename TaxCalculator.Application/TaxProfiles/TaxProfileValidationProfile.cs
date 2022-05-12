@@ -10,7 +10,7 @@ public class TaxProfileValidationProfile : ValidationProfile
         ForModel<CreateTaxProfileCommand>(b =>
         {
             b.Property(x => x.Name)
-                .MinLength(5);
+                .Required();
 
             b.Property(x => x.Description)
                 .Required();
