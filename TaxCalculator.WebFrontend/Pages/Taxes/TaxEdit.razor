@@ -62,17 +62,17 @@ else
     [Parameter]
     public string TaxId { get; set; }
 
-    public UpdateTaxModel Tax { get; set; } = new();
+    private UpdateTaxModel Tax { get; set; } = new();
 
-    public Dictionary<string, string>? TaxTypes { get; set; }
+    private Dictionary<string, string>? TaxTypes { get; set; }
 
-    public EditContext EditContext { get; set; }
+    private EditContext EditContext { get; set; }
 
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
 
     private bool CanExecute => !string.IsNullOrEmpty(Tax.TaxType);
 
-    public bool IsInitialized { get; set; } = false;
+    private bool IsInitialized { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
