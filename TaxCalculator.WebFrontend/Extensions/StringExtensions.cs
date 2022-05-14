@@ -1,4 +1,4 @@
-﻿namespace TaxCalculator.WebFrontend;
+﻿namespace TaxCalculator.WebFrontend.Extensions;
 
 public static class StringExtensions
 {

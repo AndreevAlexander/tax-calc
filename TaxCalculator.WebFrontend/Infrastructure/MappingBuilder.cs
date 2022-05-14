@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TaxCalculator.Domain.Enums;
+using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Models;
 using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands;
 using TaxCalculator.WebFrontend.Pages.Incomes.Commands;

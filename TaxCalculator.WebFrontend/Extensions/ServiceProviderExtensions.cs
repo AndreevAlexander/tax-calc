@@ -3,7 +3,7 @@ using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Handler;
 using TaxCalculator.WebFrontend.Pages.Dashboard.Queries;
 
-namespace TaxCalculator.WebFrontend;
+namespace TaxCalculator.WebFrontend.Extensions;
 
 public static class ServiceProviderExtension
 {

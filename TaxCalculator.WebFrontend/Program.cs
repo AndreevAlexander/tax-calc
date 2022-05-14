@@ -10,6 +10,7 @@ using TaxCalculator.Validation;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.WebFrontend;
 using TaxCalculator.WebFrontend.Data;
+using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Infrastructure;
 using TaxCalculator.WebFrontend.Validation;
 
