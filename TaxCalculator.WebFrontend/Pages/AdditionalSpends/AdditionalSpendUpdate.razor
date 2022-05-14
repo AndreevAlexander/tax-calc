@@ -3,10 +3,14 @@
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.WebFrontend.Shared.FormInputs
-@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.Domain.Entities
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands
+@using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Queries
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi
+@inject IQueryBus _queryBus
+@inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
 
 <PageTitle>Edit Additional Spend</PageTitle>
@@ -52,13 +56,16 @@ else
 
     private UpdateAdditionalSpendModel UpdateAdditionalSpendModel { get; } = new();
 
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
 
-    public bool IsLoaded { get; set; }
+    private bool IsLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var additionalSpend = await _webApi.GetOneAsync<AdditionalSpend?>($"AdditionalSpend/one?AdditionalSpendId={AdditionalSpendId}");
+        var additionalSpend = await _queryBus.ExecuteAsync<GetAdditionalSpendByIdQuery, AdditionalSpendModel>(new GetAdditionalSpendByIdQuery
+        {
+            AdditionalSpendId = Guid.Parse(AdditionalSpendId)
+        });
 
         if (additionalSpend != null)
         {
@@ -73,9 +80,14 @@ else
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Update(UpdateAdditionalSpendModel, "AdditionalSpend");
+        var result = await _commandBus.DispatchAsync(new UpdateAdditionalSpendCommand
+        {
+            Amount = decimal.Parse(UpdateAdditionalSpendModel.Amount),
+            AdditionalSpendId = Guid.Parse(UpdateAdditionalSpendModel.AdditionalSpendId),
+            AppliedBeforeTax = UpdateAdditionalSpendModel.AppliedBeforeTax
+        });
 
-        if (result.RecordId != null && result.RecordId != Guid.Empty)
+        if (result.Status == CommandStatus.Success)
         {
             _navigationManager.NavigateTo($"/manage-additional-spends/{ProfileId}");
         }

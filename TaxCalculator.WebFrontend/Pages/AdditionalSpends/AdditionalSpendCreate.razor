@@ -3,9 +3,11 @@
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.WebFrontend.Shared.FormInputs
-@using TaxCalculator.WebFrontend.Data
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi
+@inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
 
 <PageTitle>Add Additional Spend</PageTitle>
@@ -49,9 +51,14 @@
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Create(CreateAdditionalSpendModel, "AdditionalSpend");
+        var result = await _commandBus.DispatchAsync(new CreateAdditionalSpendCommand
+        {
+            Amount = decimal.Parse(CreateAdditionalSpendModel.Amount),
+            AppliedBeforeTax = CreateAdditionalSpendModel.AppliedBeforeTax,
+            TaxProfileId = Guid.Parse(CreateAdditionalSpendModel.TaxProfileId)
+        });
 
-        if (result.RecordId != null)
+        if (result.Status == CommandStatus.Success)
         {
             _navigationManager.NavigateTo($"/manage-additional-spends/{ProfileId}");
         }
