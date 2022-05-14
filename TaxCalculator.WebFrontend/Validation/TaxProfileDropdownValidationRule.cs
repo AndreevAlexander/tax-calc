@@ -1,6 +1,7 @@
 ﻿using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
+using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Models;
 using TaxCalculator.WebFrontend.Pages.Taxes.Queries;
 
@@ -18,17 +19,18 @@ public class TaxProfileDropdownValidationRule : IValidationRule
     public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
     {
         var results = new List<ValidationResult>();
-        
-        var profileId = (string) data;
 
-        var taxes = await _queryBus.ExecuteAsync<GetTaxesQuery, List<TaxModel>>(new GetTaxesQuery
-            {ProfileId = Guid.Parse(profileId)});
-        
-        if (!taxes.Any())
+        if (data is string profileId)
         {
-            results.Add(ValidationResult.Invalid("This profile misses tax configuration"));
+            var taxes = await _queryBus.ExecuteAsync<GetTaxesQuery, List<TaxModel>>(new GetTaxesQuery
+                {ProfileId = profileId.ToGuid()});
+        
+            if (!taxes.Any())
+            {
+                results.Add(ValidationResult.Invalid("This profile misses tax configuration"));
+            }
         }
-
+        
         return results;
     }
 }

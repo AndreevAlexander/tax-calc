@@ -3,9 +3,11 @@
 @using TaxCalculator.WebFrontend.Shared.FormInputs
 @using TaxCalculator.Domain.Entities
 @using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.Domain.Services.Identifier
 @using TaxCalculator.WebFrontend.Pages.TaxProfiles.Queries
 
 @inject IQueryBus _queryBus
+@inject IIdentifierService _identifierService
 
 @if (Initializing)
 {
@@ -16,12 +18,22 @@
 else
 {
     <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-        <Validator TModel="TaxProfileDropdown" OnValidated="@(() => this.StateHasChanged())"/>
+        <Validator TModel="TaxProfileDropdownModel" OnValidated="@(() => this.StateHasChanged())"/>
         
-        <SelectInput DefaultOption="Select tax profile"
-                     Data="TaxProfiles"
-                     @bind-Value="@TaxProfileDropdown.Id"
-                     MessageFor="@(() => TaxProfileDropdown.Id)"/>
+        <div class="row">
+            <div class="col-md-6">
+                <SelectInput DefaultOption="Select tax profile"
+                             Data="TaxProfiles"
+                             @bind-Value="@TaxProfileDropdown.TaxProfileId"
+                             MessageFor="@(() => TaxProfileDropdown.TaxProfileId)"/>
+            </div>
+            <div class="col-md-6">
+                <SelectInput DefaultOption="Select currency"
+                             Data="Currencies"
+                             @bind-Value="@TaxProfileDropdown.CurrencyId"
+                             MessageFor="@(() => TaxProfileDropdown.CurrencyId)"/>
+            </div>
+        </div>
 
         <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" Label="Select"/>
     </EditForm>
@@ -29,17 +41,19 @@ else
 
 @code {
     [Parameter]
-    public EventCallback<Guid?> OnSubmit { get; set; }
+    public EventCallback<TaxProfileDropdownModel> OnSubmit { get; set; }
     
     private EditContext EditContext { get; set; }
 
-    private bool CanExecute => !string.IsNullOrEmpty(TaxProfileDropdown.Id);
+    private bool CanExecute => !string.IsNullOrEmpty(TaxProfileDropdown.TaxProfileId);
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
-    private TaxProfileDropdown TaxProfileDropdown { get; set; } = new();
+    private TaxProfileDropdownModel TaxProfileDropdown { get; set; } = new();
     
     private Dictionary<string, string>? TaxProfiles { get; set; }
+    
+    private Dictionary<string, string> Currencies { get; set; }
 
     private bool Initializing { get; set; } = true;
 
@@ -49,6 +63,8 @@ else
             .ToDictionary(x => x.Id.ToString(), x => x.Name);
 
         EditContext = new EditContext(TaxProfileDropdown);
+
+        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => x.Key.ToString(), x => x.Value);
         
         Initializing = false;
     }
@@ -57,7 +73,7 @@ else
     {
         if (IsValid && OnSubmit.HasDelegate)
         {
-            await OnSubmit.InvokeAsync(Guid.Parse(TaxProfileDropdown.Id));
+            await OnSubmit.InvokeAsync(TaxProfileDropdown);
         }
     }
 }
