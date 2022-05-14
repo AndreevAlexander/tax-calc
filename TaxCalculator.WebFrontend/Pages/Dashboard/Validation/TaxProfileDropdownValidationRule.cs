@@ -5,7 +5,7 @@ using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Models;
 using TaxCalculator.WebFrontend.Pages.Taxes.Queries;
 
-namespace TaxCalculator.WebFrontend.Validation;
+namespace TaxCalculator.WebFrontend.Pages.Dashboard.Validation;
 
 public class TaxProfileDropdownValidationRule : IValidationRule
 {

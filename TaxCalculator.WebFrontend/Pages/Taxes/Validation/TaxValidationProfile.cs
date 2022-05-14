@@ -1,7 +1,7 @@
 ﻿using TaxCalculator.Validation;
 using TaxCalculator.WebFrontend.Models;
 
-namespace TaxCalculator.WebFrontend.Validation;
+namespace TaxCalculator.WebFrontend.Pages.Taxes.Validation;
 
 public class TaxValidationProfile : ValidationProfile
 {
