@@ -20,7 +20,7 @@
 else
 {
     <div>
-        <div style="display: flex; justify-content: space-between;">
+        <div class="app-table-header">
             <h3>Tax Profiles</h3>
             <NavLink href="tax-profile/create" class="btn btn-primary">Create Profile</NavLink>
         </div>
@@ -39,7 +39,7 @@ else
                     <tr>
                         <td>@profile.Name</td>
                         <td>@profile.Description</td>
-                        <td style="box-sizing: border-box;">
+                        <td class="app-table-actions">
                             <NavLink class="btn btn-info" href="@("tax-profile/details/" + profile.Id)">Details</NavLink>
                             <button class="btn btn-danger" onclick="@(() => HandleDeleteAsync(profile.Id))">Delete</button>
                         </td>

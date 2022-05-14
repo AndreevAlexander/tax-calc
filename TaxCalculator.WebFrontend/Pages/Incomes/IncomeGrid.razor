@@ -20,7 +20,7 @@
 else
 {
     <div>
-        <div style="display: flex; justify-content: space-between">
+        <div class="app-table-header">
             <h3>Manage incomes</h3>
             <NavLink href="@("/manage-incomes/" + ProfileId + "/add")" class="btn btn-primary">Add income</NavLink>
         </div>
@@ -40,7 +40,7 @@ else
                         <tr>
                             <td>@income.Value</td>
                             <td>@income.IncomeDate.ToString("yyyy-MM-dd")</td>
-                            <td style="box-sizing: border-box">
+                            <td class="app-table-actions">
                                 <NavLink href="@("/manage-incomes/" + ProfileId + "/edit/" + income.Id)" class="btn btn-warning">Edit</NavLink>
                                 <button class="btn btn-danger" onclick="@(() => HandleDeleteAsync(income.Id))">Delete</button>
                             </td>

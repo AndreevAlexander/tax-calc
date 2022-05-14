@@ -8,8 +8,8 @@
 @inject IQueryBus _queryBus
 @inject ICommandBus _commandBus
 
-<div style="margin-top: 20px">
-    <div style="display: flex; justify-content: space-between;">
+<div class="app-component-mtop-20">
+    <div class="app-table-header">
         <h5>Taxes configurations</h5>
         <NavLink href="@("tax/create/" + ProfileId)" class="btn btn-primary">Add tax configuration</NavLink>
     </div>
@@ -30,7 +30,7 @@
                     <td>@tax.Amount @(tax.IsPercentage ? "%" : "")</td>
                     <td>@tax.TaxType</td>
                     <td>@tax.AppliesBefore</td>
-                    <td style="box-sizing: border-box;">
+                    <td class="app-table-actions">
                         <NavLink class="btn btn-warning" href="@("tax/edit/" + ProfileId + "/" + tax.Id)">Edit</NavLink>
                         <button class="btn btn-danger" onclick="@(() => HandleTaxDeleteAsync(tax.Id))">Delete</button>
                     </td>
