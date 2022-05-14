@@ -6,9 +6,11 @@
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Add Additional Spend</PageTitle>
 
@@ -51,12 +53,9 @@
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new CreateAdditionalSpendCommand
-        {
-            Amount = decimal.Parse(CreateAdditionalSpendModel.Amount),
-            AppliedBeforeTax = CreateAdditionalSpendModel.AppliedBeforeTax,
-            TaxProfileId = Guid.Parse(CreateAdditionalSpendModel.TaxProfileId)
-        });
+        var command = _mapper.Map<CreateAdditionalSpendCommand>(CreateAdditionalSpendModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
 
         if (result.Status == CommandStatus.Success)
         {

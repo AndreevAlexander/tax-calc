@@ -3,15 +3,16 @@
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.WebFrontend.Shared.FormInputs
-@using TaxCalculator.Domain.Entities
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands
 @using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Queries
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject IQueryBus _queryBus
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Edit Additional Spend</PageTitle>
 
@@ -54,7 +55,7 @@ else
     
     private EditContext EditContext { get; set; }
 
-    private UpdateAdditionalSpendModel UpdateAdditionalSpendModel { get; } = new();
+    private UpdateAdditionalSpendModel UpdateAdditionalSpendModel { get; set; }
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
@@ -69,9 +70,7 @@ else
 
         if (additionalSpend != null)
         {
-            UpdateAdditionalSpendModel.Amount = additionalSpend.Amount.ToString();
-            UpdateAdditionalSpendModel.AppliedBeforeTax = additionalSpend.AppliedBeforeTax;
-            UpdateAdditionalSpendModel.AdditionalSpendId = AdditionalSpendId;
+            UpdateAdditionalSpendModel = _mapper.Map<UpdateAdditionalSpendModel>(additionalSpend);
         }
         
         EditContext = new EditContext(UpdateAdditionalSpendModel);
@@ -80,12 +79,9 @@ else
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new UpdateAdditionalSpendCommand
-        {
-            Amount = decimal.Parse(UpdateAdditionalSpendModel.Amount),
-            AdditionalSpendId = Guid.Parse(UpdateAdditionalSpendModel.AdditionalSpendId),
-            AppliedBeforeTax = UpdateAdditionalSpendModel.AppliedBeforeTax
-        });
+        var command = _mapper.Map<UpdateAdditionalSpendCommand>(UpdateAdditionalSpendModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
 
         if (result.Status == CommandStatus.Success)
         {
