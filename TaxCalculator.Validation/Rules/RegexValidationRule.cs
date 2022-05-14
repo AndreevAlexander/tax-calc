@@ -10,7 +10,9 @@ public class RegexValidationRule : IValidationRule
     {
         var result = new List<ValidationResult>();
 
-        if (context is string pattern && (!string.IsNullOrEmpty(pattern) || !string.IsNullOrWhiteSpace(pattern)))
+        var pattern = (string)context;
+
+        if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrWhiteSpace(pattern))
         {
             if (data is string s && !Regex.IsMatch(s, pattern))
             {

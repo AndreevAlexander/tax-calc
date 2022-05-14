@@ -1,12 +1,14 @@
 ﻿@page "/tax-profile/create"
 
-@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.WebFrontend.Validation
 @using TaxCalculator.Domain.Services.Identifier
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.WebFrontend.Shared.FormInputs
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands
+@using TaxCalculator.Cqrs.Contracts
 
-@inject WebApi _webApi;
+@inject ICommandBus _commandBus;
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
 
@@ -71,8 +73,14 @@ else
     
     private async Task HandleSubmitAsync()
     {
-        var result = await _webApi.Create(CreateTaxProfileModel, "TaxProfile");
-        if (result.RecordId != null)
+        var result = await _commandBus.DispatchAsync(new CreateTaxProfileCommand
+        {
+            Description = CreateTaxProfileModel.Description,
+            Name = CreateTaxProfileModel.Name,
+            ProfileCurrencyId = Guid.Parse(CreateTaxProfileModel.ProfileCurrencyId)
+        });
+        
+        if (result.Status == CommandStatus.Success)
         {
             _navigationManager.NavigateTo($"tax-profile/details/{result.RecordId}");
         }

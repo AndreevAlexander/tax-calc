@@ -1,9 +1,10 @@
 ﻿@page "/dashboard"
 
-@using TaxCalculator.WebFrontend.Data
 @using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Pages.Dashboard.Queries
 
-@inject WebApi _webApi
+@inject IQueryBus _queryBus
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -72,7 +73,10 @@
       
         if (profileId.HasValue)
         {
-            CalculateTaxesModel = await _webApi.GetOneAsync<CalculateTaxesModel?>($"TaxProfile/CalculateTaxes?ProfileId={profileId}");
+            CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(new GetTaxStatisticsQuery
+            {
+                ProfileId = profileId.Value
+            });
         }
 
         IsTaxLoading = false;
