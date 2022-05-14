@@ -2,9 +2,9 @@
 
 @inherits InputText
 
-<div style="margin: 5px; display: flex; justify-content: space-between; align-items: baseline;">
-    <h6 style="width: 150px">@Label</h6>
-    <div style="width: 100%">
+<div class="app-input-group">
+    <h6 class="app-input-label">@Label</h6>
+    <div class="app-input-container">
         <input @attributes="AdditionalAttributes"
                class="form-control"
                @bind=@CurrentValueAsString

@@ -43,7 +43,7 @@
 
     private CreateAdditionalSpendModel CreateAdditionalSpendModel { get; } = new();
 
-    public bool IsValid => !EditContext.GetValidationMessages().Any();
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
 
     protected override async Task OnInitializedAsync()
     {

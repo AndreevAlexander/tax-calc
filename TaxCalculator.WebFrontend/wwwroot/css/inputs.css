@@ -1,0 +1,32 @@
+﻿.app-input-group
+{
+    display: flex;
+    margin: 5px;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.app-input-group-checkbox
+{
+    display: flex;
+    margin: 5px;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
+.app-input-label
+{
+    width: 150px;
+}
+
+.app-input-container
+{
+    width: 100%;
+}
+
+.app-btn-submit
+{
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 5px;
+}
