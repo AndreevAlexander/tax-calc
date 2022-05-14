@@ -21,13 +21,13 @@
 else
 {
     <div>
-        <div style="display: flex; justify-content: space-between;">
+        <div class="app-table-header">
             <h3>Manage additional spends</h3>
             <NavLink href="@("/manage-additional-spends/" + ProfileId + "/add")" class="btn btn-primary">Add</NavLink>
         </div>
         <br/>
         <div>
-            <table class="table" style="width: 100%;">
+            <table class="table app-table-max-width">
                 <thead>
                 <tr>
                     <th>Amount</th>
@@ -41,7 +41,7 @@ else
                         <tr>
                             <td>@additionalSpend.Amount</td>
                             <td>@(additionalSpend.AppliedBeforeTax ? "Yes" : "No")</td>
-                            <td style="box-sizing: border-box">
+                            <td class="app-table-actions">
                                 <NavLink href="@("/manage-additional-spends/" + ProfileId + "/edit/" + additionalSpend.Id)"
                                          class="btn btn-warning">
                                     Edit

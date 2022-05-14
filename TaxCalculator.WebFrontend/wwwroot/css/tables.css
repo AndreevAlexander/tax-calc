@@ -1,0 +1,15 @@
+﻿.app-table-max-width
+{
+    width: 100%;
+}
+
+.app-table-header
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-table-actions
+{
+    box-sizing: border-box;
+}
