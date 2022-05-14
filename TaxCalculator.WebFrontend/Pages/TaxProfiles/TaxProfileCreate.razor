@@ -7,10 +7,12 @@
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject ICommandBus _commandBus;
 @inject NavigationManager _navigationManager;
 @inject IIdentifierService _identifierService;
+@inject IMapper _mapper;
 
 <PageTitle>Create Tax Profile</PageTitle>
 
@@ -73,12 +75,9 @@ else
     
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new CreateTaxProfileCommand
-        {
-            Description = CreateTaxProfileModel.Description,
-            Name = CreateTaxProfileModel.Name,
-            ProfileCurrencyId = Guid.Parse(CreateTaxProfileModel.ProfileCurrencyId)
-        });
+        var command = _mapper.Map<CreateTaxProfileCommand>(CreateTaxProfileModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
         
         if (result.Status == CommandStatus.Success)
         {

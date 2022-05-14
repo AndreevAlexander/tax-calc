@@ -8,10 +8,12 @@
 @using TaxCalculator.WebFrontend.Pages.Taxes.Commands
 @using TaxCalculator.WebFrontend.Pages.Taxes.Queries
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject IQueryBus _queryBus
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Edit Tax Configuration</PageTitle>
 
@@ -62,7 +64,7 @@ else
     [Parameter]
     public string TaxId { get; set; }
 
-    private UpdateTaxModel Tax { get; set; } = new();
+    private UpdateTaxModel Tax { get; set; }
 
     private Dictionary<string, string>? TaxTypes { get; set; }
 
@@ -81,10 +83,7 @@ else
             TaxId = Guid.Parse(TaxId)
         });
 
-        Tax.Id = tax.Id;
-        Tax.Amount = tax.Amount.ToString();
-        Tax.AppliesBefore = tax.AppliesBefore != null ? tax.AppliesBefore.ToString() : null;
-        Tax.TaxType = tax.TaxType.ToString();
+        Tax = _mapper.Map<UpdateTaxModel>(tax);
 
         EditContext = new EditContext(Tax);
         
@@ -101,14 +100,9 @@ else
     {
         if (IsValid)
         {
-            var result = await _commandBus.DispatchAsync(new UpdateTaxCommand
-            {
-                Id = Tax.Id,
-                Amount = Tax.Amount,
-                AppliesBefore = Tax.AppliesBefore,
-                IsPercentage = Tax.IsPercentage,
-                TaxType = Enum.Parse<TaxType>(Tax.TaxType)
-            });
+            var command = _mapper.Map<UpdateTaxCommand>(Tax);
+            
+            var result = await _commandBus.DispatchAsync(command);
             
             if (result.Status == CommandStatus.Success)
             {

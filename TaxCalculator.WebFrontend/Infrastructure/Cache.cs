@@ -1,6 +1,6 @@
 ﻿using TaxCalculator.Contracts;
 
-namespace TaxCalculator.WebFrontend;
+namespace TaxCalculator.WebFrontend.Infrastructure;
 
 public class Cache : ICache
 {

@@ -7,14 +7,16 @@
 @using TaxCalculator.WebFrontend.Pages.Incomes.Commands
 @using TaxCalculator.Cqrs.Contracts
 @using TaxCalculator.WebFrontend.Pages.Incomes.Query
+@using TaxCalculator.Contracts
 
 @inject IQueryBus _queryBus
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Edit Income</PageTitle>
 
-@if (string.IsNullOrEmpty(UpdateIncomeModel.IncomeId))
+@if (Initializing)
 {
     <p>
         <em>Loading...</em>
@@ -54,9 +56,11 @@ else
     
     private bool IsValid => !EditContext.GetValidationMessages().Any();
     
-    private UpdateIncomeModel UpdateIncomeModel { get; } = new();
+    private UpdateIncomeModel UpdateIncomeModel { get; set; }
     
     private EditContext EditContext { get; set; }
+
+    private bool Initializing { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,21 +69,17 @@ else
             IncomeId = Guid.Parse(IncomeId)
         });
 
-        UpdateIncomeModel.Value = income.Value.ToString();
-        UpdateIncomeModel.IncomeDate = income.IncomeDate.ToString("yyyy-MM-dd");
-        UpdateIncomeModel.IncomeId = IncomeId;
-        
+        UpdateIncomeModel = _mapper.Map<UpdateIncomeModel>(income);
+
         EditContext = new EditContext(UpdateIncomeModel);
+        Initializing = false;
     }
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new UpdateIncomeCommand
-        {
-            IncomeId = Guid.Parse(UpdateIncomeModel.IncomeId),
-            Value = decimal.Parse(UpdateIncomeModel.Value),
-            IncomeDate = DateTime.Parse(UpdateIncomeModel.IncomeDate)
-        });
+        var command = _mapper.Map<UpdateIncomeCommand>(UpdateIncomeModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
         
         if (result.Status == CommandStatus.Success)
         {

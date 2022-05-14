@@ -72,14 +72,13 @@ else
 
     private async Task HandleSubmitAsync()
     {
-        Enum.TryParse(CreateTaxModel.TaxType, false, out TaxType type);
         var result = await _commandBus.DispatchAsync(new CreateTaxCommand
         {
             Amount = double.Parse(CreateTaxModel.Amount),
             AppliesBefore = CreateTaxModel.AppliesBefore != null ? decimal.Parse(CreateTaxModel.AppliesBefore) : null,
             IsPercentage = CreateTaxModel.IsPercentage,
             TaxProfileId = CreateTaxModel.TaxProfileId,
-            TaxType = type
+            TaxType = Enum.Parse<TaxType>(CreateTaxModel.TaxType)
         });
         
         if (result.Status == CommandStatus.Success)

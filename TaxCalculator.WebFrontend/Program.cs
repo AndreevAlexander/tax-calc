@@ -10,6 +10,8 @@ using TaxCalculator.Validation;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.WebFrontend;
 using TaxCalculator.WebFrontend.Data;
+using TaxCalculator.WebFrontend.Extensions;
+using TaxCalculator.WebFrontend.Infrastructure;
 using TaxCalculator.WebFrontend.Validation;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -34,5 +36,8 @@ builder.Services.AddSingleton<ICache, Cache>();
 builder.Services.AddSingleton<IHandlerLoader, HandlerLoader>();
 builder.Services.AddScoped<IQueryBus, QueryBus>(provider => new QueryBus(provider.GetQueryHandler));
 builder.Services.AddScoped<ICommandBus, CommandBus>(provider => new CommandBus(provider.GetCommandHandler));
+
+builder.Services.AddSingleton<MappingBuilder>();
+builder.Services.AddSingleton<IMapper, MapperDecorator>();
 
 await builder.Build().RunAsync();

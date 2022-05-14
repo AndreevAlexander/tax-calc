@@ -6,9 +6,11 @@
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Pages.Incomes.Commands
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Add Income</PageTitle>
 
@@ -51,12 +53,9 @@
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new CreateIncomeCommand
-        {
-            Value = CreateIncomeModel.Value,
-            TaxProfileId = CreateIncomeModel.TaxProfileId,
-            IncomeDate = DateTime.Parse(CreateIncomeModel.IncomeDate)
-        });
+        var command = _mapper.Map<CreateIncomeCommand>(CreateIncomeModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
         
         if (result.Status == CommandStatus.Success)
         {
