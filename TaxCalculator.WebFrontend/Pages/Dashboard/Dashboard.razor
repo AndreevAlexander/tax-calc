@@ -2,6 +2,7 @@
 
 @using TaxCalculator.WebFrontend.Models
 @using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Extensions
 @using TaxCalculator.WebFrontend.Pages.Dashboard.Queries
 
 @inject IQueryBus _queryBus
@@ -66,19 +67,17 @@
 
     private bool IsTaxLoading { get; set; }
 
-    private async Task HandleSubmitAsync(Guid? profileId)
+    private async Task HandleSubmitAsync(TaxProfileDropdownModel profileDropdown)
     {
         IsTaxLoading = true;
         ClearDisplay();
-      
-        if (profileId.HasValue)
+        
+        CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(new GetTaxStatisticsQuery
         {
-            CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(new GetTaxStatisticsQuery
-            {
-                ProfileId = profileId.Value
-            });
-        }
-
+            ProfileId = profileDropdown.TaxProfileId.ToGuid(),
+            CurrencyId = profileDropdown.CurrencyId?.ToGuid()
+        });
+        
         IsTaxLoading = false;
     }
 

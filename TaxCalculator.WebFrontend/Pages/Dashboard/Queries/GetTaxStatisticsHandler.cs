@@ -15,7 +15,14 @@ public class GetTaxStatisticsHandler : IQueryHandler<GetTaxStatisticsQuery, Calc
     
     public async Task<CalculateTaxesModel?> HandleAsync(GetTaxStatisticsQuery query)
     {
-        var result = await _api.GetOneAsync<CalculateTaxesModel?>($"TaxProfile/CalculateTaxes?ProfileId={query.ProfileId}");
+        var url = $"TaxProfile/CalculateTaxes?ProfileId={query.ProfileId}";
+        if (query.CurrencyId.HasValue)
+        {
+            url = $"{url}&CurrencyId={query.CurrencyId}";
+        }
+        
+        var result = await _api.GetOneAsync<CalculateTaxesModel?>(url);
+        
         return result;
     }
 }
