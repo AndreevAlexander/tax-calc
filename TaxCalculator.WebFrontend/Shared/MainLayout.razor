@@ -6,6 +6,7 @@
 @inherits LayoutComponentBase
 
 @inject IStateManager _stateManager;
+@inject NavigationManager _navigationManager;
 
 <div class="page">
     <div class="sidebar">
@@ -21,6 +22,19 @@
                              class="btn btn-outline-success">
                         @CurrentProfile.Name
                     </NavLink>
+
+                    @if (!_navigationManager.Uri.Contains("tax-profile/details"))
+                    {
+                        <NavLink href="@("/manage-incomes/" + CurrentProfile.TaxProfileId)"
+                                 class="btn btn-outline-success">
+                            Manage incomes
+                        </NavLink>
+                    
+                        <NavLink href="@("/manage-additional-spends/" + CurrentProfile.TaxProfileId)"
+                                 class="btn btn-outline-success">
+                            Manage spends
+                        </NavLink>
+                    }
                 }
             </div>
         </div>  
