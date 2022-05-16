@@ -36,8 +36,8 @@ public class TaxProfile : BaseEntity
         
         var groupedIncomes = incomes.GroupBy(x => new
         {
-            x.CreatedDate.Year,
-            x.CreatedDate.Month
+            x.IncomeDate.Year,
+            x.IncomeDate.Month
         });
 
         var totalIncome = incomes.Sum(x => x.Value);
