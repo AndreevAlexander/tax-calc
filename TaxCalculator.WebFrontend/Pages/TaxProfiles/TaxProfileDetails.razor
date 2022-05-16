@@ -18,6 +18,8 @@
 @inject IJSRuntime _jsRuntime;
 @inject IMapper _mapper;
 
+@inherits StateComponent
+
 <PageTitle>Tax Profile Details</PageTitle>
 
 @if (!IsLoaded)
@@ -95,6 +97,8 @@ else
             CurrencyId = profile.ProfileCurrencyId.Value;
         }
 
+        RiseStateChanged(StateEventList.CurrentProfileChanged, UpdateTaxProfileModel);
+        
         EditContext = new EditContext(UpdateTaxProfileModel);
         IsLoaded = true;
     }

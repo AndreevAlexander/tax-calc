@@ -16,7 +16,8 @@ using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Validation;
 using TaxCalculator.WebFrontend.Pages.Incomes.Validation;
 using TaxCalculator.WebFrontend.Pages.Taxes.Validation;
 using TaxCalculator.WebFrontend.Pages.TaxProfiles.Validation;
-using TaxCalculator.WebFrontend.Validation;
+using TaxCalculator.WebFrontend.State;
+using TaxCalculator.WebFrontend.State.Contracts;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -24,6 +25,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient {BaseAddress = new Uri("https://localhost:7001")});
 builder.Services.AddScoped<WebApi>();
+
 builder.Services.AddScoped<IValidationEngine, ValidationEngine>(provider =>
 {
     var engine = new ValidationEngine(t => (IValidationRule) ActivatorUtilities.GetServiceOrCreateInstance(provider, t));
@@ -43,5 +45,7 @@ builder.Services.AddScoped<ICommandBus, CommandBus>(provider => new CommandBus(p
 
 builder.Services.AddSingleton<MappingBuilder>();
 builder.Services.AddSingleton<IMapper, MapperDecorator>();
+
+builder.Services.AddSingleton<IStateManager, StateManager>();
 
 await builder.Build().RunAsync();

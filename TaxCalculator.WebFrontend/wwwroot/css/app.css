@@ -69,4 +69,9 @@ a, .btn-link {
 {
     margin-top: 20px;
 }
-    
+
+.app-layout-header-items
+{
+    display: flex;
+    justify-content: flex-start;
+}
