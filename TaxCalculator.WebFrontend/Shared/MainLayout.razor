@@ -1,4 +1,11 @@
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Pages
+@using TaxCalculator.WebFrontend.State
+@using TaxCalculator.WebFrontend.State.Contracts
+
 @inherits LayoutComponentBase
+
+@inject IStateManager _stateManager;
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +14,15 @@
 
     <main>
         <div class="top-row px-4">
-            
+            <div class="app-layout-header-items">
+                @if (CurrentProfile != null)
+                {
+                    <NavLink href="@("/tax-profile/details/" + CurrentProfile.TaxProfileId)"
+                             class="btn btn-outline-success">
+                        @CurrentProfile.Name
+                    </NavLink>
+                }
+            </div>
         </div>  
 
         <article class="content px-4">
@@ -15,3 +30,23 @@
         </article>
     </main>
 </div>
+
+@code
+{
+    private UpdateTaxProfileModel? CurrentProfile { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        _stateManager.OnStateChanged += OnStateChanged;
+    }
+
+    private void OnStateChanged(object? sender, StateChangedEventArgs e)
+    {
+        if (e.EventName == StateEventList.CurrentProfileChanged)
+        {
+            CurrentProfile = e.CurrentState as UpdateTaxProfileModel;
+        }
+        
+        StateHasChanged();
+    }
+}

@@ -14,9 +14,6 @@ public class Validator<TModel> : ComponentBase
     public object? ValidationContext { get; set; }
 
     [Parameter]
-    public Type ModelType { get; set; }
-
-    [Parameter]
     public Action? OnValidated { get; set; }
 
     [Inject]
