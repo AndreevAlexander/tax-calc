@@ -19,19 +19,19 @@
                 @if (CurrentProfile != null)
                 {
                     <NavLink href="@("/tax-profile/details/" + CurrentProfile.TaxProfileId)"
-                             class="btn btn-outline-success">
+                             class="btn btn-sm btn-outline-success">
                         @CurrentProfile.Name
                     </NavLink>
 
                     @if (!_navigationManager.Uri.Contains("tax-profile/details"))
                     {
                         <NavLink href="@("/manage-incomes/" + CurrentProfile.TaxProfileId)"
-                                 class="btn btn-outline-success">
+                                 class="btn btn-sm btn-outline-success">
                             Manage incomes
                         </NavLink>
                     
                         <NavLink href="@("/manage-additional-spends/" + CurrentProfile.TaxProfileId)"
-                                 class="btn btn-outline-success">
+                                 class="btn btn-sm btn-outline-success">
                             Manage spends
                         </NavLink>
                     }
