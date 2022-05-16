@@ -1,0 +1,50 @@
+﻿@inherits InputSelect<TValue>
+
+@using System.Linq.Expressions
+
+@typeparam TValue
+
+<div class="app-input-group">
+    @if (Label != null)
+    {
+        <h6 class="app-input-label">@Label</h6>
+    }
+    <div class="app-input-container">
+        <select @bind=@CurrentValueAsString
+                @bind:event="oninput"
+                @attributes="AdditionalAttributes"
+                class="form-control"
+                disabled="@(!IsEnabled)">
+            <option selected="selected" disabled="disabled">@DefaultOption</option>
+            @if (Data != null && Data.Any())
+            {
+                @foreach (var item in Data)
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            }
+        </select>
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
+        }
+    </div>
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    
+    [Parameter]
+    public string DefaultOption { get; set; }
+
+    [Parameter]
+    public Dictionary<TValue, string>? Data { get; set; }
+
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+    
+    [Parameter]
+    public Expression<Func<TValue>>? MessageFor { get; set; }
+}

@@ -1,0 +1,79 @@
+﻿@using TaxCalculator.WebFrontend.Validation;
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.WebFrontend.Shared.FormInputs
+@using TaxCalculator.Domain.Entities
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.Domain.Services.Identifier
+@using TaxCalculator.WebFrontend.Pages.TaxProfiles.Queries
+
+@inject IQueryBus _queryBus
+@inject IIdentifierService _identifierService
+
+@if (Initializing)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
+        <Validator TModel="TaxProfileDropdownModel" OnValidated="@(() => this.StateHasChanged())"/>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <SelectInput DefaultOption="Select tax profile"
+                             Data="TaxProfiles"
+                             @bind-Value="@TaxProfileDropdown.TaxProfileId"
+                             MessageFor="@(() => TaxProfileDropdown.TaxProfileId)"/>
+            </div>
+            <div class="col-md-6">
+                <SelectInput DefaultOption="Select currency"
+                             Data="Currencies"
+                             @bind-Value="@TaxProfileDropdown.CurrencyId"
+                             MessageFor="@(() => TaxProfileDropdown.CurrencyId)"/>
+            </div>
+        </div>
+
+        <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" Label="Select"/>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<TaxProfileDropdownModel> OnSubmit { get; set; }
+    
+    private EditContext EditContext { get; set; }
+
+    private bool CanExecute => !string.IsNullOrEmpty(TaxProfileDropdown.TaxProfileId);
+
+    private bool IsValid => !EditContext.GetValidationMessages().Any();
+
+    private TaxProfileDropdownModel TaxProfileDropdown { get; set; } = new();
+    
+    private Dictionary<string, string>? TaxProfiles { get; set; }
+    
+    private Dictionary<string, string> Currencies { get; set; }
+
+    private bool Initializing { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TaxProfiles = (await _queryBus.ExecuteAsync<GetTaxProfilesQuery, List<TaxProfileModel>>(new GetTaxProfilesQuery()))
+            .ToDictionary(x => x.Id.ToString(), x => x.Name);
+
+        EditContext = new EditContext(TaxProfileDropdown);
+
+        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => x.Key.ToString(), x => x.Value);
+        
+        Initializing = false;
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        if (IsValid && OnSubmit.HasDelegate)
+        {
+            await OnSubmit.InvokeAsync(TaxProfileDropdown);
+        }
+    }
+}

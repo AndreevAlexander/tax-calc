@@ -6,11 +6,13 @@ namespace TaxCalculator.Validation.Rules;
 
 public class RegexValidationRule : IValidationRule
 {
-    public IEnumerable<ValidationResult> Validate(object? data, string propertyName, object? context = null)
+    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
     {
         var result = new List<ValidationResult>();
 
-        if (context is string pattern && (!string.IsNullOrEmpty(pattern) || !string.IsNullOrWhiteSpace(pattern)))
+        var pattern = (string)context;
+
+        if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrWhiteSpace(pattern))
         {
             if (data is string s && !Regex.IsMatch(s, pattern))
             {

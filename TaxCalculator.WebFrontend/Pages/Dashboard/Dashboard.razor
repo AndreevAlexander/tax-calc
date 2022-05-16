@@ -1,0 +1,93 @@
+﻿@page "/dashboard"
+
+@using TaxCalculator.WebFrontend.Models
+@using TaxCalculator.Cqrs.Contracts.Bus
+@using TaxCalculator.WebFrontend.Extensions
+@using TaxCalculator.WebFrontend.Pages.Dashboard.Queries
+
+@inject IQueryBus _queryBus
+
+<PageTitle>Dashboard</PageTitle>
+
+<div>
+    <div>
+        <ProfileForm OnSubmit="@HandleSubmitAsync"/>
+    </div>
+    <br />
+    <div>
+        <table class="table app-table-max-width">
+            <thead>
+            <tr>
+                <th>Month</th>
+                <th>Income Tax</th>
+                <th>Social Tax</th>
+                <th>Income Gross @(CalculateTaxesModel?.Currency != null ? $"({CalculateTaxesModel?.Currency})" : "")</th>
+                <th>Income Net @(CalculateTaxesModel?.Currency != null ? $"({CalculateTaxesModel?.Currency})" : "")</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (CalculateTaxesModel != null)
+            {
+                @foreach (var information in CalculateTaxesModel.TaxInformation)
+                {
+                    <tr>
+                        <td>@information.Month</td>
+                        <td>@information.IncomeTax</td>
+                        <td>@information.SocialTax</td>
+                        <td>@information.IncomeGross</td>
+                        <td>@information.IncomeNet</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                @if (IsTaxLoading)
+                {
+                    <p>
+                        <em>Loading...</em>
+                    </p>
+                }
+            }
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Total (gross/net):</td>
+                <td>@CalculateTaxesModel?.IncomeTotal?.TotalGross</td>
+                <td>@CalculateTaxesModel?.IncomeTotal?.TotalNet</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@code {
+    private CalculateTaxesModel? CalculateTaxesModel { get; set; }
+
+    private bool IsTaxLoading { get; set; }
+
+    private async Task HandleSubmitAsync(TaxProfileDropdownModel profileDropdown)
+    {
+        IsTaxLoading = true;
+        ClearDisplay();
+        
+        CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(new GetTaxStatisticsQuery
+        {
+            ProfileId = profileDropdown.TaxProfileId.ToGuid(),
+            CurrencyId = profileDropdown.CurrencyId?.ToGuid()
+        });
+        
+        IsTaxLoading = false;
+    }
+
+    private void ClearDisplay()
+    {
+        if (CalculateTaxesModel != null)
+        {
+            CalculateTaxesModel.TaxInformation.Clear();
+            CalculateTaxesModel.IncomeTotal = null;
+            StateHasChanged();
+        }
+    }
+}

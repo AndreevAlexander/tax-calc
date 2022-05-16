@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaxCalculator.Application.Taxes.Queries;
 using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Application.TaxProfiles.Queries;
 using TaxCalculator.Cqrs.Contracts.Bus;
@@ -10,7 +11,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TaxProfileController : Controller
+public class TaxProfileController : BaseController
 {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
@@ -23,6 +24,13 @@ public class TaxProfileController : Controller
         _validationEngine = validationEngine;
     }
 
+    [HttpGet("one")]
+    public async Task<ActionResult<List<TaxProfile>>> GetProfile([FromQuery] GetTaxProfileByIdQuery query)
+    {
+        var result = await _queryBus.ExecuteAsync<GetTaxProfileByIdQuery, TaxProfile?>(query);
+        return Ok(result);
+    }
+    
     [HttpGet]
     public async Task<ActionResult<List<TaxProfile>>> GetProfiles([FromQuery] GetTaxProfilesQuery query)
     {
@@ -33,14 +41,14 @@ public class TaxProfileController : Controller
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> CreateProfile([FromBody] CreateTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
-            return Ok(result.ToValidated(validationResult.ValidationResults)); 
+            return Ok(result.ToValidated(validationResult.ValidationResults));
         }
 
-        return BadRequest(validationResult.ValidationResults);
+        return BadRequest(validationResult);
     }
 
     [HttpGet("CalculateTaxes")]
@@ -53,7 +61,7 @@ public class TaxProfileController : Controller
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateProfile([FromBody] UpdateTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
@@ -66,7 +74,7 @@ public class TaxProfileController : Controller
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteProfile([FromQuery] RemoveTaxProfileCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

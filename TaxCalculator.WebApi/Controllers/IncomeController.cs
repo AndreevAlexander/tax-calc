@@ -10,7 +10,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class IncomeController : Controller
+public class IncomeController : BaseController
 {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;
@@ -42,33 +42,33 @@ public class IncomeController : Controller
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> CreateIncome([FromBody] AddIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
             return Ok(result.ToValidated(validationResult.ValidationResults));
         }
 
-        return BadRequest(validationResult.ValidationResults);
+        return BadRequest(validationResult);
     }
 
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateIncome([FromBody] UpdateIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);
             return Ok(result.ToValidated(validationResult.ValidationResults));
         }
 
-        return BadRequest(validationResult.ValidationResults);
+        return BadRequest(validationResult);
     }
     
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteIncome([FromQuery] RemoveIncomeCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

@@ -1,0 +1,12 @@
+﻿<div class="app-btn-submit">
+    <button type="submit" class="btn btn-primary" disabled="@(!IsEnabled)">@(Label ?? "Save")</button>
+</div>
+
+@code {
+    
+    [Parameter]
+    public string? Label { get; set; }
+    
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+}

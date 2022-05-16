@@ -18,7 +18,7 @@ public class ValidationEngine : IValidationEngine
 		_validationProfiles = new List<IValidationProfile>();
 	}
 
-	public ValidationResultContainer Validate<TModel>(TModel model, object? context = null) where TModel : class
+	public async Task<ValidationResultContainer> ValidateAsync<TModel>(TModel model, object? context = null) where TModel : class
 	{
 		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
 
@@ -38,7 +38,7 @@ public class ValidationEngine : IValidationEngine
 
 				var value = property?.GetValue(model);
 
-				var resultsForProperty = ExecuteValidationRules(propertyValidationConfiguration,
+				var resultsForProperty = await ExecuteValidationRulesAsync(propertyValidationConfiguration,
 					propertyNameForValidation, value, context);
 				
 				foreach (var result in resultsForProperty)
@@ -51,33 +51,39 @@ public class ValidationEngine : IValidationEngine
 		return new ValidationResultContainer(results);
 	}
 
-	private Dictionary<string, IEnumerable<ValidationResult>> ExecuteValidationRules(RuleConfiguration configuration,
+	private async Task<Dictionary<string, IEnumerable<ValidationResult>>> ExecuteValidationRulesAsync(RuleConfiguration configuration,
 		string propertyName, object? value, object? context = null)
 	{
 		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
 		
 		if (configuration.IsRequired)
 		{
-			var requiredRule = new RequiredValidationRule();
-			SetResults(propertyName, results, requiredRule.Validate(value, propertyName).ToList());
+			var validationResults = await new RequiredValidationRule().ValidateAsync(value, propertyName);
+			SetResults(propertyName, results, validationResults.ToList());
 		}
 
 		if (configuration.MaxLength != null)
 		{
-			var maxLengthRule = new MaxLengthValidationRule(); 
-			SetResults(propertyName, results, maxLengthRule.Validate(value, propertyName, configuration.MaxLength).ToList());
+			var validationResults = await new MaxLengthValidationRule().ValidateAsync(value, propertyName, configuration.MaxLength);
+			SetResults(propertyName, results, validationResults.ToList());
 		}
 
 		if (configuration.MinLength != null)
 		{
-			var minLengthRule = new MinLengthValidationRule();
-			SetResults(propertyName, results, minLengthRule.Validate(value, propertyName, configuration.MinLength).ToList());
+			var validationResults = await new MinLengthValidationRule().ValidateAsync(value, propertyName, configuration.MinLength);
+			SetResults(propertyName, results, validationResults.ToList());
 		}
 
 		if (configuration.Regex != null)
 		{
-			var regexRule = new RegexValidationRule();
-			SetResults(propertyName, results, regexRule.Validate(value, propertyName, configuration.Regex).ToList());
+			var validationResults = await new RegexValidationRule().ValidateAsync(value, propertyName, configuration.Regex);
+			SetResults(propertyName, results, validationResults.ToList());
+		}
+
+		if (configuration.IsNumeric)
+		{
+			var validationResults = await new NumericValidationRule().ValidateAsync(value, propertyName);
+			SetResults(propertyName, results, validationResults.ToList());
 		}
 		
 		if (configuration.CustomValidators.Any())
@@ -85,7 +91,8 @@ public class ValidationEngine : IValidationEngine
 			foreach (var customValidatorType in configuration.CustomValidators)
 			{
 				var customValidator = _ruleResolver(customValidatorType);
-				SetResults(propertyName, results, customValidator.Validate(value, propertyName, context).ToList());
+				var validationResults = await customValidator.ValidateAsync(value, propertyName, context);
+				SetResults(propertyName, results, validationResults.ToList());
 			}
 		}
 

@@ -10,7 +10,7 @@ namespace TaxCalculator.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AdditionalSpendController : Controller
+public class AdditionalSpendController : BaseController
 {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;
@@ -42,33 +42,33 @@ public class AdditionalSpendController : Controller
     [HttpPost]
     public async Task<ActionResult<ValidatedCommandResult>> AddSpend([FromBody] AddAdditionalSpendCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
-            var results = await _commandBus.DispatchAsync(command);
-            return Ok(results.ToValidated(validationResults.ValidationResults));
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResults.ValidationResults));
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
     
     [HttpPut]
     public async Task<ActionResult<ValidatedCommandResult>> UpdateSpend([FromBody] UpdateAdditionalSpendCommand command)
     {
-        var validationResults = _validationEngine.Validate(command);
+        var validationResults = await _validationEngine.ValidateAsync(command);
         if (!validationResults.HasErrors)
         {
-            var results = await _commandBus.DispatchAsync(command);
-            return Ok(results.ToValidated(validationResults.ValidationResults));
+            var result = await _commandBus.DispatchAsync(command);
+            return Ok(result.ToValidated(validationResults.ValidationResults));
         }
 
-        return BadRequest(validationResults.ValidationResults);
+        return BadRequest(validationResults);
     }
     
     [HttpDelete]
     public async Task<ActionResult<ValidatedCommandResult>> DeleteAdditionalSpend([FromQuery] RemoveAdditionalSpendCommand command)
     {
-        var validationResult = _validationEngine.Validate(command);
+        var validationResult = await _validationEngine.ValidateAsync(command);
         if (!validationResult.HasErrors)
         {
             var result = await _commandBus.DispatchAsync(command);

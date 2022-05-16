@@ -1,0 +1,34 @@
+﻿@using System.Linq.Expressions
+
+@inherits InputTextArea
+
+<div class="app-input-group">
+    <h6 class="app-input-label">@Label</h6>
+    <div class="app-input-container">
+        <textarea class="form-control"
+                  cols="30"
+                  rows="5"
+                  @bind=@CurrentValueAsString
+                  @bind:event="oninput"
+                  @attributes="AdditionalAttributes"
+                  disabled="@(!IsEnabled)">
+        </textarea>
+        
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
+        }
+    </div>
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+    
+    [Parameter]
+    public Expression<Func<string>>? MessageFor { get; set; }
+}

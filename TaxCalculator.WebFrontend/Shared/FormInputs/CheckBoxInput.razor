@@ -1,0 +1,35 @@
+﻿<div class="app-input-group-checkbox">
+    <h6 class="app-input-label">@Label</h6>
+    <InputCheckbox @bind-Value=@Value disabled="@(!IsEnabled)" />
+</div>
+<br />
+
+@code {
+    private bool _value;
+    
+    [Parameter]
+    public string Label { get; set; }
+    
+    [Parameter] 
+    public bool Value 
+    { 
+        get => _value; 
+        set
+        {
+            if(value == _value)
+                return;
+
+            _value = value;  
+            if(ValueChanged.HasDelegate)
+            {
+                ValueChanged.InvokeAsync(_value);
+            }  
+        }
+    }
+    
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+    
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+}

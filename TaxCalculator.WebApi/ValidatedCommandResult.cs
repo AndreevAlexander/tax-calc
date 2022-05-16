@@ -5,5 +5,5 @@ namespace TaxCalculator.WebApi;
 
 public class ValidatedCommandResult : CommandResult
 {
-    public Dictionary<string, IEnumerable<ValidationResult>> Warnings { get; set; }
+    public Dictionary<string, IEnumerable<ValidationResult>> ValidationResults { get; set; }
 }
