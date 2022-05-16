@@ -42,7 +42,11 @@
 
     private void OnStateChanged(object? sender, StateChangedEventArgs e)
     {
-        CurrentProfile = _stateManager.GetActualState<UpdateTaxProfileModel>(StateEventList.CurrentProfileChanged);
+        if (e.EventName == StateEventList.CurrentProfileChanged)
+        {
+            CurrentProfile = e.CurrentState as UpdateTaxProfileModel;
+        }
+        
         StateHasChanged();
     }
 }
