@@ -7,6 +7,7 @@
 @using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands
 @using TaxCalculator.Cqrs.Contracts
 @using TaxCalculator.Contracts
+@using TaxCalculator.WebFrontend.Extensions
 
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
@@ -21,14 +22,14 @@
     <br />
     <div>
         <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-            <Validator TModel="CreateAdditionalSpendModel" OnValidated="@(() => this.StateHasChanged())" />
+            <Validator TModel="AdditionalSpendModel" OnValidated="@(() => this.StateHasChanged())" />
             
-            <TextInput Label="Amount" 
-                       @bind-Value="@CreateAdditionalSpendModel.Amount"
-                       MessageFor="@(() => CreateAdditionalSpendModel.Amount)"/>
+            <NumericInput Label="Amount"
+                       @bind-Value="@AdditionalSpendModel.Amount"
+                       MessageFor="@(() => AdditionalSpendModel.Amount)"/>
             
             <CheckBoxInput Label="Applied Before Taxation"
-                           @bind-Value="@CreateAdditionalSpendModel.AppliedBeforeTax"/>
+                           @bind-Value="@AdditionalSpendModel.AppliedBeforeTax"/>
             
             <ButtonSubmit IsEnabled="@IsValid"/>
         </EditForm>        
@@ -41,19 +42,19 @@
     
     private EditContext EditContext { get; set; }
 
-    private CreateAdditionalSpendModel CreateAdditionalSpendModel { get; } = new();
+    private AdditionalSpendModel AdditionalSpendModel { get; } = new();
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
     protected override async Task OnInitializedAsync()
     {
-        CreateAdditionalSpendModel.TaxProfileId = ProfileId;
-        EditContext = new EditContext(CreateAdditionalSpendModel);
+        AdditionalSpendModel.TaxProfileId = ProfileId.ToGuid();
+        EditContext = new EditContext(AdditionalSpendModel);
     }
 
     private async Task HandleSubmitAsync()
     {
-        var command = _mapper.Map<CreateAdditionalSpendCommand>(CreateAdditionalSpendModel);
+        var command = _mapper.Map<CreateAdditionalSpendCommand>(AdditionalSpendModel);
         
         var result = await _commandBus.DispatchAsync(command);
 

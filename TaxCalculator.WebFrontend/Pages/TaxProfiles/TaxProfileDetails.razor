@@ -42,15 +42,15 @@ else
         <div>
             <div>
                 <EditForm EditContext="@EditContext" OnSubmit="@HandleProfileUpdate">
-                    <Validator TModel="UpdateTaxProfileModel" OnValidated="@(() => this.StateHasChanged())"/>
+                    <Validator TModel="TaxProfileModel" OnValidated="@(() => this.StateHasChanged())"/>
                     
                     <TextInput Label="Name" 
-                               MessageFor="@(() => UpdateTaxProfileModel.Name)"
-                               @bind-Value="UpdateTaxProfileModel.Name" />
+                               MessageFor="@(() => TaxProfileModel.Name)"
+                               @bind-Value="TaxProfileModel.Name" />
 
                     <TextAreaInput Label="Description"
-                                   MessageFor="@(() => UpdateTaxProfileModel.Description)"
-                                   @bind-Value="UpdateTaxProfileModel.Description" />
+                                   MessageFor="@(() => TaxProfileModel.Description)"
+                                   @bind-Value="TaxProfileModel.Description" />
 
                     <SelectInput Label="Profile currency" 
                                  DefaultOption="Select currency"
@@ -70,7 +70,7 @@ else
     [Parameter]
     public string ProfileId { get; set; }
     
-    private UpdateTaxProfileModel UpdateTaxProfileModel { get; set; }
+    private TaxProfileModel? TaxProfileModel { get; set; }
     
     private Dictionary<Guid, string>? Currencies { get; set; } = new();
     
@@ -84,28 +84,26 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        var profile = await _queryBus.ExecuteAsync<GetTaxProfileByIdQuery, TaxProfileModel?>(new GetTaxProfileByIdQuery
+        TaxProfileModel = await _queryBus.ExecuteAsync<GetTaxProfileByIdQuery, TaxProfileModel>(new GetTaxProfileByIdQuery
         {
             TaxProfileId = Guid.Parse(ProfileId)
         });
 
-        if (profile != null)
+        if (TaxProfileModel != null)
         {
-            UpdateTaxProfileModel = _mapper.Map<UpdateTaxProfileModel>(profile);
-
             Currencies = _identifierService.Currencies.ToDictionary();
-            CurrencyId = profile.ProfileCurrencyId.Value;
+            CurrencyId = TaxProfileModel.ProfileCurrencyId.Value;
         }
 
-        RiseStateChanged(StateEventList.CurrentProfileChanged, UpdateTaxProfileModel);
+        RaiseStateChanged(StateEventList.CurrentProfileChanged, TaxProfileModel);
         
-        EditContext = new EditContext(UpdateTaxProfileModel);
+        EditContext = new EditContext(TaxProfileModel);
         IsLoaded = true;
     }
 
     private async Task HandleProfileUpdate()
     {
-        var command = _mapper.Map<UpdateTaxProfileCommand>(UpdateTaxProfileModel);
+        var command = _mapper.Map<UpdateTaxProfileCommand>(TaxProfileModel);
         
         var result = await _commandBus.DispatchAsync(command);
         

@@ -6,7 +6,7 @@ public class TaxModel
 {
     public Guid Id { get; set; }
     
-    public double Amount { get; set; }
+    public double? Amount { get; set; }
     
     public bool IsPercentage { get; set; }
     

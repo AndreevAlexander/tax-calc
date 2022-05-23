@@ -7,24 +7,14 @@ public class IncomeValidationProfile : ValidationProfile
 {
     public IncomeValidationProfile()
     {
-        ForModel<CreateIncomeModel>(builder =>
+        ForModel<IncomeModel>(builder =>
         {
             builder.Property(p => p.Value)
                 .Required()
                 .IsNumeric();
 
             builder.Property(p => p.IncomeDate)
-                .Regex("[0-9]{4}-[0-9]{2}-[0-9]{2}");
-        });
-        
-        ForModel<UpdateIncomeModel>(builder =>
-        {
-            builder.Property(p => p.Value)
-                .Required()
-                .IsNumeric();
-
-            builder.Property(p => p.IncomeDate)
-                .Regex("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+                .Required();
         });
     }
 }

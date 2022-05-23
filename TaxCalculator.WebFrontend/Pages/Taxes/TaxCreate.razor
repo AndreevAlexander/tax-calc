@@ -7,9 +7,11 @@
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Pages.Taxes.Commands
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.Contracts
 
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
+@inject IMapper _mapper
 
 <PageTitle>Create Tax Configuration</PageTitle>
 
@@ -28,11 +30,11 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="CreateTaxModel" OnValidated="@(() => this.StateHasChanged())" />
-                <TextInput Label="Amount" @bind-Value="CreateTaxModel.Amount" MessageFor="@(() => CreateTaxModel.Amount)"/>
-                <TextInput Label="Applies before" @bind-Value="CreateTaxModel.AppliesBefore"  />
-                <CheckBoxInput Label="Is Percentage" @bind-Value="CreateTaxModel.IsPercentage" />
-                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="CreateTaxModel.TaxType" />
+                <Validator TModel="TaxModel" OnValidated="@(() => this.StateHasChanged())" />
+                <NumericInput Label="Amount" @bind-Value="TaxModel.Amount" MessageFor="@(() => TaxModel.Amount)"/>
+                <NumericInput Label="Applies before" @bind-Value="TaxModel.AppliesBefore" />
+                <CheckBoxInput Label="Is Percentage" @bind-Value="TaxModel.IsPercentage" />
+                <SelectInput Label="Tax type" DefaultOption="Select tax type" Data="@TaxTypes" @bind-Value="TaxModel.TaxType" />
                 <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" />
             </EditForm>  
         </div>
@@ -44,42 +46,37 @@ else
     [Parameter]
     public string ProfileId { get; set; }
 
-    private CreateTaxModel CreateTaxModel { get; } = new();
+    private TaxModel TaxModel { get; } = new();
 
-    private Dictionary<string, string> TaxTypes { get; set; }
+    private Dictionary<TaxType, string> TaxTypes { get; set; }
     
     private EditContext EditContext { get; set; }
     
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
-    private bool CanExecute => !string.IsNullOrEmpty(CreateTaxModel.TaxType);
+    private bool CanExecute => true;//!string.IsNullOrEmpty(CreateTaxModel.TaxType);
 
     private bool Initializing { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
-        CreateTaxModel.TaxProfileId = Guid.Parse(ProfileId);
+        TaxModel.TaxProfileId = Guid.Parse(ProfileId);
 
-        TaxTypes = new Dictionary<string, string>
+        TaxTypes = new Dictionary<TaxType, string>
         {
-            {nameof(TaxType.IncomeTax), "Income tax"},
-            {nameof(TaxType.SocialTax), "Social tax"}
+            {TaxType.IncomeTax, "Income tax"},
+            {TaxType.SocialTax, "Social tax"}
         };
 
-        EditContext = new EditContext(CreateTaxModel);
+        EditContext = new EditContext(TaxModel);
         Initializing = false;
     }
 
     private async Task HandleSubmitAsync()
     {
-        var result = await _commandBus.DispatchAsync(new CreateTaxCommand
-        {
-            Amount = double.Parse(CreateTaxModel.Amount),
-            AppliesBefore = CreateTaxModel.AppliesBefore != null ? decimal.Parse(CreateTaxModel.AppliesBefore) : null,
-            IsPercentage = CreateTaxModel.IsPercentage,
-            TaxProfileId = CreateTaxModel.TaxProfileId,
-            TaxType = Enum.Parse<TaxType>(CreateTaxModel.TaxType)
-        });
+        var command = _mapper.Map<CreateTaxCommand>(TaxModel);
+        
+        var result = await _commandBus.DispatchAsync(command);
         
         if (result.Status == CommandStatus.Success)
         {

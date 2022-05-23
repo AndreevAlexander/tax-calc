@@ -32,23 +32,23 @@ else
         <br/> 
         <div>
             <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
-                <Validator TModel="UpdateTaxModel" OnValidated="@(() => this.StateHasChanged())" />
+                <Validator TModel="TaxModel" OnValidated="@(() => this.StateHasChanged())" />
                 
-                <TextInput Label="Amount" 
-                           @bind-Value="Tax.Amount"
-                           MessageFor="@(() => Tax.Amount)"/>
+                <NumericInput Label="Amount" 
+                           @bind-Value="TaxModel.Amount"
+                           MessageFor="@(() => TaxModel.Amount)"/>
 
-                <TextInput Label="Applies before" 
-                           @bind-Value="Tax.AppliesBefore" />
+                <NumericInput Label="Applies before"
+                           @bind-Value="TaxModel.AppliesBefore" />
                 
                 <CheckBoxInput Label="Is Percentage" 
-                               @bind-Value="Tax.IsPercentage" />
+                               @bind-Value="TaxModel.IsPercentage" />
                 
                 <SelectInput Label="Tax type"
                              DefaultOption="Select tax type"
                              Data="@TaxTypes"
-                             @bind-Value="@Tax.TaxType"
-                             MessageFor="@(() => Tax.TaxType)" />
+                             @bind-Value="@TaxModel.TaxType"
+                             MessageFor="@(() => TaxModel.TaxType)" />
 
                 <ButtonSubmit IsEnabled="@(CanExecute && IsValid)"/>
             </EditForm>  
@@ -64,33 +64,31 @@ else
     [Parameter]
     public string TaxId { get; set; }
 
-    private UpdateTaxModel Tax { get; set; }
+    private TaxModel TaxModel { get; set; }
 
-    private Dictionary<string, string>? TaxTypes { get; set; }
+    private Dictionary<TaxType, string>? TaxTypes { get; set; }
 
     private EditContext EditContext { get; set; }
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
-    private bool CanExecute => !string.IsNullOrEmpty(Tax.TaxType);
+    private bool CanExecute => true;//!string.IsNullOrEmpty(TaxModel.TaxType);
 
     private bool IsInitialized { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        var tax = await _queryBus.ExecuteAsync<GetTaxByIdQuery, TaxModel>(new GetTaxByIdQuery
+        TaxModel = await _queryBus.ExecuteAsync<GetTaxByIdQuery, TaxModel>(new GetTaxByIdQuery
         {
             TaxId = Guid.Parse(TaxId)
         });
 
-        Tax = _mapper.Map<UpdateTaxModel>(tax);
-
-        EditContext = new EditContext(Tax);
+        EditContext = new EditContext(TaxModel);
         
-        TaxTypes = new Dictionary<string, string>
+        TaxTypes = new Dictionary<TaxType, string>
         {
-            {nameof(TaxType.IncomeTax), "Income tax"},
-            {nameof(TaxType.SocialTax), "Social tax"}
+            {TaxType.IncomeTax, "Income tax"},
+            {TaxType.SocialTax, "Social tax"}
         };
 
         IsInitialized = true;
@@ -100,7 +98,7 @@ else
     {
         if (IsValid)
         {
-            var command = _mapper.Map<UpdateTaxCommand>(Tax);
+            var command = _mapper.Map<UpdateTaxCommand>(TaxModel);
             
             var result = await _commandBus.DispatchAsync(command);
             

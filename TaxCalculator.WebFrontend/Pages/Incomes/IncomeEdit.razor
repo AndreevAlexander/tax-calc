@@ -31,15 +31,15 @@ else
         <br />
         <div>
             <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
-                <Validator TModel="UpdateIncomeModel" OnValidated="@(() => this.StateHasChanged())" />
+                <Validator TModel="IncomeModel" OnValidated="@(() => this.StateHasChanged())" />
             
-                <TextInput Label="Amount"
-                           MessageFor="@(() => UpdateIncomeModel.Value)"
-                           @bind-Value="@UpdateIncomeModel.Value" />
+                <NumericInput Label="Amount"
+                           MessageFor="@(() => IncomeModel.Value)"
+                           @bind-Value="@IncomeModel.Value" />
             
-                <TextInput Label="Income date" 
-                           MessageFor="@(() => UpdateIncomeModel.IncomeDate)"
-                           @bind-Value="@UpdateIncomeModel.IncomeDate"/>
+                <DateInput Label="Income date" 
+                           MessageFor="@(() => IncomeModel.IncomeDate)"
+                           @bind-Value="@IncomeModel.IncomeDate"/>
             
                 <ButtonSubmit IsEnabled="@IsValid" />
             </EditForm>
@@ -56,7 +56,7 @@ else
     
     private bool IsValid => !EditContext.GetValidationMessages().Any();
     
-    private UpdateIncomeModel UpdateIncomeModel { get; set; }
+    private IncomeModel IncomeModel { get; set; }
     
     private EditContext EditContext { get; set; }
 
@@ -64,20 +64,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var income = await _queryBus.ExecuteAsync<GetIncomeByIdQuery, IncomeModel>(new GetIncomeByIdQuery
+        IncomeModel = await _queryBus.ExecuteAsync<GetIncomeByIdQuery, IncomeModel>(new GetIncomeByIdQuery
         {
             IncomeId = Guid.Parse(IncomeId)
         });
 
-        UpdateIncomeModel = _mapper.Map<UpdateIncomeModel>(income);
-
-        EditContext = new EditContext(UpdateIncomeModel);
+        EditContext = new EditContext(IncomeModel);
         Initializing = false;
     }
 
     private async Task HandleSubmitAsync()
     {
-        var command = _mapper.Map<UpdateIncomeCommand>(UpdateIncomeModel);
+        var command = _mapper.Map<UpdateIncomeCommand>(IncomeModel);
         
         var result = await _commandBus.DispatchAsync(command);
         

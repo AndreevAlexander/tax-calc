@@ -18,19 +18,19 @@
             <div class="app-layout-header-items">
                 @if (CurrentProfile != null)
                 {
-                    <NavLink href="@("/tax-profile/details/" + CurrentProfile.TaxProfileId)"
+                    <NavLink href="@("/tax-profile/details/" + CurrentProfile.Id)"
                              class="btn btn-sm btn-outline-success">
                         @CurrentProfile.Name
                     </NavLink>
 
                     @if (!_navigationManager.Uri.Contains("tax-profile/details"))
                     {
-                        <NavLink href="@("/manage-incomes/" + CurrentProfile.TaxProfileId)"
+                        <NavLink href="@("/manage-incomes/" + CurrentProfile.Id)"
                                  class="btn btn-sm btn-outline-success">
                             Manage incomes
                         </NavLink>
                     
-                        <NavLink href="@("/manage-additional-spends/" + CurrentProfile.TaxProfileId)"
+                        <NavLink href="@("/manage-additional-spends/" + CurrentProfile.Id)"
                                  class="btn btn-sm btn-outline-success">
                             Manage spends
                         </NavLink>
@@ -47,7 +47,7 @@
 
 @code
 {
-    private UpdateTaxProfileModel? CurrentProfile { get; set; }
+    private TaxProfileModel? CurrentProfile { get; set; }
     
     protected override void OnInitialized()
     {
@@ -58,7 +58,7 @@
     {
         if (e.EventName == StateEventList.CurrentProfileChanged)
         {
-            CurrentProfile = e.CurrentState as UpdateTaxProfileModel;
+            CurrentProfile = e.CurrentState as TaxProfileModel;
         }
         
         StateHasChanged();

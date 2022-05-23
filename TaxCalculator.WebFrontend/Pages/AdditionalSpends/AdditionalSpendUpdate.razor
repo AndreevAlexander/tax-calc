@@ -31,14 +31,15 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="UpdateAdditionalSpendModel" OnValidated="@(() => this.StateHasChanged())" />
+                <Validator TModel="AdditionalSpendModel" 
+                           OnValidated="@(() => this.StateHasChanged())" />
             
-                <TextInput Label="Amount" 
-                           @bind-Value="@UpdateAdditionalSpendModel.Amount"
-                           MessageFor="@(() => UpdateAdditionalSpendModel.Amount)"/>
+                <NumericInput Label="Amount"
+                           @bind-Value="@AdditionalSpendModel.Amount"
+                           MessageFor="@(() => AdditionalSpendModel.Amount)"/>
             
                 <CheckBoxInput Label="Applied Before Taxation"
-                               @bind-Value="@UpdateAdditionalSpendModel.AppliedBeforeTax"/>
+                               @bind-Value="@AdditionalSpendModel.AppliedBeforeTax"/>
             
                 <ButtonSubmit IsEnabled="@IsValid"/>
             </EditForm>        
@@ -55,7 +56,7 @@ else
     
     private EditContext EditContext { get; set; }
 
-    private UpdateAdditionalSpendModel UpdateAdditionalSpendModel { get; set; }
+    private AdditionalSpendModel AdditionalSpendModel { get; set; }
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
@@ -63,23 +64,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var additionalSpend = await _queryBus.ExecuteAsync<GetAdditionalSpendByIdQuery, AdditionalSpendModel>(new GetAdditionalSpendByIdQuery
+        AdditionalSpendModel = await _queryBus.ExecuteAsync<GetAdditionalSpendByIdQuery, AdditionalSpendModel>(new GetAdditionalSpendByIdQuery
         {
             AdditionalSpendId = Guid.Parse(AdditionalSpendId)
         });
 
-        if (additionalSpend != null)
-        {
-            UpdateAdditionalSpendModel = _mapper.Map<UpdateAdditionalSpendModel>(additionalSpend);
-        }
-        
-        EditContext = new EditContext(UpdateAdditionalSpendModel);
+        EditContext = new EditContext(AdditionalSpendModel);
         IsLoaded = true;
     }
 
     private async Task HandleSubmitAsync()
     {
-        var command = _mapper.Map<UpdateAdditionalSpendCommand>(UpdateAdditionalSpendModel);
+        var command = _mapper.Map<UpdateAdditionalSpendCommand>(AdditionalSpendModel);
         
         var result = await _commandBus.DispatchAsync(command);
 

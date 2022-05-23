@@ -7,14 +7,7 @@ public class AdditionalSpendsValidationProfile : ValidationProfile
 {
     public AdditionalSpendsValidationProfile()
     {
-        ForModel<CreateAdditionalSpendModel>(b =>
-        {
-            b.Property(p => p.Amount)
-                .Required()
-                .IsNumeric();
-        });
-        
-        ForModel<UpdateAdditionalSpendModel>(b =>
+        ForModel<AdditionalSpendModel>(b =>
         {
             b.Property(p => p.Amount)
                 .Required()

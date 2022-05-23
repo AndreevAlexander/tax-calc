@@ -4,5 +4,5 @@ public interface INotifyStateChanged
 {
     IStateManager StateManager { get;set; }
     
-    void RiseStateChanged<TState>(string eventName, TState state);
+    void RaiseStateChanged<TState>(string eventName, TState? state);
 }

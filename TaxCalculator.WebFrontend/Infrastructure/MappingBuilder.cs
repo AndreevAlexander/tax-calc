@@ -27,78 +27,56 @@ public class MappingBuilder
 
     private void SetupAdditionalSpendMapping(IProfileExpression profile)
     {
-        profile.CreateMap<CreateAdditionalSpendModel, CreateAdditionalSpendCommand>()
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToDecimal()))
+        profile.CreateMap<AdditionalSpendModel, CreateAdditionalSpendCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
             .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax))
-            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId.ToGuid()));
-        
-        profile.CreateMap<AdditionalSpendModel, UpdateAdditionalSpendModel>()
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToString()))
-            .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax))
-            .ForMember(x => x.AdditionalSpendId, o => o.MapFrom(x => x.Id.ToString()));
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
 
-        profile.CreateMap<UpdateAdditionalSpendModel, UpdateAdditionalSpendCommand>()
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToDecimal()))
+        profile.CreateMap<AdditionalSpendModel, UpdateAdditionalSpendCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
             .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax))
-            .ForMember(x => x.AdditionalSpendId, o => o.MapFrom(x => x.AdditionalSpendId.ToGuid()));
+            .ForMember(x => x.AdditionalSpendId, o => o.MapFrom(x => x.Id));
     }
 
     private void SetupIncomeMapping(IProfileExpression profile)
     {
-        profile.CreateMap<CreateIncomeModel, CreateIncomeCommand>()
-            .ForMember(x => x.Value, o => o.MapFrom(x => x.Value.ToDecimal()))
-            .ForMember(x => x.IncomeDate, o => o.MapFrom(x => DateTime.Parse(x.IncomeDate)))
+        profile.CreateMap<IncomeModel, CreateIncomeCommand>()
+            .ForMember(x => x.Value, o => o.MapFrom(x => x.Value))
+            .ForMember(x => x.IncomeDate, o => o.MapFrom(x => x.IncomeDate))
             .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
 
-        profile.CreateMap<IncomeModel, UpdateIncomeModel>()
-            .ForMember(x => x.Value, o => o.MapFrom(x => x.Value.ToString()))
-            .ForMember(x => x.IncomeDate, o => o.MapFrom(x => x.IncomeDate.ToString("yyyy-MM-dd")))
+        profile.CreateMap<IncomeModel, UpdateIncomeCommand>()
+            .ForMember(x => x.Value, o => o.MapFrom(x => x.Value))
+            .ForMember(x => x.IncomeDate, o => o.MapFrom(x => x.IncomeDate))
             .ForMember(x => x.IncomeId, o => o.MapFrom(x => x.Id));
-
-        profile.CreateMap<UpdateIncomeModel, UpdateIncomeCommand>()
-            .ForMember(x => x.Value, o => o.MapFrom(x => x.Value.ToDecimal()))
-            .ForMember(x => x.IncomeDate, o => o.MapFrom(x => DateTime.Parse(x.IncomeDate)))
-            .ForMember(x => x.IncomeId, o => o.MapFrom(x => x.IncomeId.ToGuid()));
     }
 
     private void SetupTaxMapping(IProfileExpression profile)
     {
-        profile.CreateMap<CreateTaxModel, CreateTaxCommand>()
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToDouble()))
-            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore.ToDecimal()))
+        profile.CreateMap<TaxModel, CreateTaxCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
-            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse<TaxType>(x.TaxType)))
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType))
             .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
 
-        profile.CreateMap<TaxModel, UpdateTaxModel>()
+        profile.CreateMap<TaxModel, UpdateTaxCommand>()
             .ForMember(x => x.Id, o => o.MapFrom(x => x.Id))
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToString()))
-            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore.ToString()))
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
-            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType.ToString()));
-        
-        profile.CreateMap<UpdateTaxModel, UpdateTaxCommand>()
-            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id))
-            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount.ToDouble()))
-            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore.ToDecimal()))
-            .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
-            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse<TaxType>(x.TaxType)));
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType));
     }
 
     private void SetupTaxProfileMapping(IProfileExpression profile)
     {
-        profile.CreateMap<CreateTaxProfileModel, CreateTaxProfileCommand>()
+        profile.CreateMap<TaxProfileModel, CreateTaxProfileCommand>()
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
             .ForMember(x => x.Description, o => o.MapFrom(x => x.Description))
-            .ForMember(x => x.ProfileCurrencyId, o => o.MapFrom(x => x.ProfileCurrencyId.ToGuid()));
+            .ForMember(x => x.ProfileCurrencyId, o => o.MapFrom(x => x.ProfileCurrencyId));
 
-        profile.CreateMap<TaxProfileModel, UpdateTaxProfileModel>()
-            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.Id.ToString()))
-            .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
-            .ForMember(x => x.Description, o => o.MapFrom(x => x.Description));
-        
-        profile.CreateMap<UpdateTaxProfileModel, UpdateTaxProfileCommand>()
-            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId.ToGuid()))
+        profile.CreateMap<TaxProfileModel, UpdateTaxProfileCommand>()
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.Id))
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
             .ForMember(x => x.Description, o => o.MapFrom(x => x.Description));
     }

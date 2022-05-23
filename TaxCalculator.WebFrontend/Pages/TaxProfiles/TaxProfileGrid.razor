@@ -5,9 +5,12 @@
 @using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands
 @using TaxCalculator.WebFrontend.Pages.TaxProfiles.Queries
 @using TaxCalculator.Cqrs.Contracts
+@using TaxCalculator.WebFrontend.State.Contracts
 
 @inject IQueryBus _queryBus
 @inject ICommandBus _commandBus
+
+@inherits StateComponent
 
 <PageTitle>Tax Profiles</PageTitle>
 
@@ -69,7 +72,7 @@ else
         if (result.Status == CommandStatus.Success)
         {
             TaxProfiles = TaxProfiles?.Where(x => x.Id != id).ToList();
-            StateHasChanged();
+            RaiseStateChanged<TaxProfileModel?>(StateEventList.CurrentProfileChanged, null);
         }
     }
 }

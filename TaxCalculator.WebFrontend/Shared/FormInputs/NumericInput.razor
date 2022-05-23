@@ -1,0 +1,33 @@
+﻿@using System.Linq.Expressions
+
+@typeparam TValue
+
+@inherits InputNumber<TValue>
+
+<div class="app-input-group">
+    <h6 class="app-input-label">@Label</h6>
+    <div class="app-input-container">
+        <input @attributes="AdditionalAttributes"
+               class="form-control"
+               @bind=@CurrentValueAsString
+               @bind:event="oninput"
+               disabled="@(!IsEnabled)" />
+        
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
+        }
+    </div>
+</div>
+<br/>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+    
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+    
+    [Parameter]
+    public Expression<Func<TValue>>? MessageFor { get; set; }
+}

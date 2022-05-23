@@ -7,6 +7,7 @@
 @using TaxCalculator.WebFrontend.Pages.Incomes.Commands
 @using TaxCalculator.Cqrs.Contracts
 @using TaxCalculator.Contracts
+@using TaxCalculator.WebFrontend.Extensions
 
 @inject ICommandBus _commandBus
 @inject NavigationManager _navigationManager
@@ -21,15 +22,15 @@
     <br />
     <div>
         <EditForm OnSubmit="@HandleSubmitAsync" EditContext="@EditContext">
-            <Validator TModel="CreateIncomeModel" OnValidated="@(() => this.StateHasChanged())" />
+            <Validator TModel="IncomeModel" OnValidated="@(() => this.StateHasChanged())" />
             
-            <TextInput Label="Amount"
-                       MessageFor="@(() => CreateIncomeModel.Value)"
-                       @bind-Value="@CreateIncomeModel.Value" />
+            <NumericInput Label="Amount"
+                       MessageFor="@(() => IncomeModel.Value)"
+                       @bind-Value="@IncomeModel.Value" />
             
-            <TextInput Label="Income date" 
-                       MessageFor="@(() => CreateIncomeModel.IncomeDate)"
-                       @bind-Value="@CreateIncomeModel.IncomeDate"/>
+            <DateInput Label="Income date" 
+                       MessageFor="@(() => IncomeModel.IncomeDate)"
+                       @bind-Value="@IncomeModel.IncomeDate"/>
             
             <ButtonSubmit IsEnabled="@IsValid" />
         </EditForm>
@@ -41,19 +42,19 @@
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
     
-    private CreateIncomeModel CreateIncomeModel { get; } = new();
+    private IncomeModel IncomeModel { get; } = new();
     
     private EditContext EditContext { get; set; }
 
     protected override void OnInitialized()
     {
-        CreateIncomeModel.TaxProfileId = Guid.Parse(ProfileId);
-        EditContext = new EditContext(CreateIncomeModel);
+        IncomeModel.TaxProfileId = ProfileId.ToGuid();
+        EditContext = new EditContext(IncomeModel);
     }
 
     private async Task HandleSubmitAsync()
     {
-        var command = _mapper.Map<CreateIncomeCommand>(CreateIncomeModel);
+        var command = _mapper.Map<CreateIncomeCommand>(IncomeModel);
         
         var result = await _commandBus.DispatchAsync(command);
         

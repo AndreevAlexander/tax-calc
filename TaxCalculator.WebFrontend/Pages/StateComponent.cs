@@ -9,8 +9,9 @@ public class StateComponent : ComponentBase, INotifyStateChanged
     [Inject]
     public IStateManager StateManager { get; set; }
     
-    public void RiseStateChanged<TState>(string eventName, TState state)
+    public void RaiseStateChanged<TState>(string eventName, TState? state)
     {
         StateManager.SetState(eventName, state);
+        StateHasChanged();
     }
 }

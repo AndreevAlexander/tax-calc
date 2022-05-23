@@ -31,20 +31,20 @@ else
         <br />
         <div>
             <EditForm EditContext="@EditContext" OnSubmit="@HandleSubmitAsync">
-                <Validator TModel="CreateTaxProfileModel" OnValidated="@(() => this.StateHasChanged())" />
+                <Validator TModel="TaxProfileModel" OnValidated="@(() => this.StateHasChanged())" />
             
                 <TextInput Label="Name"
-                           @bind-Value="CreateTaxProfileModel.Name"
-                           MessageFor="@(() => CreateTaxProfileModel.Name)"/>
+                           @bind-Value="TaxProfileModel.Name"
+                           MessageFor="@(() => TaxProfileModel.Name)"/>
 
                 <TextAreaInput Label="Description"
-                               @bind-Value="CreateTaxProfileModel.Description"
-                               MessageFor="@(() => CreateTaxProfileModel.Description)"/>
+                               @bind-Value="TaxProfileModel.Description"
+                               MessageFor="@(() => TaxProfileModel.Description)"/>
 
                 <SelectInput Label="Profile currency"
                              DefaultOption="Select currency"
                              Data="Currencies"
-                             @bind-Value="CreateTaxProfileModel.ProfileCurrencyId"/>
+                             @bind-Value="TaxProfileModel.ProfileCurrencyId"/>
                 
                 <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" />
             </EditForm>
@@ -53,29 +53,29 @@ else
 }
 
 @code {
-    private CreateTaxProfileModel CreateTaxProfileModel { get; } = new();
+    private TaxProfileModel? TaxProfileModel { get; } = new();
     
     private EditContext EditContext { get; set; }
 
-    private Dictionary<string, string>? Currencies { get; set; }
+    private Dictionary<Guid?, string>? Currencies { get; set; }
 
     private bool IsInitialized { get; set; }
 
     private bool IsValid => !EditContext.GetValidationMessages().Any();
 
-    private bool CanExecute => !string.IsNullOrEmpty(CreateTaxProfileModel.ProfileCurrencyId);
+    private bool CanExecute => TaxProfileModel?.ProfileCurrencyId.HasValue ?? false;
 
     protected override void OnInitialized()
     {
-        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => x.Key.ToString(), x => x.Value);
-        EditContext = new EditContext(CreateTaxProfileModel);
+        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => (Guid?)x.Key, x => x.Value);
+        EditContext = new EditContext(TaxProfileModel);
 
         IsInitialized = true;
     }
     
     private async Task HandleSubmitAsync()
     {
-        var command = _mapper.Map<CreateTaxProfileCommand>(CreateTaxProfileModel);
+        var command = _mapper.Map<CreateTaxProfileCommand>(TaxProfileModel);
         
         var result = await _commandBus.DispatchAsync(command);
         

@@ -1,0 +1,33 @@
+﻿@using System.Linq.Expressions
+
+@inherits InputDate<DateTime>
+
+<div class="app-input-group">
+    <h6 class="app-input-label">@Label</h6>
+    <div class="app-input-container">
+        <input type="date"
+               @attributes="AdditionalAttributes"
+               class="form-control"
+               @bind=@CurrentValue
+               @bind:event="oninput"
+               @bind:format="yyyy-MM-dd"
+               disabled="@(!IsEnabled)" />
+        @if (MessageFor != null)
+        {
+            <ValidationMessage For="@MessageFor"/>
+        }
+    </div>
+</div>
+<br />
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; }
+    
+    [Parameter]
+    public bool IsEnabled { get; set; } = true;
+    
+    [Parameter]
+    public Expression<Func<DateTime>>? MessageFor { get; set; }
+}
