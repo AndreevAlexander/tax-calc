@@ -13,6 +13,7 @@ using TaxCalculator.WebFrontend.Data;
 using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Infrastructure;
 using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Validation;
+using TaxCalculator.WebFrontend.Pages.Dashboard.Validation;
 using TaxCalculator.WebFrontend.Pages.Incomes.Validation;
 using TaxCalculator.WebFrontend.Pages.Taxes.Validation;
 using TaxCalculator.WebFrontend.Pages.TaxProfiles.Validation;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IValidationEngine, ValidationEngine>(provider =>
     engine.RegisterValidationProfile<IncomeValidationProfile>();
     engine.RegisterValidationProfile<AdditionalSpendsValidationProfile>();
     engine.RegisterValidationProfile<TaxProfileValidationProfile>();
+    engine.RegisterValidationProfile<DashboardValidationProfile>();
 
     return engine;
 });
