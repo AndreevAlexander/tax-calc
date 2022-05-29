@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Validation", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.WebFrontend", "TaxCalculator.WebFrontend\TaxCalculator.WebFrontend.csproj", "{E222A42D-0C2B-42A2-AE5A-279898381E8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Domain.Dto", "TaxCalculator.Domain.Dto\TaxCalculator.Domain.Dto.csproj", "{92CF693E-E206-4474-9A71-CF50F7F8A844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Domain.Services", "TaxCalculator.Domain.Services\TaxCalculator.Domain.Services.csproj", "{8F85CE28-7E22-45C5-AFC4-FDFE585132BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +76,13 @@ Global
 		{E222A42D-0C2B-42A2-AE5A-279898381E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E222A42D-0C2B-42A2-AE5A-279898381E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E222A42D-0C2B-42A2-AE5A-279898381E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92CF693E-E206-4474-9A71-CF50F7F8A844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CF693E-E206-4474-9A71-CF50F7F8A844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CF693E-E206-4474-9A71-CF50F7F8A844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CF693E-E206-4474-9A71-CF50F7F8A844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F85CE28-7E22-45C5-AFC4-FDFE585132BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F85CE28-7E22-45C5-AFC4-FDFE585132BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F85CE28-7E22-45C5-AFC4-FDFE585132BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F85CE28-7E22-45C5-AFC4-FDFE585132BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

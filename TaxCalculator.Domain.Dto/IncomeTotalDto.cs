@@ -1,4 +1,4 @@
-﻿namespace TaxCalculator.Domain.Dtos;
+﻿namespace TaxCalculator.Domain.Dto;
 
 public class IncomeTotalDto
 {

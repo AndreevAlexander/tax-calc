@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
-using TaxCalculator.Domain.Entities;
+﻿using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
 using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Application.Services;
 
-public class CurrencyConverterService : ICurrencyConverterService
+public class CurrencyConverterService : ICurrencyConverterService<TaxProfile>
 {
     private readonly IEntityManager _entityManager;
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using TaxCalculator.Cqrs.Contracts.Handler;
-using TaxCalculator.Domain.Dtos;
+﻿using TaxCalculator.Cqrs.Contracts.Handler;
+using TaxCalculator.Domain.Dto;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
 using TaxCalculator.Domain.Services.Identifier;
@@ -14,11 +11,11 @@ namespace TaxCalculator.Application.TaxProfiles.Queries;
 public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, CalculateTaxesResult>
 {
     private readonly IEntityManager _entityManager;
-    private readonly ICurrencyConverterService _currencyConverterService;
+    private readonly ICurrencyConverterService<TaxProfile> _currencyConverterService;
     private readonly IIdentifierService _identifierService;
 
     public CalculateTaxesHandler(IEntityManager entityManager,
-                                 ICurrencyConverterService currencyConverterService,
+                                 ICurrencyConverterService<TaxProfile> currencyConverterService,
                                  IIdentifierService identifierService)
     {
         _entityManager = entityManager;
