@@ -6,7 +6,7 @@ namespace TaxCalculator.Validation.Rules;
 
 public class RequiredValidationRule : IValidationRule
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
+    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
     {
         var hasErrors = false;
         var results = new List<ValidationResult>();
@@ -53,7 +53,7 @@ public class RequiredValidationRule : IValidationRule
         
         if (hasErrors)
         {
-            results.Add(ValidationResult.Invalid($"{propertyName} is required"));
+            results.Add(ValidationResult.Invalid($"Value is required"));
         }
 
         return results;
