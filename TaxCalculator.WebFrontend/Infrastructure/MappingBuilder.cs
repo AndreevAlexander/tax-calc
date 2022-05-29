@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TaxCalculator.Domain.Enums;
 using TaxCalculator.WebFrontend.Extensions;
 using TaxCalculator.WebFrontend.Models;
 using TaxCalculator.WebFrontend.Pages.AdditionalSpends.Commands;
+using TaxCalculator.WebFrontend.Pages.Dashboard.Queries;
 using TaxCalculator.WebFrontend.Pages.Incomes.Commands;
 using TaxCalculator.WebFrontend.Pages.Taxes.Commands;
 using TaxCalculator.WebFrontend.Pages.TaxProfiles.Commands;
@@ -23,6 +23,7 @@ public class MappingBuilder
         SetupIncomeMapping(profile);
         SetupTaxMapping(profile);
         SetupTaxProfileMapping(profile);
+        SetupTaxStatisticsMapping(profile);
     }
 
     private void SetupAdditionalSpendMapping(IProfileExpression profile)
@@ -79,5 +80,14 @@ public class MappingBuilder
             .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.Id))
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
             .ForMember(x => x.Description, o => o.MapFrom(x => x.Description));
+    }
+
+    private void SetupTaxStatisticsMapping(IProfileExpression profile)
+    {
+        profile.CreateMap<TaxProfileDropdownModel, GetTaxStatisticsQuery>()
+            .ForMember(x => x.CurrencyId, o => o.MapFrom(x => x.CurrencyId.ToGuid()))
+            .ForMember(x => x.ProfileId, o => o.MapFrom(x => x.TaxProfileId.ToGuid()))
+            .ForMember(x => x.From, o => o.MapFrom(x => x.From))
+            .ForMember(x => x.To, o => o.MapFrom(x => x.To));
     }
 }

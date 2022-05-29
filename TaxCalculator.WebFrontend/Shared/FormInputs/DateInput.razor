@@ -3,7 +3,11 @@
 @inherits InputDate<DateTime>
 
 <div class="app-input-group">
-    <h6 class="app-input-label">@Label</h6>
+    @if (Label != null)
+    {
+        <h6 class="app-input-label">@Label</h6>
+    }
+    
     <div class="app-input-container">
         <input type="date"
                @attributes="AdditionalAttributes"
@@ -11,7 +15,7 @@
                @bind=@CurrentValue
                @bind:event="oninput"
                @bind:format="yyyy-MM-dd"
-               disabled="@(!IsEnabled)" />
+               disabled="@(!IsEnabled)"/>
         @if (MessageFor != null)
         {
             <ValidationMessage For="@MessageFor"/>
@@ -23,7 +27,7 @@
 @code {
 
     [Parameter]
-    public string Label { get; set; }
+    public string? Label { get; set; }
     
     [Parameter]
     public bool IsEnabled { get; set; } = true;

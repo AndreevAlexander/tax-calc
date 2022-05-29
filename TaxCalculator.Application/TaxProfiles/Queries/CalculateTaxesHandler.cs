@@ -6,6 +6,7 @@ using TaxCalculator.Domain.Dtos;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
 using TaxCalculator.Domain.Services.Identifier;
+using TaxCalculator.Domain.ValueObjects;
 using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Application.TaxProfiles.Queries;
@@ -27,9 +28,13 @@ public class CalculateTaxesHandler : IQueryHandler<CalculateTaxesQuery, Calculat
 
     public async Task<CalculateTaxesResult> HandleAsync(CalculateTaxesQuery query)
     {
+        var period = query.From.HasValue && query.To.HasValue
+            ? new DateRange {From = query.From.Value, To = query.To.Value}
+            : null;
+        
         var taxProfile = await _entityManager.GetRepository<TaxProfile>()
             .As<ITaxProfileRepository>()
-            .GetOneAsync(query.ProfileId, query.Period);
+            .GetOneAsync(query.ProfileId, period);
 
         var result = new CalculateTaxesResult();
         if (taxProfile != null)
