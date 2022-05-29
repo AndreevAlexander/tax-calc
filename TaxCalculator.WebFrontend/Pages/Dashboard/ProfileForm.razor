@@ -38,11 +38,13 @@ else
         <div class="row">
             <div class="col-md-6">
                 <DateInput @bind-Value="@TaxProfileDropdown.From" 
-                           Label="From"/>
+                           Label="From"
+                           MessageFor="@(() => TaxProfileDropdown.From)"/>
             </div>
             <div class="col-md-6">
                 <DateInput @bind-Value="@TaxProfileDropdown.To"
-                           Label="To" />
+                           Label="To" 
+                           MessageFor="@(() => TaxProfileDropdown.To)"/>
             </div>
         </div>
 
