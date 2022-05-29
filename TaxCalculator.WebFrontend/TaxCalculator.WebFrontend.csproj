@@ -16,7 +16,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TaxCalculator.Cqrs.Implementation\TaxCalculator.Cqrs.Implementation.csproj" />
-      <ProjectReference Include="..\TaxCalculator.Persistence\TaxCalculator.Persistence.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Domain.Dto\TaxCalculator.Domain.Dto.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Domain.Services\TaxCalculator.Domain.Services.csproj" />
       <ProjectReference Include="..\TaxCalculator.Validation\TaxCalculator.Validation.csproj" />
     </ItemGroup>
 

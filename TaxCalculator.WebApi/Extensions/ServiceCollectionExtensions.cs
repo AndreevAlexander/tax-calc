@@ -8,6 +8,7 @@ using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Cqrs.Implementation;
 using TaxCalculator.Cqrs.Implementation.Bus;
 using TaxCalculator.Data;
+using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Services;
 using TaxCalculator.Domain.Services.Identifier;
 using TaxCalculator.Infrastructure;
@@ -28,7 +29,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICache, CacheDecorator>();
         services.AddSingleton<IHandlerLoader, HandlerLoader>();
         services.AddSingleton<IIdentifierService, IdentifierService>();
-        services.AddScoped<ICurrencyConverterService, CurrencyConverterService>();
+        services.AddScoped<ICurrencyConverterService<TaxProfile>, CurrencyConverterService>();
     }
 
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)

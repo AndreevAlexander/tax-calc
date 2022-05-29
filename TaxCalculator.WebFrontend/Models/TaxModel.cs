@@ -1,4 +1,4 @@
-﻿using TaxCalculator.Domain.Enums;
+﻿using TaxCalculator.WebFrontend.Enums;
 
 namespace TaxCalculator.WebFrontend.Models;
 

@@ -1,4 +1,4 @@
-﻿using TaxCalculator.Domain.Dtos;
+﻿using TaxCalculator.Domain.Dto;
 
 namespace TaxCalculator.WebFrontend.Models;
 

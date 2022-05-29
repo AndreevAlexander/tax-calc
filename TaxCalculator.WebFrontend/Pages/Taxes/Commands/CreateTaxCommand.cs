@@ -1,5 +1,5 @@
 ﻿using TaxCalculator.Cqrs.Contracts;
-using TaxCalculator.Domain.Enums;
+using TaxCalculator.WebFrontend.Enums;
 
 namespace TaxCalculator.WebFrontend.Pages.Taxes.Commands;
 

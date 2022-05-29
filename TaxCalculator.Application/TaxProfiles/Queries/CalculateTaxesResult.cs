@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TaxCalculator.Domain.Dtos;
+﻿using TaxCalculator.Domain.Dto;
 
 namespace TaxCalculator.Application.TaxProfiles.Queries;
 
