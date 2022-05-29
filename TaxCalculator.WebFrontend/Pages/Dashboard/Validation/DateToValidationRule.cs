@@ -14,7 +14,7 @@ public class DateToValidationRule : IValidationRule
         {
             if (toDate < dropdownModel.From)
             {
-                results.Add(ValidationResult.Invalid("Date 'To' can not be less than 'From'"));        
+                results.Add(ValidationResult.Invalid("Date To can not be less than From"));        
             }
         }
 
