@@ -5,7 +5,7 @@ namespace TaxCalculator.Validation.Rules;
 
 public class NumericValidationRule : IValidationRule
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
+    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
     {
         var results = new List<ValidationResult>();
         
@@ -14,12 +14,12 @@ public class NumericValidationRule : IValidationRule
             var isNumeric = decimal.TryParse(s, out decimal result);
             if (!isNumeric)
             {
-                results.Add(ValidationResult.Invalid($"{propertyName} should be numeric"));
+                results.Add(ValidationResult.Invalid("Value should be numeric"));
             }
         } 
         else if (!(data is int) && !(data is double) && !(data is float) && !(data is decimal))
         {
-            results.Add(ValidationResult.Invalid($"{propertyName} should be numeric"));
+            results.Add(ValidationResult.Invalid("Value should be numeric"));
         }
 
         return results;

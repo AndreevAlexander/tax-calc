@@ -16,7 +16,7 @@ public class TaxProfileDropdownValidationRule : IValidationRule
         _queryBus = queryBus;
     }
     
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null)
+    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
     {
         var results = new List<ValidationResult>();
 

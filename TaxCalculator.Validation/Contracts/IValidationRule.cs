@@ -5,5 +5,5 @@ namespace TaxCalculator.Validation.Contracts;
 
 public interface IValidationRule
 {
-    Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, string propertyName, object? context = null);
+    Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null);
 }
