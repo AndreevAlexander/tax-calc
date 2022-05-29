@@ -27,7 +27,6 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
             {
                 incomes = incomes.Where(x => x.IncomeDate >= period.From && x.IncomeDate <= period.To);
                 additionalSpends = additionalSpends.Where(x => x.CreatedDate >= period.From && x.CreatedDate <= period.To);
-                taxes = taxes.Where(x => x.CreatedDate >= period.From && x.CreatedDate <= period.To);
             }
 
             taxProfile.AdditionalSpends = additionalSpends.ToList();
@@ -38,4 +37,4 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
 
         return taxProfile;
     }
-}
+} 

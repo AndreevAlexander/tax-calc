@@ -34,6 +34,17 @@ else
                              MessageFor="@(() => TaxProfileDropdown.CurrencyId)"/>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <DateInput @bind-Value="@TaxProfileDropdown.From" 
+                           Label="From"/>
+            </div>
+            <div class="col-md-6">
+                <DateInput @bind-Value="@TaxProfileDropdown.To"
+                           Label="To" />
+            </div>
+        </div>
 
         <ButtonSubmit IsEnabled="@(CanExecute && IsValid)" Label="Select"/>
     </EditForm>

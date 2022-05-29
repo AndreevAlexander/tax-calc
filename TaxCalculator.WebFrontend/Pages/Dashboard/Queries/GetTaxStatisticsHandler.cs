@@ -20,6 +20,11 @@ public class GetTaxStatisticsHandler : IQueryHandler<GetTaxStatisticsQuery, Calc
         {
             url = $"{url}&CurrencyId={query.CurrencyId}";
         }
+
+        if (query.From.HasValue && query.To.HasValue)
+        {
+            url = $"{url}&From={query.From}&To={query.To}";
+        }
         
         var result = await _api.GetOneAsync<CalculateTaxesModel?>(url);
         

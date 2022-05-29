@@ -4,8 +4,10 @@
 @using TaxCalculator.Cqrs.Contracts.Bus
 @using TaxCalculator.WebFrontend.Extensions
 @using TaxCalculator.WebFrontend.Pages.Dashboard.Queries
+@using TaxCalculator.Contracts
 
 @inject IQueryBus _queryBus
+@inject IMapper _mapper
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -71,12 +73,9 @@
     {
         IsTaxLoading = true;
         ClearDisplay();
-        
-        CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(new GetTaxStatisticsQuery
-        {
-            ProfileId = profileDropdown.TaxProfileId.ToGuid(),
-            CurrencyId = profileDropdown.CurrencyId?.ToGuid()
-        });
+
+        var statisticsQuery = _mapper.Map<GetTaxStatisticsQuery>(profileDropdown);
+        CalculateTaxesModel = await _queryBus.ExecuteAsync<GetTaxStatisticsQuery, CalculateTaxesModel>(statisticsQuery);
         
         IsTaxLoading = false;
     }
