@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TaxCalculator.Validation.Contracts;
+﻿using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 using TaxCalculator.Validation.Rules;
 
@@ -11,16 +8,18 @@ public class ValidationEngine : IValidationEngine
 {
 	private readonly RuleResolver _ruleResolver;
 	private readonly List<IValidationProfile> _validationProfiles;
+	private readonly Dictionary<string, IEnumerable<ValidationResult>> _validationResults;
 
 	public ValidationEngine(RuleResolver ruleResolver)
 	{
 		_ruleResolver = ruleResolver;
-		_validationProfiles = new List<IValidationProfile>();
+		_validationProfiles = new();
+		_validationResults = new();
 	}
 
 	public async Task<ValidationResultContainer> ValidateAsync<TModel>(TModel model, object? context = null) where TModel : class
 	{
-		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
+		_validationResults.Clear();
 
 		var profilesForModel = _validationProfiles.Where(x => x.HasRules<TModel>()).ToArray();
 		
@@ -38,56 +37,49 @@ public class ValidationEngine : IValidationEngine
 
 				var value = property?.GetValue(model);
 
-				var resultsForProperty = await ExecuteValidationRulesAsync(propertyValidationConfiguration,
-					model, propertyNameForValidation, value, context);
-				
-				foreach (var result in resultsForProperty)
-				{
-					results.Add(result.Key, result.Value);
-				}
+				await ExecuteValidationRulesAsync(propertyValidationConfiguration, model, propertyNameForValidation,
+					value, context);
 			}
 		}
 		
-		return new ValidationResultContainer(results);
+		return new ValidationResultContainer(_validationResults);
 	}
 
-	private async Task<Dictionary<string, IEnumerable<ValidationResult>>> ExecuteValidationRulesAsync<TModel>(
+	private async Task ExecuteValidationRulesAsync<TModel>(
 		RuleConfiguration configuration,
 		TModel model, 
 		string propertyName,
 		object? value,
 		object? context = null) where TModel : class
 	{
-		var results = new Dictionary<string, IEnumerable<ValidationResult>>();
-		
 		if (configuration.IsRequired)
 		{
 			var validationResults = await new RequiredValidationRule().ValidateAsync(value, model);
-			SetResults(propertyName, results, validationResults.ToList());
+			SetResults(propertyName, validationResults.ToList());
 		}
 
 		if (configuration.MaxLength != null)
 		{
 			var validationResults = await new MaxLengthValidationRule().ValidateAsync(value, model, configuration.MaxLength);
-			SetResults(propertyName, results, validationResults.ToList());
+			SetResults(propertyName, validationResults.ToList());
 		}
 
 		if (configuration.MinLength != null)
 		{
 			var validationResults = await new MinLengthValidationRule().ValidateAsync(value, model, configuration.MinLength);
-			SetResults(propertyName, results, validationResults.ToList());
+			SetResults(propertyName, validationResults.ToList());
 		}
 
 		if (configuration.Regex != null)
 		{
 			var validationResults = await new RegexValidationRule().ValidateAsync(value, model, configuration.Regex);
-			SetResults(propertyName, results, validationResults.ToList());
+			SetResults(propertyName, validationResults.ToList());
 		}
 
 		if (configuration.IsNumeric)
 		{
 			var validationResults = await new NumericValidationRule().ValidateAsync(value, model);
-			SetResults(propertyName, results, validationResults.ToList());
+			SetResults(propertyName, validationResults.ToList());
 		}
 		
 		if (configuration.CustomValidators.Any())
@@ -96,27 +88,24 @@ public class ValidationEngine : IValidationEngine
 			{
 				var customValidator = _ruleResolver(customValidatorType);
 				var validationResults = await customValidator.ValidateAsync(value, model, context);
-				SetResults(propertyName, results, validationResults.ToList());
+				SetResults(propertyName, validationResults.ToList());
 			}
 		}
-
-		return results;
 	}
 
-	private void SetResults(string propertyName, 
-							Dictionary<string, IEnumerable<ValidationResult>> results,
+	private void SetResults(string propertyName,
 							List<ValidationResult> validationResults)
 	{
 		if (validationResults.Any())
 		{
-			if (results.TryGetValue(propertyName, out IEnumerable<ValidationResult>? existingResults))
+			if (_validationResults.TryGetValue(propertyName, out IEnumerable<ValidationResult>? existingResults))
 			{
 				validationResults.AddRange(existingResults);
-				results[propertyName] = validationResults;
+				_validationResults[propertyName] = validationResults;
 			}
 			else
 			{
-				results.Add(propertyName, validationResults);
+				_validationResults.Add(propertyName, validationResults);
 			}
 		}
 	}
