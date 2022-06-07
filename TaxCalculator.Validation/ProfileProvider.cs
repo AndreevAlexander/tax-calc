@@ -6,21 +6,42 @@ public class ProfileProvider : IProfileProvider
 {
     private readonly List<IValidationProfile> _validationProfiles;
 
+    private readonly Dictionary<Type, List<IValidationProfile>> _validationProfilesPerModel;
+
     public ProfileProvider()
     {
         _validationProfiles = new();
+        _validationProfilesPerModel = new();
     }
     
     public IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class
     {
-        return _validationProfiles.Where(x => x.HasRules<TModel>());
+        return _validationProfilesPerModel[typeof(TModel)];
     }
 
     public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
     {
-        if (_validationProfiles.All(x => x.GetType() != typeof(TProfile)))
+        var profile = new TProfile();
+        var profileModelTypes = profile.GetModelTypes();
+
+        foreach (var profileModelType in profileModelTypes)
         {
-            _validationProfiles.Add(new TProfile());	
+            if (!_validationProfilesPerModel.TryGetValue(profileModelType, out List<IValidationProfile>? profiles))
+            {
+                profiles = new List<IValidationProfile>
+                {
+                    profile
+                };
+                
+                _validationProfilesPerModel.Add(profileModelType, profiles);
+            }
+            else
+            {
+                if (_validationProfilesPerModel[profileModelType].All(x => x.GetType() != typeof(TProfile)))
+                {
+                    _validationProfilesPerModel[profileModelType].Add(profile);    
+                }
+            }
         }
     }
 }
