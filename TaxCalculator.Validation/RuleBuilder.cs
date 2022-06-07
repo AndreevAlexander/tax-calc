@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using TaxCalculator.Validation.Contracts;
 
 namespace TaxCalculator.Validation;
@@ -20,8 +21,10 @@ public class RuleBuilder<TModel> : IRuleBuilder<TModel>, IRuleStage where TModel
     public IRuleStage Property<TProperty>(Expression<Func<TModel, TProperty>> propertyExpression)
     {
         var body = (MemberExpression) propertyExpression.Body;
-        PropertyName = body.Member.Name;
-        _ruleConfigurations.TryAdd(PropertyName, new RuleConfiguration());
+        var propertyInfo = (PropertyInfo) body.Member;
+        PropertyName = propertyInfo.Name;
+        
+        _ruleConfigurations.TryAdd(PropertyName, new RuleConfiguration(propertyInfo));
         
         return this;
     }
@@ -62,8 +65,8 @@ public class RuleBuilder<TModel> : IRuleBuilder<TModel>, IRuleStage where TModel
         return this;
     }
 
-    public Dictionary<string, RuleConfiguration> Build()
+    public IEnumerable<RuleConfiguration> Build()
     {
-        return _ruleConfigurations;
+        return _ruleConfigurations.Select(x => x.Value).ToArray();
     }
 }

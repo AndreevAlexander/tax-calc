@@ -27,15 +27,23 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient {BaseAddress = new Uri("https://localhost:7001")});
 builder.Services.AddScoped<WebApi>();
 
+builder.Services.AddSingleton<IProfileProvider, ProfileProvider>(provider =>
+{
+    var profileProvider = new ProfileProvider();
+    profileProvider.RegisterValidationProfile<TaxValidationProfile>();
+    profileProvider.RegisterValidationProfile<IncomeValidationProfile>();
+    profileProvider.RegisterValidationProfile<AdditionalSpendsValidationProfile>();
+    profileProvider.RegisterValidationProfile<TaxProfileValidationProfile>();
+    profileProvider.RegisterValidationProfile<DashboardValidationProfile>();
+
+    return profileProvider;
+});
+
 builder.Services.AddScoped<IValidationEngine, ValidationEngine>(provider =>
 {
-    var engine = new ValidationEngine(t => (IValidationRule) ActivatorUtilities.GetServiceOrCreateInstance(provider, t));
-    engine.RegisterValidationProfile<TaxValidationProfile>();
-    engine.RegisterValidationProfile<IncomeValidationProfile>();
-    engine.RegisterValidationProfile<AdditionalSpendsValidationProfile>();
-    engine.RegisterValidationProfile<TaxProfileValidationProfile>();
-    engine.RegisterValidationProfile<DashboardValidationProfile>();
-
+    var profileProvider = provider.GetService<IProfileProvider>();
+    var engine = new ValidationEngine(t => (IValidationRule) ActivatorUtilities.GetServiceOrCreateInstance(provider, t),
+        profileProvider);
     return engine;
 });
 

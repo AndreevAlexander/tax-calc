@@ -7,13 +7,13 @@ namespace TaxCalculator.Validation;
 public class ValidationEngine : IValidationEngine
 {
 	private readonly RuleResolver _ruleResolver;
-	private readonly List<IValidationProfile> _validationProfiles;
+	private readonly IProfileProvider _profileProvider;
 	private readonly Dictionary<string, IEnumerable<ValidationResult>> _validationResults;
 
-	public ValidationEngine(RuleResolver ruleResolver)
+	public ValidationEngine(RuleResolver ruleResolver, IProfileProvider profileProvider)
 	{
 		_ruleResolver = ruleResolver;
-		_validationProfiles = new();
+		_profileProvider = profileProvider;
 		_validationResults = new();
 	}
 
@@ -21,7 +21,7 @@ public class ValidationEngine : IValidationEngine
 	{
 		_validationResults.Clear();
 
-		var profilesForModel = _validationProfiles.Where(x => x.HasRules<TModel>()).ToArray();
+		var profilesForModel = _profileProvider.GetRules<TModel>();
 		
 		foreach (var validationProfile in profilesForModel)
 		{
@@ -30,15 +30,7 @@ public class ValidationEngine : IValidationEngine
 
 			foreach (var ruleConfiguration in ruleConfigurations)
 			{
-				var propertyNameForValidation = ruleConfiguration.Key;
-				var propertyValidationConfiguration = ruleConfiguration.Value;
-
-				var property = typeof(TModel).GetProperty(propertyNameForValidation);
-
-				var value = property?.GetValue(model);
-
-				await ExecuteValidationRulesAsync(propertyValidationConfiguration, model, propertyNameForValidation,
-					value, context);
+				await ExecuteValidationRulesAsync(ruleConfiguration, model, context);
 			}
 		}
 		
@@ -47,11 +39,12 @@ public class ValidationEngine : IValidationEngine
 
 	private async Task ExecuteValidationRulesAsync<TModel>(
 		RuleConfiguration configuration,
-		TModel model, 
-		string propertyName,
-		object? value,
+		TModel model,
 		object? context = null) where TModel : class
 	{
+		var propertyName = configuration.PropertyName;
+		var value = configuration.GetValue(model);
+		
 		if (configuration.IsRequired)
 		{
 			var validationResults = await new RequiredValidationRule().ValidateAsync(value, model);
@@ -107,14 +100,6 @@ public class ValidationEngine : IValidationEngine
 			{
 				_validationResults.Add(propertyName, validationResults);
 			}
-		}
-	}
-	
-	public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
-	{
-		if (_validationProfiles.All(x => x.GetType() != typeof(TProfile)))
-		{
-			_validationProfiles.Add(new TProfile());	
 		}
 	}
 }

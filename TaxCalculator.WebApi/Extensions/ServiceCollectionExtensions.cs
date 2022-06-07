@@ -47,14 +47,21 @@ public static class ServiceCollectionExtensions
 
     public static void AddValidation(this IServiceCollection services)
     {
+        services.AddSingleton<IProfileProvider, ProfileProvider>(provider =>
+        {
+            var profileProvider = new ProfileProvider();
+            profileProvider.RegisterValidationProfile<TaxProfileValidationProfile>();
+            profileProvider.RegisterValidationProfile<IncomeValidationProfile>();
+
+            return profileProvider;
+        });
+        
         services.AddSingleton<IValidationEngine, ValidationEngine>(provider =>
         {
+            var profileProvider = provider.GetService<IProfileProvider>();
             var engine = new ValidationEngine(ruleType => 
-                (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(provider, ruleType));
+                (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(provider, ruleType), profileProvider);
             
-            engine.RegisterValidationProfile<TaxProfileValidationProfile>();
-            engine.RegisterValidationProfile<IncomeValidationProfile>();
-          
             return engine;
         });
     }
