@@ -4,19 +4,16 @@ namespace TaxCalculator.Validation;
 
 public class ProfileProvider : IProfileProvider
 {
-    private readonly List<IValidationProfile> _validationProfiles;
-
-    private readonly Dictionary<Type, List<IValidationProfile>> _validationProfilesPerModel;
+    private readonly Dictionary<Type, List<IValidationProfile>> _validationProfiles;
 
     public ProfileProvider()
     {
         _validationProfiles = new();
-        _validationProfilesPerModel = new();
     }
     
     public IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class
     {
-        return _validationProfilesPerModel[typeof(TModel)];
+        return _validationProfiles[typeof(TModel)];
     }
 
     public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
@@ -26,20 +23,20 @@ public class ProfileProvider : IProfileProvider
 
         foreach (var profileModelType in profileModelTypes)
         {
-            if (!_validationProfilesPerModel.TryGetValue(profileModelType, out List<IValidationProfile>? profiles))
+            if (!_validationProfiles.TryGetValue(profileModelType, out List<IValidationProfile>? profiles))
             {
                 profiles = new List<IValidationProfile>
                 {
                     profile
                 };
                 
-                _validationProfilesPerModel.Add(profileModelType, profiles);
+                _validationProfiles.Add(profileModelType, profiles);
             }
             else
             {
-                if (_validationProfilesPerModel[profileModelType].All(x => x.GetType() != typeof(TProfile)))
+                if (_validationProfiles[profileModelType].All(x => x.GetType() != typeof(TProfile)))
                 {
-                    _validationProfilesPerModel[profileModelType].Add(profile);    
+                    _validationProfiles[profileModelType].Add(profile);    
                 }
             }
         }
