@@ -26,8 +26,8 @@ public class ValidationProfile : IValidationProfile
 	    return (IRuleBuilder<TModel>)_rulesForModels[typeof(TModel)];
     }
 
-    public bool HasRules<TModel>()
+    public IEnumerable<Type> GetModelTypes()
     {
-	    return _rulesForModels.ContainsKey(typeof(TModel));
+	    return _rulesForModels.Keys;
     }
 }
