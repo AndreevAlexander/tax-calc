@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
@@ -12,6 +12,7 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Shell.xaml" />
     <None Remove="Views\TaxProfiles\TaxProfileView.xaml" />
   </ItemGroup>
 
@@ -47,6 +48,11 @@
   <ItemGroup>
     <ProjectReference Include="..\TaxCalculator.Domain\TaxCalculator.Domain.csproj" />
     <ProjectReference Include="..\TaxCalculator.UI.MVVM\TaxCalculator.UI.MVVM.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Shell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\TaxProfiles\TaxProfileView.xaml">

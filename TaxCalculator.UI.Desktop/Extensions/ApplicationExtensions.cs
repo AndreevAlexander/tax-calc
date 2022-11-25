@@ -16,5 +16,10 @@ namespace TaxCalculator.UI.Desktop.Extensions
             var container = ((App)application).Container;
             return (TViewModel)ActivatorUtilities.GetServiceOrCreateInstance(container, typeof(TViewModel));
         }
+
+        public static INavigator GetNavigator(this Application application)
+        {
+            return ((App)application).Navigator;
+        }
     }
 }

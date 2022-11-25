@@ -31,6 +31,7 @@ namespace TaxCalculator.UI.Desktop
     /// </summary>
     public partial class App : Application
     {
+        public INavigator Navigator => _shell;
         public IServiceProvider Container { get; }
 
         /// <summary>
@@ -58,15 +59,13 @@ namespace TaxCalculator.UI.Desktop
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new Window();
-            m_window.Content = _rootFrame = new Frame();
+            _shell = new Shell();
 
-            m_window.Activate();
-            _rootFrame.Navigate(typeof(TaxProfileView));
+            _shell.RegisterMenuItem<TaxProfileView>();
+
+            _shell.Activate();
         }
 
-        private Window m_window;
-
-        private Frame _rootFrame;
+        private Shell _shell;
     }
 }

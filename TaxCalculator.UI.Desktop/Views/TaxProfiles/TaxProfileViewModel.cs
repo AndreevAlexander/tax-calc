@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using TaxCalculator.Domain.Entities;
+using TaxCalculator.UI.Desktop.Extensions;
 using TaxCalculator.UI.MVVM;
 
 namespace TaxCalculator.UI.Desktop.Views.TaxProfiles
