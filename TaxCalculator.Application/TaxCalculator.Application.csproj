@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -10,6 +10,7 @@
       <ProjectReference Include="..\TaxCalculator.Contracts\TaxCalculator.Contracts.csproj" />
       <ProjectReference Include="..\TaxCalculator.Cqrs.Contracts\TaxCalculator.Cqrs.Contracts.csproj" />
       <ProjectReference Include="..\TaxCalculator.Domain.Services\TaxCalculator.Domain.Services.csproj" />
+      <ProjectReference Include="..\TaxCalculator.Domain\TaxCalculator.Domain.csproj" />
       <ProjectReference Include="..\TaxCalculator.Persistence\TaxCalculator.Persistence.csproj" />
       <ProjectReference Include="..\TaxCalculator.Validation\TaxCalculator.Validation.csproj" />
     </ItemGroup>

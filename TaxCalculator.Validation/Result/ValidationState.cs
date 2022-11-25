@@ -1,7 +1,8 @@
-﻿namespace TaxCalculator.Validation.Result;
-
-public enum ValidationState
+﻿namespace TaxCalculator.Validation.Result
 {
-    Invalid,
-    Warning
+    public enum ValidationState
+    {
+        Invalid,
+        Warning
+    }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace TaxCalculator.Domain.Entities;
-
-public abstract class BaseEntity
+namespace TaxCalculator.Domain.Entities
 {
-    public Guid Id { get; set; }
+    public abstract class BaseEntity
+    {
+        public Guid Id { get; set; }
 
-    public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-    public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
-    public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
+    }
 }

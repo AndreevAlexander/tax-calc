@@ -1,8 +1,11 @@
-﻿namespace TaxCalculator.Validation.Contracts;
+﻿using System.Collections.Generic;
 
-public interface IProfileProvider
+namespace TaxCalculator.Validation.Contracts
 {
-    IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class;
-    
-    void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new();
+    public interface IProfileProvider
+    {
+        IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class;
+
+        void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new();
+    }
 }

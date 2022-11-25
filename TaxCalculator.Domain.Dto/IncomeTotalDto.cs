@@ -1,8 +1,9 @@
-﻿namespace TaxCalculator.Domain.Dto;
-
-public class IncomeTotalDto
+﻿namespace TaxCalculator.Domain.Dto
 {
-    public decimal TotalGross { get; set; }
-    
-    public decimal TotalNet { get; set; }
+    public class IncomeTotalDto
+    {
+        public decimal TotalGross { get; set; }
+
+        public decimal TotalNet { get; set; }
+    }
 }

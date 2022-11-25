@@ -1,29 +1,33 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.Validation.Rules;
-
-public class RegexValidationRule : IValidationRule
+namespace TaxCalculator.Validation.Rules
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
+    public class RegexValidationRule : IValidationRule
     {
-        var result = new List<ValidationResult>();
-
-        var pattern = (string)context;
-
-        if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrWhiteSpace(pattern))
+        public async Task<IEnumerable<ValidationResult>> ValidateAsync(object data, object model, object context = null)
         {
-            if (data is string s && !Regex.IsMatch(s, pattern))
+            var result = new List<ValidationResult>();
+
+            var pattern = (string)context;
+
+            if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrWhiteSpace(pattern))
             {
-                result.Add(ValidationResult.Invalid($"Value does not match {pattern}"));
+                if (data is string s && !Regex.IsMatch(s, pattern))
+                {
+                    result.Add(ValidationResult.Invalid($"Value does not match {pattern}"));
+                }
             }
-        }
-        else
-        {
-            throw new Exception("Incorrect regex pattern was set");
-        }
+            else
+            {
+                throw new Exception("Incorrect regex pattern was set");
+            }
 
-        return result;
-    } 
+            return result;
+        }
+    }
 }

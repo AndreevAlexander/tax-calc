@@ -42,8 +42,9 @@ builder.Services.AddSingleton<IProfileProvider, ProfileProvider>(provider =>
 builder.Services.AddScoped<IValidationEngine, ValidationEngine>(provider =>
 {
     var profileProvider = provider.GetService<IProfileProvider>();
-    var engine = new ValidationEngine(t => (IValidationRule) ActivatorUtilities.GetServiceOrCreateInstance(provider, t),
-        profileProvider);
+    var defaultStrategy = new DefaultRuleExecutionStrategy(t =>
+                (IValidationRule)ActivatorUtilities.GetServiceOrCreateInstance(provider, t));
+    var engine = new ValidationEngine(defaultStrategy, profileProvider);
     return engine;
 });
 

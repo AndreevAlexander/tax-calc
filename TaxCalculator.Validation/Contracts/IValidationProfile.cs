@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace TaxCalculator.Validation.Contracts;
-
-public interface IValidationProfile
+namespace TaxCalculator.Validation.Contracts
 {
-    void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class;
-    
-    IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class;
+    public interface IValidationProfile
+    {
+        void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class;
 
-    IEnumerable<Type> GetModelTypes();
+        IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class;
+
+        IEnumerable<Type> GetModelTypes();
+    }
 }

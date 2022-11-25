@@ -1,27 +1,30 @@
-﻿using TaxCalculator.Validation.Contracts;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.Validation.Rules;
-
-public class NumericValidationRule : IValidationRule
+namespace TaxCalculator.Validation.Rules
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
+    public class NumericValidationRule : IValidationRule
     {
-        var results = new List<ValidationResult>();
-        
-        if (data is string s)
+        public async Task<IEnumerable<ValidationResult>> ValidateAsync(object data, object model, object context = null)
         {
-            var isNumeric = decimal.TryParse(s, out decimal result);
-            if (!isNumeric)
+            var results = new List<ValidationResult>();
+
+            if (data is string s)
+            {
+                var isNumeric = decimal.TryParse(s, out decimal result);
+                if (!isNumeric)
+                {
+                    results.Add(ValidationResult.Invalid("Value should be numeric"));
+                }
+            }
+            else if (!(data is int) && !(data is double) && !(data is float) && !(data is decimal))
             {
                 results.Add(ValidationResult.Invalid("Value should be numeric"));
             }
-        } 
-        else if (!(data is int) && !(data is double) && !(data is float) && !(data is decimal))
-        {
-            results.Add(ValidationResult.Invalid("Value should be numeric"));
-        }
 
-        return results;
+            return results;
+        }
     }
 }

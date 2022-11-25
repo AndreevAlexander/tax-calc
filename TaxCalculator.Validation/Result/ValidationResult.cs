@@ -1,24 +1,25 @@
-﻿namespace TaxCalculator.Validation.Result;
-
-public class ValidationResult
+﻿namespace TaxCalculator.Validation.Result
 {
-    public ValidationState State { get; }
-
-    public string? Message { get; }
-
-    public ValidationResult(string? message, ValidationState state)
+    public class ValidationResult
     {
-        Message = message;
-        State = state;
-    }
+        public ValidationState State { get; }
 
-    public static ValidationResult Invalid(string message)
-    {
-        return new ValidationResult(message, ValidationState.Invalid);
-    }
-    
-    public static ValidationResult Warning(string message)
-    {
-        return new ValidationResult(message, ValidationState.Warning);
+        public string Message { get; }
+
+        public ValidationResult(string message, ValidationState state)
+        {
+            Message = message;
+            State = state;
+        }
+
+        public static ValidationResult Invalid(string message)
+        {
+            return new ValidationResult(message, ValidationState.Invalid);
+        }
+
+        public static ValidationResult Warning(string message)
+        {
+            return new ValidationResult(message, ValidationState.Warning);
+        }
     }
 }

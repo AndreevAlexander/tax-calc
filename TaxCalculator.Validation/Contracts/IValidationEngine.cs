@@ -1,7 +1,9 @@
-﻿
-namespace TaxCalculator.Validation.Contracts;
+﻿using System.Threading.Tasks;
 
-public interface IValidationEngine
+namespace TaxCalculator.Validation.Contracts
 {
-    Task<ValidationResultContainer> ValidateAsync<TModel>(TModel model, object? context = null) where TModel : class;
+    public interface IValidationEngine
+    {
+        Task<ValidationResultContainer> ValidateAsync<TModel>(TModel model, object context = null) where TModel : class;
+    }
 }

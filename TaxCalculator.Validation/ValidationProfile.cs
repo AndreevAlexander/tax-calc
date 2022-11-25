@@ -2,32 +2,36 @@
 using System.Collections.Generic;
 using TaxCalculator.Validation.Contracts;
 
-namespace TaxCalculator.Validation;
-
-public class ValidationProfile : IValidationProfile
+namespace TaxCalculator.Validation
 {
-	private readonly Dictionary<Type, IRuleBuilder> _rulesForModels;
-
-	public ValidationProfile()
-	{
-		_rulesForModels = new Dictionary<Type, IRuleBuilder>();
-	}
-	
-    public void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class
+    public abstract class ValidationProfile : IValidationProfile
     {
-	    var ruleBuilder = new RuleBuilder<TModel>();
-	    builder(ruleBuilder);
+        protected readonly Dictionary<Type, IRuleBuilder> RulesForModels;
 
-	    _rulesForModels.TryAdd(typeof(TModel), ruleBuilder);
-    }
+        public ValidationProfile()
+        {
+            RulesForModels = new Dictionary<Type, IRuleBuilder>();
+        }
 
-    public IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class
-    {
-	    return (IRuleBuilder<TModel>)_rulesForModels[typeof(TModel)];
-    }
+        public void ForModel<TModel>(Action<IRuleBuilder<TModel>> builder) where TModel : class
+        {
+            var ruleBuilder = new RuleBuilder<TModel>();
+            builder(ruleBuilder);
 
-    public IEnumerable<Type> GetModelTypes()
-    {
-	    return _rulesForModels.Keys;
+            if (!RulesForModels.ContainsKey(typeof(TModel)))
+            {
+                RulesForModels.Add(typeof(TModel), ruleBuilder);
+            }
+        }
+
+        public IRuleBuilder<TModel> GetRuleBuilder<TModel>() where TModel : class
+        {
+            return (IRuleBuilder<TModel>)RulesForModels[typeof(TModel)];
+        }
+
+        public IEnumerable<Type> GetModelTypes()
+        {
+            return RulesForModels.Keys;
+        }
     }
 }

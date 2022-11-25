@@ -1,0 +1,42 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\alexa\AppData\Local\Temp\JetBrains\ReSharperPlatformVs17\vAny_8013d591\CoverageData\_TaxCalculator.1233217110\Snapshot\snapshot.utdcvr</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0ee4c387_002Dba5d_002D4883_002D85d1_002D753b129567b6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #7" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=14837026_002Dec6d_002D48bc_002Dac75_002D8e9901e9555e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=29e2d599_002Da2c0_002D43df_002D969b_002D125d93e9529d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #6" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=356269bf_002Dce00_002D4b8a_002Db6fe_002D07be147c80d4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4141a396_002D7802_002D42a3_002D9f91_002D4ae64780e30a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=64c79707_002Da9b1_002D4a46_002D8472_002D31b2060871e8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=688b8898_002Dd8e9_002D45fa_002D858d_002D42741aa1da02/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1 #8" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::63D3A8FA-E99B-4AAC-82E4-CACDC9FA3E07::UAP,Version=v10.0.17763::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.ShouldSuccessfullyCreateModelContainerAndPopulateWithProperties&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f8dc274e_002D778d_002D4710_002D8fde_002D420a6b007067/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::6738E5C9-A099-4824-97CC-4A29090109AC::net6.0::TaxCalculator.UI.MVVM.Tests.ModelContainerTests.ModelContainerTest.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

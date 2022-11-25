@@ -1,42 +1,46 @@
-﻿using TaxCalculator.Validation.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TaxCalculator.Validation.Contracts;
 
-namespace TaxCalculator.Validation;
-
-public class ProfileProvider : IProfileProvider
+namespace TaxCalculator.Validation
 {
-    private readonly Dictionary<Type, List<IValidationProfile>> _validationProfiles;
-
-    public ProfileProvider()
+    public class ProfileProvider : IProfileProvider
     {
-        _validationProfiles = new();
-    }
-    
-    public IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class
-    {
-        return _validationProfiles[typeof(TModel)];
-    }
+        private readonly Dictionary<Type, List<IValidationProfile>> _validationProfiles;
 
-    public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
-    {
-        var profile = new TProfile();
-        var profileModelTypes = profile.GetModelTypes();
-
-        foreach (var profileModelType in profileModelTypes)
+        public ProfileProvider()
         {
-            if (!_validationProfiles.TryGetValue(profileModelType, out List<IValidationProfile>? profiles))
+            _validationProfiles = new Dictionary<Type, List<IValidationProfile>>();
+        }
+
+        public IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class
+        {
+            return _validationProfiles[typeof(TModel)];
+        }
+
+        public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
+        {
+            var profile = new TProfile();
+            var profileModelTypes = profile.GetModelTypes();
+
+            foreach (var profileModelType in profileModelTypes)
             {
-                profiles = new List<IValidationProfile>
+                if (!_validationProfiles.TryGetValue(profileModelType, out List<IValidationProfile> profiles))
                 {
-                    profile
-                };
-                
-                _validationProfiles.Add(profileModelType, profiles);
-            }
-            else
-            {
-                if (_validationProfiles[profileModelType].All(x => x.GetType() != typeof(TProfile)))
+                    profiles = new List<IValidationProfile>
+                    {
+                        profile
+                    };
+
+                    _validationProfiles.Add(profileModelType, profiles);
+                }
+                else
                 {
-                    _validationProfiles[profileModelType].Add(profile);    
+                    if (_validationProfiles[profileModelType].All(x => x.GetType() != typeof(TProfile)))
+                    {
+                        _validationProfiles[profileModelType].Add(profile);
+                    }
                 }
             }
         }

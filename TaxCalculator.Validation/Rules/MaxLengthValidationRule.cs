@@ -1,27 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.Validation.Rules;
-
-public class MaxLengthValidationRule : IValidationRule
+namespace TaxCalculator.Validation.Rules
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
+    public class MaxLengthValidationRule : IValidationRule
     {
-        var result = new List<ValidationResult>();
-
-        if (context is int maxLength)
+        public async Task<IEnumerable<ValidationResult>> ValidateAsync(object data, object model, object context = null)
         {
-            if (data is string s && s.Length > maxLength)
+            var result = new List<ValidationResult>();
+
+            if (context is int maxLength)
             {
-                result.Add(ValidationResult.Invalid($"Value can not be greater than {maxLength}"));
+                if (data is string s && s.Length > maxLength)
+                {
+                    result.Add(ValidationResult.Invalid($"Value can not be greater than {maxLength}"));
+                }
             }
-        }
-        else
-        {
-            throw new Exception("Max length was not set");
-        }
+            else
+            {
+                throw new Exception("Max length was not set");
+            }
 
-        return result;
-    } 
+            return result;
+        }
+    }
 }

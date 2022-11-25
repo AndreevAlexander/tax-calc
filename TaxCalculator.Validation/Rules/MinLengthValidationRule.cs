@@ -1,27 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.Validation.Rules;
-
-public class MinLengthValidationRule : IValidationRule
+namespace TaxCalculator.Validation.Rules
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
+    public class MinLengthValidationRule : IValidationRule
     {
-        var result = new List<ValidationResult>();
-
-        if (context is int minLength)
+        public async Task<IEnumerable<ValidationResult>> ValidateAsync(object data, object model, object context = null)
         {
-            if (data is string s && s.Length < minLength)
+            var result = new List<ValidationResult>();
+
+            if (context is int minLength)
             {
-                result.Add(ValidationResult.Invalid($"Value can not be less than {minLength}"));
+                if (data is string s && s.Length < minLength)
+                {
+                    result.Add(ValidationResult.Invalid($"Value can not be less than {minLength}"));
+                }
             }
-        }
-        else
-        {
-            throw new Exception("Min length was not set");
-        }
+            else
+            {
+                throw new Exception("Min length was not set");
+            }
 
-        return result;
-    } 
+            return result;
+        }
+    }
 }

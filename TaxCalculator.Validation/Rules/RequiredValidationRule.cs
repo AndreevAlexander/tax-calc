@@ -1,61 +1,65 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TaxCalculator.Validation.Contracts;
 using TaxCalculator.Validation.Result;
 
-namespace TaxCalculator.Validation.Rules;
-
-public class RequiredValidationRule : IValidationRule
+namespace TaxCalculator.Validation.Rules
 {
-    public async Task<IEnumerable<ValidationResult>> ValidateAsync(object? data, object model, object? context = null)
+    public class RequiredValidationRule : IValidationRule
     {
-        var hasErrors = false;
-        var results = new List<ValidationResult>();
-
-        if (data == null)
+        public async Task<IEnumerable<ValidationResult>> ValidateAsync(object data, object model, object context = null)
         {
-            hasErrors = true;
-        }
-		
-        if (data is string s && (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s)))
-        {
-            hasErrors = true;
-        }
+            var hasErrors = false;
+            var results = new List<ValidationResult>();
 
-        if (data is Array a && a.Length == 0)
-        {
-            hasErrors = true;
-        }
-
-        if (data is IEnumerable e)
-        {
-            var count = 0;
-            foreach (var item in e)
-            {
-                count++;
-                break;
-            }
-
-            if (count == 0)
+            if (data == null)
             {
                 hasErrors = true;
             }
-        }
 
-        if (data is DateTime dateTime && dateTime == DateTime.MinValue)
-        {
-            hasErrors = true;
-        }
+            if (data is string s && (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s)))
+            {
+                hasErrors = true;
+            }
 
-        if (data is Guid guid && guid == Guid.Empty)
-        {
-            hasErrors = true;
-        }
-        
-        if (hasErrors)
-        {
-            results.Add(ValidationResult.Invalid($"Value is required"));
-        }
+            if (data is Array a && a.Length == 0)
+            {
+                hasErrors = true;
+            }
 
-        return results;
-    } 
+            if (data is IEnumerable e)
+            {
+                var count = 0;
+                foreach (var item in e)
+                {
+                    count++;
+                    break;
+                }
+
+                if (count == 0)
+                {
+                    hasErrors = true;
+                }
+            }
+
+            if (data is DateTime dateTime && dateTime == DateTime.MinValue)
+            {
+                hasErrors = true;
+            }
+
+            if (data is Guid guid && guid == Guid.Empty)
+            {
+                hasErrors = true;
+            }
+
+            if (hasErrors)
+            {
+                results.Add(ValidationResult.Invalid($"Value is required"));
+            }
+
+            return results;
+        }
+    }
 }

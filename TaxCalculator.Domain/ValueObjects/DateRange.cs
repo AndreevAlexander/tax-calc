@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace TaxCalculator.Domain.ValueObjects;
-
-public class DateRange
+namespace TaxCalculator.Domain.ValueObjects
 {
-    public DateTime From { get; set; }
+    public class DateRange
+    {
+        public DateTime From { get; set; }
 
-    public DateTime To { get; set; }
+        public DateTime To { get; set; }
+    }
 }

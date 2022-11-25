@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace TaxCalculator.Domain.Exceptions;
-
-public class TaxCalculatorException : Exception
+namespace TaxCalculator.Domain.Exceptions
 {
-    public TaxCalculatorException(string message) : base(message)
+    public class TaxCalculatorException : Exception
     {
-        
+        public TaxCalculatorException(string message) : base(message)
+        {
+
+        }
     }
 }

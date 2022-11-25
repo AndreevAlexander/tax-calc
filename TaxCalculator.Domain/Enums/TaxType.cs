@@ -1,7 +1,8 @@
-﻿namespace TaxCalculator.Domain.Enums;
-
-public enum TaxType
+﻿namespace TaxCalculator.Domain.Enums
 {
-    IncomeTax,
-    SocialTax
+    public enum TaxType
+    {
+        IncomeTax,
+        SocialTax
+    }
 }

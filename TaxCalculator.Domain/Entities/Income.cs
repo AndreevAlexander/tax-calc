@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace TaxCalculator.Domain.Entities;
-
-public class Income : BaseEntity
+namespace TaxCalculator.Domain.Entities
 {
-    public decimal Value { get; set; }
+    public class Income : BaseEntity
+    {
+        public decimal Value { get; set; }
 
-    public TaxProfile TaxProfile { get; set; }
-    
-    public Guid TaxProfileId { get; set; }
+        public TaxProfile TaxProfile { get; set; }
 
-    public DateTime IncomeDate { get; set; }
+        public Guid TaxProfileId { get; set; }
+
+        public DateTime IncomeDate { get; set; }
+    }
 }

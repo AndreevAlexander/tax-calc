@@ -1,14 +1,15 @@
-﻿namespace TaxCalculator.Domain.Dto;
-
-public class TaxDataItemDto
+﻿namespace TaxCalculator.Domain.Dto
 {
-    public string Month { get; set; }
-    
-    public decimal IncomeGross { get; set; }
-    
-    public decimal IncomeTax { get; set; }
-    
-    public decimal SocialTax { get; set; }
-    
-    public decimal IncomeNet { get; set; }
+    public class TaxDataItemDto
+    {
+        public string Month { get; set; }
+
+        public decimal IncomeGross { get; set; }
+
+        public decimal IncomeTax { get; set; }
+
+        public decimal SocialTax { get; set; }
+
+        public decimal IncomeNet { get; set; }
+    }
 }

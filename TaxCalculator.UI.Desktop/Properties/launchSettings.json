@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TaxCalculator.UI.Desktop (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "TaxCalculator.UI.Desktop (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
