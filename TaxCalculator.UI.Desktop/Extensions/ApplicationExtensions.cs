@@ -21,5 +21,10 @@ namespace TaxCalculator.UI.Desktop.Extensions
         {
             return ((App)application).Navigator;
         }
+
+        public static TService GetService<TService>(this Application application)
+        {
+            return ((App)application).Container.GetService<TService>();
+        }
     }
 }

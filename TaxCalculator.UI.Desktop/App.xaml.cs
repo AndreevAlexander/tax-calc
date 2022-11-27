@@ -19,6 +19,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using TaxCalculator.UI.Desktop.Controls.DataGrid;
 using TaxCalculator.UI.Desktop.Views.TaxProfiles;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,6 +49,8 @@ namespace TaxCalculator.UI.Desktop
         public IServiceProvider ConfigureServices()
         {
             var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddSingleton<IColumnFactory, ColumnFactory>();
 
             return serviceCollection.BuildServiceProvider();
         }
