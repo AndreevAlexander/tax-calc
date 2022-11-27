@@ -9,7 +9,8 @@ using Microsoft.UI.Xaml.Data;
 
 namespace TaxCalculator.UI.MVVM
 {
-    public class ModelContainer : DynamicObject, INotifyPropertyChanged, ICustomPropertyProvider
+    public class ModelContainer<TModel> : DynamicObject, INotifyPropertyChanged, ICustomPropertyProvider
+        where TModel : class
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -25,10 +26,10 @@ namespace TaxCalculator.UI.MVVM
 
         private readonly object _model;
 
-        public ModelContainer(object model)
+        public ModelContainer(TModel model)
         {
             _model = model;
-            Type = model.GetType();
+            Type = typeof(TModel);
 
             _initialValues = new HashSet<KeyValuePair<string, object>>();
             _modelProperties = new Dictionary<string, ICustomProperty>();
@@ -50,7 +51,7 @@ namespace TaxCalculator.UI.MVVM
 
                 if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
                 {
-                    var value = propertyValue != null ? new ModelContainer(propertyValue) : null;
+                    var value = propertyValue != null ? CreateInnerContainer(propertyValue) : null;
                     _initialValues.Add(new KeyValuePair<string, object>(propertyName, value));
                 }
                 else
@@ -58,8 +59,14 @@ namespace TaxCalculator.UI.MVVM
                     _initialValues.Add(new KeyValuePair<string, object>(propertyName, propertyValue));
                 }
 
-                _modelProperties.Add(propertyName, new DynamicModelProperty(property));
+                _modelProperties.Add(propertyName, new DynamicModelProperty<TModel>(property, this));
             }
+        }
+
+        private object CreateInnerContainer(object innerModel)
+        {
+            var innerContainerType = typeof(ModelContainer<>).MakeGenericType(innerModel.GetType());
+            return Activator.CreateInstance(innerContainerType, new object[] { innerModel });
         }
 
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)

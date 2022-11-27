@@ -3,20 +3,10 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using TaxCalculator.UI.Desktop.Extensions;
 using TaxCalculator.UI.MVVM;
 
@@ -56,10 +46,10 @@ namespace TaxCalculator.UI.Desktop.Controls.DataGrid
                 if (type.IsGenericType)
                 {
                     var genericArgument = type.GetGenericArguments().First();
-                    if (genericArgument == typeof(ModelContainer))
+                    if (genericArgument.GetGenericTypeDefinition() == typeof(ModelContainer<>))
                     {
                         var firstItem = Items.Cast<object>().First();
-                        var result = genericArgument.GetProperty(nameof(ModelContainer.Type))?.GetValue(firstItem);
+                        var result = genericArgument.GetProperty(nameof(ModelContainer<object>.Type))?.GetValue(firstItem);
 
                         if (result is Type modelType)
                         {

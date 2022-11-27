@@ -4,8 +4,10 @@ using Microsoft.UI.Xaml.Data;
 
 namespace TaxCalculator.UI.MVVM
 {
-    public class DynamicModelProperty : ICustomProperty
+    public class DynamicModelProperty<TOwner> : ICustomProperty where TOwner : class
     {
+        private readonly ModelContainer<TOwner> _owner;
+
         public bool CanRead { get; }
         
         public bool CanWrite { get; }
@@ -14,8 +16,9 @@ namespace TaxCalculator.UI.MVVM
         
         public Type Type { get; }
 
-        public DynamicModelProperty(PropertyInfo propertyInfo)
+        public DynamicModelProperty(PropertyInfo propertyInfo, ModelContainer<TOwner> owner)
         {
+            _owner = owner;
             Type = propertyInfo.PropertyType;
             CanRead = propertyInfo.CanRead;
             CanWrite = propertyInfo.CanWrite;
@@ -24,22 +27,22 @@ namespace TaxCalculator.UI.MVVM
 
         public object GetValue(object target)
         {
-            return ((ModelContainer)target)[Name];
+            return ((dynamic)_owner)[Name];
         }
 
         public void SetValue(object target, object value)
         {
-            ((ModelContainer)target)[Name] = value;
+            ((dynamic)_owner)[Name] = value;
         }
 
         public object GetIndexedValue(object target, object index)
         {
-            return ((ModelContainer)target)[index.ToString()];
+            return ((dynamic)_owner)[index.ToString()];
         }
 
         public void SetIndexedValue(object target, object value, object index)
         {
-            ((ModelContainer)target)[index.ToString()] = value;
+            ((dynamic)_owner)[index.ToString()] = value;
         }
     }
 }
