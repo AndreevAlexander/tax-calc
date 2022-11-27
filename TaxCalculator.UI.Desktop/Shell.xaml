@@ -15,9 +15,14 @@
                     SelectionChanged="NavigationView_OnSelectionChanged"
                     Loaded="NavigationView_OnLoaded"
                     PaneDisplayMode="LeftCompact">
-        <NavigationView.MenuItems>
-            
-        </NavigationView.MenuItems>
-        <Frame Name="ContentFrame" />
+        <Frame Name="ContentFrame">
+            <Frame.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="Styles.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Frame.Resources>
+        </Frame>
     </NavigationView>
 </Window>
