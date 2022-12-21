@@ -7,11 +7,20 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
+using TaxCalculator.Domain.Services.Identifier;
+using TaxCalculator.UI.Desktop.Converters;
 
 namespace TaxCalculator.UI.Desktop.Controls.DataGrid
 {
     public class ColumnFactory : IColumnFactory
     {
+        private readonly IIdentifierService _identifierService;
+
+        public ColumnFactory(IIdentifierService identifierService)
+        {
+            _identifierService = identifierService;
+        }
+
         public DataGridColumn CreateColumn(PropertyInfo property)
         {
             var columnAttribute = property.GetCustomAttribute<GeneratedColumnAttribute>();
@@ -36,7 +45,8 @@ namespace TaxCalculator.UI.Desktop.Controls.DataGrid
                 Binding = new Binding
                 {
                     Path = new PropertyPath(propertyName),
-                    Mode = BindingMode.TwoWay
+                    Mode = BindingMode.TwoWay,
+                    Converter = attribute.RequiresIdentifierConversion ? new IdentifierConverter { IdentifierService = _identifierService } : null
                 }
             };
 

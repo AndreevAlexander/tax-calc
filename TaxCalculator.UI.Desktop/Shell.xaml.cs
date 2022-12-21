@@ -3,19 +3,12 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using TaxCalculator.UI.Desktop.Attributes;
 using TaxCalculator.UI.Desktop.Views.TaxProfiles;
 
@@ -29,6 +22,8 @@ namespace TaxCalculator.UI.Desktop
     /// </summary>
     public sealed partial class Shell : Window, INavigator
     {
+        public event EventHandler<object> Navigated; 
+
         public Shell()
         {
             this.InitializeComponent();
@@ -36,7 +31,10 @@ namespace TaxCalculator.UI.Desktop
 
         private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            SetCurrentNavigationItem(args.SelectedItemContainer as NavigationViewItem);
+            if (args.SelectedItemContainer != null)
+            {
+                SetCurrentNavigationItem(args.SelectedItemContainer as NavigationViewItem);
+            }
         }
 
         private void NavigationView_OnLoaded(object sender, RoutedEventArgs e)
@@ -53,9 +51,12 @@ namespace TaxCalculator.UI.Desktop
             }
 
             var viewType = Type.GetType(item.Tag.ToString());
-            ContentFrame.Navigate(viewType, parameters ?? item.Content);
 
-            NavigationView.SelectedItem = item;
+            if (ContentFrame.Content == null || ContentFrame.Content.GetType() != viewType)
+            {
+                ContentFrame.Navigate(viewType, parameters);
+                NavigationView.SelectedItem = item;
+            }
         }
 
         private IEnumerable<NavigationViewItem> GetNavigationItems()
@@ -65,8 +66,14 @@ namespace TaxCalculator.UI.Desktop
 
         public void NavigateTo<TView>(object parameters) where TView : Page
         {
-            var navigationViewItem = GetNavigationItems().FirstOrDefault(x => x.Tag.Equals(typeof(Type).FullName));
+            var navigationViewItem = GetNavigationItems().FirstOrDefault(x => x.Tag.Equals(typeof(TView).FullName));
             SetCurrentNavigationItem(navigationViewItem);
+        }
+
+        public void NavigateToFromView<TView>(object parameters) where TView : Page
+        {
+            ContentFrame.Navigate(typeof(TView), parameters);
+            NavigationView.SelectedItem = null;
         }
 
         public Page GetCurrentView()

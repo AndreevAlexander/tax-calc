@@ -39,11 +39,11 @@ namespace TaxCalculator.UI.Desktop.Controls.CrudDataGrid
 
         public ICollection Items
         {
-            get => (ICollection)GetValue(ItemsDependencyProperty);
-            set => SetValue(ItemsDependencyProperty, value);
+            get => (ICollection)GetValue(ItemsProperty);
+            set => SetValue(ItemsProperty, value);
         }
 
-        public static DependencyProperty ItemsDependencyProperty = DependencyProperty.Register(nameof(Items),
+        public static DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items),
             typeof(ICollection),
             typeof(CrudDataGrid),
             new PropertyMetadata(null));

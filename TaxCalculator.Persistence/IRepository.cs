@@ -5,7 +5,7 @@ using TaxCalculator.Domain.Entities;
 
 namespace TaxCalculator.Persistence;
 
-public interface IRepository<TEntity> : IRepository where TEntity : BaseEntity
+public interface IRepository<TEntity> : IRepository where TEntity : class
 {
     ValueTask<TEntity?> GetOneAsync(Guid id);
 

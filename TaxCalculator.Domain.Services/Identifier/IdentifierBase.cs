@@ -4,13 +4,19 @@ namespace TaxCalculator.Domain.Services.Identifier;
 
 public abstract class IdentifierBase<T>
 {
+    public Dictionary<T, string> IdentifierValues { get; private set; }
+
+    public string this[T identifierId] => IdentifierValues[identifierId];
+
     public string? GetIdentifierName(T identifier)
     {
-        return GetType().GetProperties().FirstOrDefault(x => x.GetValue(this)?.Equals(identifier) ?? false)?.Name;
+        return this[identifier];
     }
 
-    public Dictionary<T, string> ToDictionary()
+    protected void InitializeIdentifierValues()
     {
-        return GetType().GetProperties().ToDictionary(x => (T) x.GetValue(this), x => x.Name);
+        IdentifierValues = GetType().GetProperties()
+            .Where(x => x.PropertyType == typeof(T))
+            .ToDictionary(x => (T) x.GetValue(this), x => x.Name);
     }
 }

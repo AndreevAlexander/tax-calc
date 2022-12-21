@@ -14,7 +14,7 @@
     d:DataContext="{d:DesignInstance local:TaxProfileViewModel}">
 
     <Grid>
-        <c:CrudDataGrid Items="{Binding Items, Mode=TwoWay}"
+        <c:CrudDataGrid Items="{Binding ItemsWatcher.Result, Mode=TwoWay}"
                         AddButtonCommand="{Binding AddNewCommand}" />
     </Grid>
 </Page>

@@ -24,7 +24,7 @@ namespace TaxCalculator.UI.MVVM
 
         private readonly HashSet<KeyValuePair<string, object>> _initialValues;
 
-        private readonly object _model;
+        private readonly TModel _model;
 
         public ModelContainer(TModel model)
         {
@@ -128,6 +128,20 @@ namespace TaxCalculator.UI.MVVM
                 _values[key] = value;
                 RaisePropertyChanged(key);
             }
+        }
+
+        public TModel ProjectChanges()
+        {
+            var properties = typeof(TModel)
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .ToDictionary(x => x.Name, x => x);
+
+            foreach (var property in _values)
+            {
+                properties[property.Key].SetValue(_model, property.Value);
+            }
+
+            return _model;
         }
     }
 }

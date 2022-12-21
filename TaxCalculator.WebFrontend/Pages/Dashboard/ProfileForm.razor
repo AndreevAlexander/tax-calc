@@ -76,7 +76,7 @@ else
 
         EditContext = new EditContext(TaxProfileDropdown);
 
-        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => x.Key.ToString(), x => x.Value);
+        Currencies = _identifierService.Currencies.IdentifierValues.ToDictionary(x => x.Key.ToString(), x => x.Value);
         
         Initializing = false;
     }

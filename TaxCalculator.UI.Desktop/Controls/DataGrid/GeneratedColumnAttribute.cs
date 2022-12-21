@@ -13,10 +13,13 @@ namespace TaxCalculator.UI.Desktop.Controls.DataGrid
 
         public bool IsReadOnly { get; }
 
-        public GeneratedColumnAttribute(string displayName, bool isReadOnly = false)
+        public bool RequiresIdentifierConversion { get; }
+
+        public GeneratedColumnAttribute(string displayName, bool isReadOnly = false, bool requiresIdentifierConversion = false)
         {
             DisplayName = displayName;
             IsReadOnly = isReadOnly;
+            RequiresIdentifierConversion = requiresIdentifierConversion;
         }
     }
 }

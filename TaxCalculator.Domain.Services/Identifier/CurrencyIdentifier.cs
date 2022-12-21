@@ -2,11 +2,21 @@
 
 public class CurrencyIdentifier<T> : IdentifierBase<T>
 {
-    public T Usd { get; set; }
+    public T Usd { get; }
 
-    public T Eur { get; set; }
+    public T Eur { get; }
 
-    public T Uah { get; set; }
+    public T Uah { get; }
 
-    public T Pln { get; set; }
+    public T Pln { get; }
+
+    public CurrencyIdentifier(T usd, T eur, T uah, T pln)
+    {
+        Usd = usd;
+        Eur = eur;
+        Uah = uah;
+        Pln = pln;
+
+        InitializeIdentifierValues();
+    }
 }

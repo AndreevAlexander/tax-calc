@@ -91,7 +91,7 @@ else
 
         if (TaxProfileModel != null)
         {
-            Currencies = _identifierService.Currencies.ToDictionary();
+            Currencies = _identifierService.Currencies.IdentifierValues;
             CurrencyId = TaxProfileModel.ProfileCurrencyId.Value;
         }
 

@@ -7,7 +7,7 @@ using TaxCalculator.Persistence;
 
 namespace TaxCalculator.Data.Repositories;
 
-public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class
 {
     protected readonly TaxContext Context;
 

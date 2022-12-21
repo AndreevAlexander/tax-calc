@@ -67,7 +67,7 @@ else
 
     protected override void OnInitialized()
     {
-        Currencies = _identifierService.Currencies.ToDictionary().ToDictionary(x => (Guid?)x.Key, x => x.Value);
+        Currencies = _identifierService.Currencies.IdentifierValues.ToDictionary(x => (Guid?)x.Key, x => x.Value);
         EditContext = new EditContext(TaxProfileModel);
 
         IsInitialized = true;

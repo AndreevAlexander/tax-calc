@@ -26,7 +26,7 @@ builder.Services.AddCqrs();
 builder.Services.AddValidation();
 builder.Services.AddCors(x =>
 {
-    x.AddPolicy(CorsPolicy, policy => policy.WithOrigins("https://localhost:7015")
+    x.AddPolicy(CorsPolicy, policy => policy.AllowAnyOrigin()
         .WithHeaders("*")
         .WithMethods("GET", "POST", "PUT", "DELETE"));
 });

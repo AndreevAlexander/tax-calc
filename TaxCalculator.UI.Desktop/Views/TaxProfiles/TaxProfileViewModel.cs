@@ -1,43 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using DevExpress.Pdf.Native.BouncyCastle.Utilities;
+using Microsoft.UI.Xaml.Navigation;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ABI.System;
-using TaxCalculator.Domain.Entities;
+using TaxCalculator.Cqrs.Contracts.Bus;
+using TaxCalculator.UI.Desktop.Views.TaxProfiles.Queries;
+using TaxCalculator.UI.Desktop.Views.TaxProfilesManage;
 using TaxCalculator.UI.MVVM;
 
 namespace TaxCalculator.UI.Desktop.Views.TaxProfiles
 {
     public class TaxProfileViewModel : BaseViewModel
     {
-        public ObservableCollection<ModelContainer<TaxProfileModel>> Items { get; set; }
+        private readonly IQueryBus _queryBus;
+        private readonly INavigator _navigator;
+
+        public AsyncWatcher<ObservableCollection<ModelContainer<TaxProfileModel>>> ItemsWatcher { get; set; }
 
         public ICommand AddNewCommand { get; set; }
 
-        public TaxProfileViewModel()
+        public TaxProfileViewModel(IQueryBus queryBus, INavigator navigator)
         {
-            Items = new ObservableCollection<ModelContainer<TaxProfileModel>>
-            {
-                new (new TaxProfileModel
-                {
-                    Name = "test profile"
-                })
-            };
+            _queryBus = queryBus;
+            _navigator = navigator;
+
+            ItemsWatcher = new(LoadDataAsync());
 
             AddNewCommand = new AsyncCommand(AddNewCommandExecuteAsync);
         }
 
         public async Task AddNewCommandExecuteAsync()
         {
-            await Task.Delay(2);
+            _navigator.NavigateToFromView<TaxProfileManageView>(null);
+        }
 
-           // ((dynamic)Items[0]).Name = "asdasdasd";
+        private async Task<ObservableCollection<ModelContainer<TaxProfileModel>>> LoadDataAsync()
+        {
+            var taxProfiles = await _queryBus
+                .ExecuteAsync<GetTaxProfilesQuery, List<TaxProfileModel>>(new GetTaxProfilesQuery());
 
-            //await Task.Delay(1000);
+            var containers = taxProfiles.Select(x => new ModelContainer<TaxProfileModel>(x));
 
-            Items.Clear();
-
-           // RaisePropertyChanged(nameof(Items));
+            return new ObservableCollection<ModelContainer<TaxProfileModel>>(containers);
         }
     }
 }

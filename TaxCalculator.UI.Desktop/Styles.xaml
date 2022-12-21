@@ -9,4 +9,7 @@
     <Style TargetType="Grid">
         <Setter Property="Padding" Value="20" />
     </Style>
+    <Style TargetType="StackPanel">
+        <Setter Property="Padding" Value="5"/>
+    </Style>
 </ResourceDictionary>

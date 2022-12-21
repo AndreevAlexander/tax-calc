@@ -25,7 +25,7 @@ public class EntityManager : IEntityManager
         };
     }
 
-    public IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity
+    public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
     {
         var notExists = !_repositories.TryGetValue(typeof(TEntity), out IRepository? repository);
         if (notExists)
@@ -37,25 +37,27 @@ public class EntityManager : IEntityManager
         return (IRepository<TEntity>)repository;
     }
 
-    public void Persist<TEntity>(TEntity entity) where TEntity : BaseEntity
+    public void Persist<TEntity>(TEntity entity) where TEntity : class
     {
         var isTracked = _context.ChangeTracker.Entries().Any(e => e.Entity == entity);
         if (isTracked)
         {
-            entity.UpdatedDate = DateTime.Now;
+            ((dynamic)entity).UpdatedDate = DateTime.Now;
         }
         else
         {
-            entity.Id = Guid.NewGuid();
-            entity.CreatedDate = DateTime.Now;
+            ((dynamic)entity).Id = Guid.NewGuid();
+            ((dynamic)entity).CreatedDate = DateTime.Now;
 
             _context.Set<TEntity>().Add(entity);
         }
     }
 
-    public void Remove<TEntity>(Guid id) where TEntity : BaseEntity
+    public void Remove<TEntity>(Guid id) where TEntity : class
     {
-        var entity = GetRepository<TEntity>().GetMany().FirstOrDefault(x => x.Id == id);
+        var idProperty = typeof(TEntity).GetProperty(nameof(BaseEntity.Id));
+
+        var entity = GetRepository<TEntity>().GetMany().FirstOrDefault(x => idProperty.GetValue(x).Equals(id));
         if (entity != null)
         {
             _context.Remove(entity);

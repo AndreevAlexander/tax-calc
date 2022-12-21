@@ -10,6 +10,15 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Views\TaxProfilesManage\TaxConfiguration\TaxConfigurationManagementView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TaxProfilesManage\TaxProfileManageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Taxes\TaxView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\CrudDataGrid\CrudDataGrid.xaml">
       <SubType>Designer</SubType>
     </Page>

@@ -11,6 +11,8 @@ namespace TaxCalculator.UI.Desktop
     {
         void NavigateTo<TView>(object parameters) where TView : Page;
 
+        void NavigateToFromView<TView>(object parameters) where TView : Page;
+
         Page GetCurrentView();
 
         void RegisterMenuItem<TView>() where TView : Page;

@@ -12,9 +12,8 @@
     mc:Ignorable="d">
 
     <controls:DataGrid Name="DataGrid"
-                       Loaded="FrameworkElement_OnLoaded"
                        AutoGenerateColumns="False"
-                       ItemsSource="{x:Bind Items, Mode=TwoWay}">
+                       ItemsSource="{x:Bind DataItems, Mode=TwoWay}">
 
     </controls:DataGrid>
 </UserControl>

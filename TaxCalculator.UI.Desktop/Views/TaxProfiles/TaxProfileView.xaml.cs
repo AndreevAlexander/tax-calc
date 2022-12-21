@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Extensions.DependencyInjection;
 using TaxCalculator.UI.Desktop.Attributes;
 using TaxCalculator.UI.Desktop.Extensions;
 
@@ -33,7 +34,7 @@ namespace TaxCalculator.UI.Desktop.Views.TaxProfiles
         {
             this.InitializeComponent();
 
-            DataContext = Application.Current.GetViewModel<TaxProfileViewModel>();
+            DataContext = App.Current.GetService<TaxProfileViewModel>();
         }
     }
 }

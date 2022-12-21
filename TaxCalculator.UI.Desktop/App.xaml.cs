@@ -1,26 +1,25 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Net.Http;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TaxCalculator.Contracts;
+using TaxCalculator.Cqrs.Contracts;
+using TaxCalculator.Cqrs.Contracts.Bus;
+using TaxCalculator.Cqrs.Implementation;
+using TaxCalculator.Cqrs.Implementation.Bus;
+using TaxCalculator.Domain.Services.Identifier;
+using TaxCalculator.Persistence;
+using TaxCalculator.UI.Data;
+using TaxCalculator.UI.Data.Contracts;
 using TaxCalculator.UI.Desktop.Controls.DataGrid;
+using TaxCalculator.UI.Desktop.Views.Taxes;
 using TaxCalculator.UI.Desktop.Views.TaxProfiles;
+using TaxCalculator.UI.Desktop.Views.TaxProfilesManage;
+using TaxCalculator.UI.Desktop.Views.TaxProfilesManage.TaxConfiguration;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,10 +29,9 @@ namespace TaxCalculator.UI.Desktop
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public partial class App : Application
+    public partial class App : Microsoft.UI.Xaml.Application
     {
-        public INavigator Navigator => _shell;
-        public IServiceProvider Container { get; }
+        public IHost AppHost { get; set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -43,16 +41,42 @@ namespace TaxCalculator.UI.Desktop
         {
             this.InitializeComponent();
 
-            Container = ConfigureServices();
+            AppHost = Host.CreateDefaultBuilder()
+                .ConfigureServices(ConfigureServices)
+                .Build();
         }
 
-        public IServiceProvider ConfigureServices()
+        public void ConfigureServices(IServiceCollection services)
         {
-            var serviceCollection = new ServiceCollection();
+            ConfigureViews(services);
+            ConfigureViewModels(services);
 
-            serviceCollection.AddSingleton<IColumnFactory, ColumnFactory>();
+            services.AddSingleton<ICache, Cache>();
+            services.AddSingleton<IHandlerLoader, HandlerLoader>();
+            services.AddSingleton<IIdentifierService, IdentifierService>();
+            services.AddSingleton<IColumnFactory, ColumnFactory>();
 
-            return serviceCollection.BuildServiceProvider();
+            services.AddScoped<IQueryBus, QueryBus>(provider => new QueryBus(provider.GetQueryHandler));
+            services.AddScoped<ICommandBus, CommandBus>(provider => new CommandBus(provider.GetCommandHandler));
+
+            services.AddTransient<HttpClient>(provider => new HttpClient
+                { BaseAddress = new Uri("https://localhost:7001/api/") });
+            services.AddTransient<IWebApi, WebApi>();
+        }
+
+        private void ConfigureViews(IServiceCollection services)
+        {
+            //services.AddSingleton<Shell>();
+            services.AddSingleton<INavigator, Shell>();
+
+            services.AddTransient<TaxProfileView>();
+        }
+
+        private void ConfigureViewModels(IServiceCollection services)
+        {
+            services.AddTransient<TaxProfileViewModel>();
+            services.AddTransient<TaxProfileManageViewModel>();
+            services.AddTransient<TaxConfigurationManagementViewModel>();
         }
 
         /// <summary>
@@ -60,15 +84,16 @@ namespace TaxCalculator.UI.Desktop
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            _shell = new Shell();
+            await AppHost.StartAsync();
 
-            _shell.RegisterMenuItem<TaxProfileView>();
+            var shell = (Shell)AppHost.Services.GetRequiredService<INavigator>();
 
-            _shell.Activate();
+            shell.RegisterMenuItem<TaxProfileView>();
+            shell.RegisterMenuItem<TaxView>();
+
+            shell.Activate();
         }
-
-        private Shell _shell;
     }
 }

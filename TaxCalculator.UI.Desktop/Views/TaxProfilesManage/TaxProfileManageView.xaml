@@ -1,0 +1,59 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
+<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
+
+<Page
+    x:Class="TaxCalculator.UI.Desktop.Views.TaxProfilesManage.TaxProfileManageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TaxCalculator.UI.Desktop.Views.TaxProfilesManage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:TaxCalculator.UI.Desktop.Converters"
+    mc:Ignorable="d"
+    xmlns:c="using:TaxCalculator.UI.Desktop.Controls.CrudDataGrid"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    d:DataContext="{d:DesignInstance local:TaxProfileManageViewModel}">
+
+    <Page.Resources>
+        <converters:IdentifierConverter x:Key="IdentifierConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Name" />
+            <TextBox Text="{Binding TaxProfileContainer.Name, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" 
+                    Orientation="Vertical">
+            <TextBlock Text="Description" />
+            <TextBox Text="{Binding TaxProfileContainer.Description, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" 
+                    Orientation="Vertical">
+            <TextBlock Text="Currency" />
+            <ComboBox ItemsSource="{Binding Currencies, Mode=TwoWay}"
+                      SelectedItem="{Binding TaxProfileContainer.ProfileCurrencyId, Mode=TwoWay, Converter={StaticResource IdentifierConverter}}"
+                      DisplayMemberPath="Value" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal">
+            <Button Content="Save" Command="{Binding SaveTaxProfileCommand}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4">
+            <c:CrudDataGrid AddButtonCommand="{Binding AddTaxCommand}"
+                            Items="{Binding Taxes.Result}" />
+        </StackPanel>
+    </Grid>
+</Page>
