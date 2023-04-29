@@ -20,6 +20,8 @@
     
     <controls:NavigationMenu SelectionChanged="NavigationMenu_OnSelectionChanged">
         <controls:NavigationMenuItem Title="item"/>
+        <controls:NavigationMenuItem Title="item 2"/>
+        <controls:NavigationMenuItem Title="item 3"/>
     </controls:NavigationMenu>
 
 </Window>

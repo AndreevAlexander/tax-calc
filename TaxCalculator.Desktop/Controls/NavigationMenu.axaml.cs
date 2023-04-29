@@ -8,6 +8,8 @@ namespace TaxCalculator.Desktop.Controls;
 
 public class NavigationMenu : ItemsControl
 {
+    private NavigationMenuItem _selectedItem;
+
     public event EventHandler<MenuEventArgs> SelectionChanged
     {
         add => AddHandler(SelectionChangedEvent, value);
@@ -24,6 +26,16 @@ public class NavigationMenu : ItemsControl
 
     public void OnNavigationMenuItemSelected(NavigationMenuItem sender, AvaloniaPropertyChangedEventArgs e)
     {
+        if (!sender.Equals(_selectedItem))
+        {
+            if (_selectedItem != null)
+            {
+                _selectedItem.IsSelected = false;
+            }
+
+            _selectedItem = sender;
+        }
+        
         RaiseEvent(new MenuEventArgs(SelectionChangedEvent, sender));
     }
 }

@@ -86,6 +86,7 @@ public class NavigationMenuItem : TemplatedControl
     public NavigationMenuItem()
     {
         ClickEvent.AddClassHandler<NavigationMenuItem>((s, e) => s.OnNavigationMenuItemClick(s, e));
+        IsSelectedProperty.Changed.AddClassHandler<NavigationMenuItem>(OnNavigationMenuItemSelected);
     }
     
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
@@ -96,7 +97,12 @@ public class NavigationMenuItem : TemplatedControl
     public virtual void OnNavigationMenuItemClick(NavigationMenuItem sender, RoutedEventArgs e)
     {
         sender.IsSelected = !sender.IsSelected;
-
+        
+        e.Handled = true;
+    }
+    
+    public virtual void OnNavigationMenuItemSelected(NavigationMenuItem sender, AvaloniaPropertyChangedEventArgs e)
+    {
         if (sender.IsSelected)
         {
             sender.PseudoClasses.Add(SelectedPseudoClass);
@@ -105,7 +111,5 @@ public class NavigationMenuItem : TemplatedControl
         {
             sender.PseudoClasses.Remove(SelectedPseudoClass);
         }
-
-        e.Handled = true;
     }
 }
