@@ -1,0 +1,34 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TaxCalculator.Desktop.Controls">
+    <Design.PreviewWith>
+        <controls:NavigationMenu Width="300">
+            <controls:NavigationMenuItem Title="Item 1"/>
+            <controls:NavigationMenuItem Title="Item 2" IsSelected="True"/>
+            <controls:NavigationMenuItem Title="Item 3"/>
+            <controls:NavigationMenuItem Title="Item 4"/>
+        </controls:NavigationMenu>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|NavigationMenu">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Width="{TemplateBinding Width}">
+                    <StackPanel Classes="Layout"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Stretch"
+                                Width="{TemplateBinding Width}">
+                        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"
+                                        Items="{TemplateBinding Items}"/>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <Style Selector="StackPanel.Layout">
+        <Setter Property="Background" Value="#F2F2F2" />
+        <Setter Property="Width" Value="300" /> 
+    </Style>
+</Styles>
