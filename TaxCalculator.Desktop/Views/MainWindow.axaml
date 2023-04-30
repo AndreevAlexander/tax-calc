@@ -15,13 +15,16 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
     
-    <controls:NavigationMenu SelectionChanged="NavigationMenu_OnSelectionChanged">
+    <controls:NavigationView IsPaneOpen="True"
+                             OpenPaneLength="300"
+                             ItemClickCommand="{Binding MenuItemClickCommand}">
         <controls:NavigationMenuItem Title="item"/>
         <controls:NavigationMenuItem Title="item 2"/>
         <controls:NavigationMenuItem Title="item 3"/>
-    </controls:NavigationMenu>
-
+        <controls:NavigationView.Content>
+            <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </controls:NavigationView.Content>
+    </controls:NavigationView>
+   
 </Window>

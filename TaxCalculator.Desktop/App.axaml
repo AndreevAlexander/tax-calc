@@ -12,5 +12,6 @@
         
         <StyleInclude Source="/Controls/NavigationMenuItem.axaml"/>
         <StyleInclude Source="/Controls/NavigationMenu.axaml"/>
+        <StyleInclude Source="/Controls/NavigationView.axaml"/>
     </Application.Styles>
 </Application>

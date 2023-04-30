@@ -2,16 +2,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:TaxCalculator.Desktop.Controls">
     <Design.PreviewWith>
-        <controls:NavigationView />
+        <controls:NavigationView IsPaneOpen="True"
+                                 OpenPaneLength="300"
+                                 CompactPaneLength="50">
+            <controls:NavigationMenuItem Title="Item 1" />
+            <controls:NavigationMenuItem Title="Item 2" />
+            <controls:NavigationMenuItem Title="Item 3" />
+            <controls:NavigationView.Content>
+                <TextBlock Text="Content" />
+            </controls:NavigationView.Content>
+        </controls:NavigationView>
     </Design.PreviewWith>
 
     <Style Selector="controls|NavigationView">
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
-                <SplitView>
+                <SplitView OpenPaneLength="{TemplateBinding OpenPaneLength}"
+                           CompactPaneLength="{TemplateBinding CompactPaneLength}"
+                           IsPaneOpen="{TemplateBinding IsPaneOpen}">
                     <SplitView.Pane>
-                        <controls:NavigationMenu>
+                        <controls:NavigationMenu Width="{TemplateBinding OpenPaneLength}">
                             <ItemsControl ItemsPanel="{TemplateBinding ItemsPanel}" 
                                           Items="{TemplateBinding Items}"/>
                         </controls:NavigationMenu>
@@ -26,6 +37,5 @@
     
     <Style Selector="controls|NavigationView SplitView">
         <Setter Property="PaneBackground" Value="#F2F2F2" />
-        <Setter Property="OpenPaneLength" Value="300" />
     </Style>
 </Styles>

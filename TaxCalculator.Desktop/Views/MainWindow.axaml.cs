@@ -12,13 +12,4 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-
-    private void NavigationMenu_OnSelectionChanged(object sender, MenuEventArgs e)
-    {
-        var title = e.MenuItem;
-
-        Console.WriteLine(title);
-        
-        e.Handled = true;
-    }
 }
