@@ -96,11 +96,14 @@ public class NavigationView : ItemsControl
 
     public virtual void OnSelectionChanged(NavigationMenuItem sender, AvaloniaPropertyChangedEventArgs e)
     {
-        RaiseEvent(new MenuEventArgs(SelectionChangedEvent, sender));
-
-        if (ItemClickCommand != null && ItemClickCommand.CanExecute(sender))
+        if (sender.IsSelected) //TODO: use something else instead of subscription to IsSelectedProperty.Changed, because it triggers for control which gets selected and for control which gets unselected 
         {
-            ItemClickCommand.Execute(sender);
+            RaiseEvent(new MenuEventArgs(SelectionChangedEvent, sender));
+
+            if (ItemClickCommand != null && ItemClickCommand.CanExecute(sender))
+            {
+                ItemClickCommand.Execute(sender);
+            }
         }
     }
 }
