@@ -20,7 +20,8 @@
             <ControlTemplate>
                 <SplitView OpenPaneLength="{TemplateBinding OpenPaneLength}"
                            CompactPaneLength="{TemplateBinding CompactPaneLength}"
-                           IsPaneOpen="{TemplateBinding IsPaneOpen}">
+                           IsPaneOpen="{TemplateBinding IsPaneOpen}"
+                           DisplayMode="{TemplateBinding DisplayMode}">
                     <SplitView.Pane>
                         <controls:NavigationMenu Width="{TemplateBinding OpenPaneLength}">
                             <ItemsControl ItemsPanel="{TemplateBinding ItemsPanel}" 

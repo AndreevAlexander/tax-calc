@@ -18,6 +18,8 @@ public class NavigationView : ItemsControl
     private int _compactPaneLength;
 
     private ICommand _itemClickCommand;
+
+    private SplitViewDisplayMode _displayMode;
     
     public object Content
     {
@@ -49,6 +51,12 @@ public class NavigationView : ItemsControl
         set => SetAndRaise(ItemClickCommandProperty, ref _itemClickCommand, value);
     }
 
+    public SplitViewDisplayMode DisplayMode
+    {
+        get => _displayMode;
+        set => SetAndRaise(DisplayModeProperty, ref _displayMode, value);
+    }
+
     public event EventHandler<MenuEventArgs> SelectionChanged
     {
         add => AddHandler(SelectionChangedEvent, value);
@@ -73,7 +81,11 @@ public class NavigationView : ItemsControl
     public static readonly DirectProperty<NavigationView, ICommand> ItemClickCommandProperty =
         AvaloniaProperty.RegisterDirect<NavigationView, ICommand>(nameof(ItemClickCommand),
             view => view.ItemClickCommand, (view, command) => view.ItemClickCommand = command);
-    
+
+    public static readonly DirectProperty<NavigationView, SplitViewDisplayMode> DisplayModeProperty =
+        AvaloniaProperty.RegisterDirect<NavigationView, SplitViewDisplayMode>(nameof(DisplayMode),
+            view => view.DisplayMode, (view, value) => view.DisplayMode = value);
+
     public static readonly RoutedEvent<MenuEventArgs> SelectionChangedEvent =
         RoutedEvent.Register<NavigationMenu, MenuEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 

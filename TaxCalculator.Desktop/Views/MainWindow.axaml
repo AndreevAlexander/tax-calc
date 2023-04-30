@@ -18,6 +18,7 @@
     
     <controls:NavigationView IsPaneOpen="True"
                              OpenPaneLength="300"
+                             DisplayMode="Inline"
                              ItemClickCommand="{Binding MenuItemClickCommand}">
         <controls:NavigationMenuItem Title="item"/>
         <controls:NavigationMenuItem Title="item 2"/>
