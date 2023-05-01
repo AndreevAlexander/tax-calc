@@ -9,5 +9,35 @@
         <vm:TaxProfileViewModel />
     </Design.DataContext>
     
-    Tax Profile
+    <Grid RowDefinitions="Auto,10,*"
+          ColumnDefinitions="Auto,*">
+        <TextBlock Text="Tax Profiles" FontSize="18" />
+        <Button Grid.Column="1"
+                Grid.Row="0"
+                Content="Add"
+                HorizontalAlignment="Right" />
+        
+        <DataGrid Grid.Row="2"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  AutoGenerateColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  IsReadOnly="True"
+                  Items="{Binding TaxProfiles, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn DisplayIndex="11" Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Spacing="2" Orientation="Horizontal">
+                                <Button Content="Edit"/>
+                                <Button Content="Remove"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

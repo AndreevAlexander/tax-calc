@@ -24,4 +24,8 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TaxCalculator.Application\TaxCalculator.Application.csproj" />
+    </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 
     <Application.Styles>
         <FluentTheme Mode="Light"/>
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         
         <StyleInclude Source="/Controls/NavigationMenuItem.axaml"/>
         <StyleInclude Source="/Controls/NavigationMenu.axaml"/>
