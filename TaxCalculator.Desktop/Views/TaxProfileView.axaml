@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="using:TaxCalculator.Desktop.Controls"
              xmlns:vm="using:TaxCalculator.Desktop.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaxCalculator.Desktop.Views.TaxProfileView">
@@ -17,7 +18,7 @@
                 Content="Add"
                 HorizontalAlignment="Right" />
         
-        <DataGrid Grid.Row="2"
+        <!--<DataGrid Grid.Row="2"
                   Grid.Column="0"
                   Grid.ColumnSpan="2"
                   AutoGenerateColumns="True"
@@ -25,6 +26,7 @@
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
                   IsReadOnly="True"
+                  
                   Items="{Binding TaxProfiles, Mode=TwoWay}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn DisplayIndex="11" Header="Actions">
@@ -38,6 +40,13 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
+        
+        <controls:DataGridExt Grid.Row="2"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              Sortable="True"
+                              ResizeableColumns="True"
+                              Items="{Binding TaxProfiles, Mode=TwoWay}"/>
     </Grid>
 </UserControl>

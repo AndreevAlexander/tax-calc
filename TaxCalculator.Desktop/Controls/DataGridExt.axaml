@@ -1,0 +1,22 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TaxCalculator.Desktop.Controls">
+    <Design.PreviewWith>
+        <controls:DataGridExt />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|DataGridExt">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DataGrid Name="DataGridExt"
+                          CanUserResizeColumns="{TemplateBinding ResizeableColumns}" 
+                          CanUserSortColumns="{TemplateBinding Sortable}"
+                          CanUserReorderColumns="False"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Items="{TemplateBinding Items, Mode=TwoWay}"/>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
