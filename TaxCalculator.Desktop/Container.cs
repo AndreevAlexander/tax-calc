@@ -96,9 +96,9 @@ public class Container : IContainer
 
         foreach (var serviceDependencyType in serviceInfo.DependencyTypes)
         {
-            if (!_dependencyMap.TryGetValue(serviceDependencyType, out ServiceInfo dependencyInfo))
+            if (!_dependencyMap.TryGetValue(serviceDependencyType, out var dependencyInfo))
             {
-                if (!_abstractionMap.TryGetValue(serviceDependencyType, out Type type))
+                if (!_abstractionMap.TryGetValue(serviceDependencyType, out var type))
                 {
                     throw new Exception($"Type {serviceDependencyType} has not been registered in the container");
                 }

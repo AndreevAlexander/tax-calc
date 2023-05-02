@@ -15,5 +15,6 @@
         <StyleInclude Source="/Controls/NavigationMenu.axaml"/>
         <StyleInclude Source="/Controls/NavigationView.axaml"/>
         <StyleInclude Source="/Controls/DataGridExt.axaml" />
+		<StyleInclude Source="/CrudStyles.axaml" />
     </Application.Styles>
 </Application>

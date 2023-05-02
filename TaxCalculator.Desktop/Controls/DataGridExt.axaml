@@ -9,13 +9,15 @@
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
-                <DataGrid Name="DataGridExt"
-                          CanUserResizeColumns="{TemplateBinding ResizeableColumns}" 
+				<DataGrid Name="DataGridExt"
+                          CanUserResizeColumns="{TemplateBinding ResizeableColumns}"
                           CanUserSortColumns="{TemplateBinding Sortable}"
                           CanUserReorderColumns="False"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          Items="{TemplateBinding Items, Mode=TwoWay}"/>
+                          SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                          Items="{TemplateBinding Items, Mode=TwoWay}">
+				</DataGrid>
             </ControlTemplate>
         </Setter>
     </Style>

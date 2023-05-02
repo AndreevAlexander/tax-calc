@@ -6,47 +6,31 @@
              xmlns:vm="using:TaxCalculator.Desktop.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaxCalculator.Desktop.Views.TaxProfileView">
-    <Design.DataContext>
-        <vm:TaxProfileViewModel />
-    </Design.DataContext>
     
     <Grid RowDefinitions="Auto,10,*"
           ColumnDefinitions="Auto,*">
-        <TextBlock Text="Tax Profiles" FontSize="18" />
-        <Button Grid.Column="1"
-                Grid.Row="0"
-                Content="Add"
-                HorizontalAlignment="Right" />
-        
-        <!--<DataGrid Grid.Row="2"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="2"
-                  AutoGenerateColumns="True"
-                  CanUserReorderColumns="True"
-                  CanUserResizeColumns="True"
-                  CanUserSortColumns="True"
-                  IsReadOnly="True"
-                  
-                  Items="{Binding TaxProfiles, Mode=TwoWay}">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn DisplayIndex="11" Header="Actions">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Spacing="2" Orientation="Horizontal">
-                                <Button Content="Edit"/>
-                                <Button Content="Remove"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>-->
+        <TextBlock Text="Tax Profiles"
+                   FontSize="18" />
+
+		<StackPanel Grid.Column="1"
+					Grid.Row="0"
+					Classes="CrudActions">
+
+			<Button Content="Edit" 
+			        Command="{Binding EditCommand, Mode=TwoWay}"/>
+			
+			<Button Content="Remove" 
+			        Command="{Binding RemoveCommand, Mode=TwoWay}"/>
+			
+			<Button Content="Add" />
+		</StackPanel>
         
         <controls:DataGridExt Grid.Row="2"
                               Grid.Column="0"
                               Grid.ColumnSpan="2"
                               Sortable="True"
                               ResizeableColumns="True"
-                              Items="{Binding TaxProfiles, Mode=TwoWay}"/>
+                              SelectedItem="{Binding SelectedTaxProfile, Mode=TwoWay}"
+                              Items="{Binding TaxProfiles, Mode=TwoWay}" />
     </Grid>
 </UserControl>

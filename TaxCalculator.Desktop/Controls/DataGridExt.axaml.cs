@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Layout;
-using Avalonia.Markup.Xaml.Templates;
+using DynamicData;
 using TaxCalculator.Desktop.Attributes;
 
 namespace TaxCalculator.Desktop.Controls;
@@ -22,9 +19,7 @@ public class DataGridExt : TemplatedControl
 
     private bool _resizeableColumns;
 
-    private ICommand _editCommand;
-
-    private ICommand _removeCommand;
+    private object _selectedItem;
 
     public IEnumerable Items
     {
@@ -44,22 +39,10 @@ public class DataGridExt : TemplatedControl
         set => SetAndRaise(ResizeableColumnsProperty, ref _resizeableColumns, value);
     }
 
-    public ICommand EditCommand
+    public object SelectedItem
     {
-        get => _editCommand;
-        set => SetAndRaise(EditCommandProperty, ref _editCommand, value);
-    }
-
-    public ICommand RemoveCommand
-    {
-        get => _removeCommand;
-        set => SetAndRaise(RemoveCommandProperty, ref _removeCommand, value);
-    }
-
-    public object CommandParameter
-    {
-        get => GetValue(CommandParameterProperty);
-        set => SetValue(CommandParameterProperty, value);
+        get => _selectedItem;
+        set => SetAndRaise(SelectedItemProperty, ref _selectedItem, value);
     }
     
     public static readonly DirectProperty<DataGridExt, IEnumerable> ItemsProperty =
@@ -74,17 +57,9 @@ public class DataGridExt : TemplatedControl
         AvaloniaProperty.RegisterDirect<DataGridExt, bool>(nameof(ResizeableColumns), g => g.ResizeableColumns,
             (g, value) => g.ResizeableColumns = value);
 
-    public static readonly DirectProperty<DataGridExt, ICommand> EditCommandProperty =
-        AvaloniaProperty.RegisterDirect<DataGridExt, ICommand>(nameof(EditCommand), g => g.EditCommand,
-            (g, value) => g.EditCommand = value);
-
-    public static readonly DirectProperty<DataGridExt, ICommand> RemoveCommandProperty =
-        AvaloniaProperty.RegisterDirect<DataGridExt, ICommand>(nameof(RemoveCommand), g => g.RemoveCommand,
-            (g, value) => g.RemoveCommand = value);
-    
-    public static readonly StyledProperty<object> CommandParameterProperty =
-        AvaloniaProperty.Register<DataGridExt, object>(nameof(CommandParameter));
-
+    public static readonly DirectProperty<DataGridExt, object> SelectedItemProperty =
+        AvaloniaProperty.RegisterDirect<DataGridExt, object>(nameof(SelectedItem), g => g.SelectedItem,
+            (g, value) => g.SelectedItem = value);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -93,18 +68,17 @@ public class DataGridExt : TemplatedControl
 
         if (dataGrid != null)
         {
-            var columns = GenerateColumns();
+            var columns = GenerateColumns().ToList();
             if (columns.Any())
             {
-                var actionsColumn = GenerateActionsColumn();
-                dataGrid.Columns.Add(actionsColumn);
+                dataGrid.Columns.AddRange(columns);
             }
         }
     }
 
-    private IEnumerable<DataGridBoundColumn> GenerateColumns()
+    private IEnumerable<DataGridColumn> GenerateColumns()
     {
-        var result = new List<DataGridBoundColumn>();
+        var result = new List<DataGridColumn>();
         
         if (Items != null)
         {
@@ -128,52 +102,46 @@ public class DataGridExt : TemplatedControl
         return result;
     }
     
-    private DataGridBoundColumn GenerateColumn(PropertyInfo propertyInfo)
+    private DataGridColumn GenerateColumn(PropertyInfo propertyInfo)
     {
-        DataGridBoundColumn column = null;
+        DataGridColumn column = null;
         
         var columnAttribute = propertyInfo.GetCustomAttribute<GridColumnAttribute>();
         if (columnAttribute != null)
         {
-            column = propertyInfo.PropertyType == typeof(bool)
-                ? new DataGridCheckBoxColumn
-                    { Header = columnAttribute.DisplayName, Binding = new Binding(propertyInfo.Name) }
-                : new DataGridTextColumn
-                    { Header = columnAttribute.DisplayName, Binding = new Binding(propertyInfo.Name) };
+            if (string.IsNullOrEmpty(columnAttribute.NestedPropertyPath))
+            {
+                column = CreateColumn(propertyInfo, columnAttribute.DisplayName, propertyInfo.Name);
+            }
+            else
+            {
+                var nestedProperty = propertyInfo;
+                var nestedPropertyNames = columnAttribute.NestedPropertyPath.Split('.');
+                if (nestedPropertyNames.Length > 1) 
+                {
+                    for (var i = 1; i < nestedPropertyNames.Length; i++)
+                    {
+                        nestedProperty = nestedProperty.PropertyType.GetProperty(nestedPropertyNames[i]);
+                    }
+                }
+
+                var bindPath = $"{propertyInfo.Name}.{columnAttribute.NestedPropertyPath}";
+                column = CreateColumn(nestedProperty, columnAttribute.DisplayName, bindPath);
+            }
+
+            column.DisplayIndex = columnAttribute.DisplayIndex;
         }
         
         return column;
     }
 
-    private DataGridTemplateColumn GenerateActionsColumn()
+    private DataGridColumn CreateColumn(PropertyInfo propertyInfo, string displayName, string bindPath)
     {
-        var actionsColumn = new DataGridTemplateColumn
-        {
-            CellTemplate = new DataTemplate
-            {
-                Content = new StackPanel
-                {
-                    Spacing = 2,
-                    Orientation = Orientation.Horizontal,
-                    Children =
-                    {
-                        new Button
-                        {
-                            Content = "Edit",
-                            Command = EditCommand,
-                            CommandParameter = CommandParameter
-                        },
-                        new Button
-                        {
-                            Content = "Remove",
-                            Command = RemoveCommand,
-                            CommandParameter = CommandParameter
-                        },
-                    }
-                }
-            }
-        };
-
-        return actionsColumn;
+        displayName = displayName ?? propertyInfo.Name;
+        return propertyInfo.PropertyType == typeof(bool)
+        ? new DataGridCheckBoxColumn
+                { Header = displayName, Binding = new Binding(bindPath) }
+        : new DataGridTextColumn
+                { Header = displayName, Binding = new Binding(bindPath) };
     }
 }

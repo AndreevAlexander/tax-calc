@@ -6,12 +6,15 @@ namespace TaxCalculator.Desktop.Attributes;
 public class GridColumnAttribute : Attribute
 {
     public string DisplayName { get; }
-    
-    public int? Index { get; }
 
-    public GridColumnAttribute(string displayName, int? index = null)
+    public string NestedPropertyPath { get; }
+
+    public int DisplayIndex { get; }
+
+    public GridColumnAttribute(string displayName = null, string nestedPropertyPath = null, int displayIndex = -1)
     {
         DisplayName = displayName;
-        Index = index;
+        NestedPropertyPath = nestedPropertyPath;
+        DisplayIndex = displayIndex;
     }
 }
