@@ -80,12 +80,15 @@ public class Bootstrapper
     private void RegisterCqrsHandlers()
     {
         var handlerLoader = new HandlerLoader(null);
-        var queryHandlerMetadataItems = handlerLoader
+        var handlerMetadataItems = handlerLoader
             .LoadTypesForAssembly(Assembly.GetAssembly(typeof(CreateTaxProfileCommand)));
 
-        foreach (var queryHandlerMetadataItem in queryHandlerMetadataItems)
+        foreach (var handlerMetadataItem in handlerMetadataItems)
         {
-            Container.Register(queryHandlerMetadataItem.Type);
+            var handlerAbstraction =
+                handlerMetadataItem.GenericTypeDefinition.MakeGenericType(
+                    handlerMetadataItem.GenericArguments.ToArray());
+            Container.Register(handlerAbstraction, handlerMetadataItem.Type);
         }
     }
 }
