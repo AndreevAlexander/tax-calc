@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using Splat;
 using TaxCalculator.Application.TaxProfiles.Commands;
@@ -23,9 +24,14 @@ public class Bootstrapper
 {
     public IContainer Container { get; }
     
+    private IConfiguration Configuration { get; }
+    
     public Bootstrapper(IContainer container)
     {
         Container = container;
+        Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
     }
     
     public void BootstrapServices()
@@ -42,7 +48,7 @@ public class Bootstrapper
         {
             var cache = resolver.GetService<ICache>();
             var options = new DbContextOptionsBuilder<TaxContext>();
-            options.UseSqlServer("Server=localhost\\sqlexpress;Database=Calculator;Trusted_Connection=True;");
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             var dbContext = new TaxContext(options.Options);
             return new EntityManager(dbContext, cache);
         });
@@ -50,9 +56,6 @@ public class Bootstrapper
 
     private void RegisterServices()
     {
-        /*Container.Register<IMyService, MyService>();
-        Container.Register<OtherService>();*/
-        
         Container.Register<IQueryBus, QueryBus>(resolver => new QueryBus(resolver.GetQueryHandler));
         Container.Register<ICommandBus, CommandBus>(resolver => new CommandBus(resolver.GetCommandHandler));
         Container.Register<IHandlerLoader, HandlerLoader>();
