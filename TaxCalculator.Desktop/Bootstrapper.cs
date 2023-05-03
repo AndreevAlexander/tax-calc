@@ -43,7 +43,7 @@ public class Bootstrapper
 
     private void RegisterDatabase()
     {
-        Container.Register(resolver =>
+        Container.Register(_ =>
         {
             var options = new DbContextOptionsBuilder<TaxContext>();
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
