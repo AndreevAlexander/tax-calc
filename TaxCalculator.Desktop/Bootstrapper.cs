@@ -44,12 +44,17 @@ public class Bootstrapper
 
     private void RegisterDatabase()
     {
+        Container.Register(resolver =>
+        {
+            var options = new DbContextOptionsBuilder<TaxContext>();
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            return new TaxContext(options.Options);
+        });
+        
         Container.Register<IEntityManager, EntityManager>(resolver =>
         {
             var cache = resolver.GetService<ICache>();
-            var options = new DbContextOptionsBuilder<TaxContext>();
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            var dbContext = new TaxContext(options.Options);
+            var dbContext = resolver.GetService<TaxContext>();
             return new EntityManager(dbContext, cache);
         });
     }

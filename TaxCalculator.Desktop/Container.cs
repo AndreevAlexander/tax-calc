@@ -17,6 +17,7 @@ public class ServiceInfo
 public interface IContainer
 {
     void Register<TService>();
+    void Register<TService>(Func<IReadonlyDependencyResolver, TService> factory);
     void  Register(Type serviceType);
     void Register<TAbstraction, TService>();
     void Register<TAbstraction, TService>(Func<IReadonlyDependencyResolver, TAbstraction> factory);
@@ -42,6 +43,11 @@ public class Container : IContainer
     public void Register<TService>()
     {
         AddToDependencyMap(null, typeof(TService));
+    }
+
+    public void Register<TService>(Func<IReadonlyDependencyResolver, TService> factory)
+    {
+        _services.Register(() => factory(_resolver));
     }
 
     public void Register(Type serviceType)
