@@ -64,7 +64,7 @@ public class Bootstrapper
         Container.Register<IQueryBus, QueryBus>(resolver => new QueryBus(resolver.GetQueryHandler));
         Container.Register<ICommandBus, CommandBus>(resolver => new CommandBus(resolver.GetCommandHandler));
         Container.Register<IHandlerLoader, HandlerLoader>();
-        Container.Register<IMapper, MapperDecorator>(resolver => new MapperDecorator(new UiMappingBuilder()));
+        Container.Register<IMapper, MapperDecorator>(_ => new MapperDecorator(new UiMappingBuilder()));
         Container.Register<ICache, StaticCache>();
     }
 
