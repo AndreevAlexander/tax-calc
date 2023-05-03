@@ -1,10 +1,7 @@
-using System;
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 using Splat;
-using TaxCalculator.Desktop.ViewModels;
 using TaxCalculator.Desktop.Views;
 
 namespace TaxCalculator.Desktop;

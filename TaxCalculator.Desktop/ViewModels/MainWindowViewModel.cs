@@ -15,8 +15,6 @@ public class MainWindowViewModel : ViewModelBase, IScreen
     public MainWindowViewModel()
     {
         Router = new RoutingState();
-        
-        //var canExecuteMenuItemClickCommand = this.WhenAnyValue(model => model.Greeting, v => !string.IsNullOrEmpty(v));
         MenuItemClickCommand = ReactiveCommand.Create<NavigationMenuItem>(ItemClickCommandExecute);
     }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Reactive.Subjects;
+using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using ReactiveUI;
@@ -20,15 +20,18 @@ public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
     
     private readonly IMapper _mapper;
 
-    //public Task<ObservableCollection<TaxProfileModel>> TaxProfiles => LoadData();
-
     public IObservable<ObservableCollection<TaxProfileModel>> TaxProfiles { get; }
-    
+
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
 
     public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
 
-    public TaxProfileModel SelectedTaxProfile { get; set; }
+    private TaxProfileModel _selectedTaxProfile;
+    public TaxProfileModel SelectedTaxProfile
+    { 
+        get => _selectedTaxProfile;
+        set => this.RaiseAndSetIfChanged(ref _selectedTaxProfile, value);
+    }
 
     public string UrlPathSegment { get; }
     
@@ -42,9 +45,9 @@ public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
         _mapper = mapper;
         HostScreen = screen;
         UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
-
-        EditCommand = ReactiveCommand.Create(EditExecute);
-        RemoveCommand = ReactiveCommand.Create(RemoveExecute);
+        
+        EditCommand = ReactiveCommand.Create(EditExecute, this.WhenAnyValue(x => x.SelectedTaxProfile).Select(x => x != null));
+        RemoveCommand = ReactiveCommand.Create(RemoveExecute, this.WhenAnyValue(x => x.SelectedTaxProfile).Select(x => x != null));
 
         TaxProfiles = LoadData().ToObservable();
     }
@@ -54,8 +57,7 @@ public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
         var taxProfiles =
             await _queryBus.ExecuteAsync<GetTaxProfilesQuery, List<TaxProfile>>(new GetTaxProfilesQuery());
 
-        var taxProfileModels = _mapper.Map<IEnumerable<TaxProfile>, IEnumerable<TaxProfileModel>>(taxProfiles);
-        return new ObservableCollection<TaxProfileModel>(taxProfileModels);
+        return _mapper.Map<ObservableCollection<TaxProfileModel>>(taxProfiles);
     }
 
     private void EditExecute()
