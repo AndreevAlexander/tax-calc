@@ -7,7 +7,7 @@ using TaxCalculator.Domain.Entities;
 
 namespace TaxCalculator.Infrastructure.Mapper;
 
-public class MappingBuilder
+public class MappingBuilder : IMappingBuilder
 {
     public IMapper CreateMapper()
     {

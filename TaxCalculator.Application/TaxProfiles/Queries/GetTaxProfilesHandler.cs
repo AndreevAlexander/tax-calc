@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TaxCalculator.Application.Extensions;
+﻿using TaxCalculator.Application.Extensions;
 using TaxCalculator.Cqrs.Contracts.Handler;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Persistence;

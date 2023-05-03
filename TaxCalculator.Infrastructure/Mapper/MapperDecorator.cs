@@ -6,7 +6,7 @@ public class MapperDecorator : IMapper
 {
     private readonly AutoMapper.IMapper _mapper;
     
-    public MapperDecorator(MappingBuilder builder)
+    public MapperDecorator(IMappingBuilder builder)
     {
         _mapper = builder.CreateMapper();
     }

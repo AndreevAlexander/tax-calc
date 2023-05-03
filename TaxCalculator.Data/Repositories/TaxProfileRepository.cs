@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.ValueObjects;
 using TaxCalculator.Persistence;
@@ -36,5 +34,10 @@ public class TaxProfileRepository : RepositoryBase<TaxProfile>, ITaxProfileRepos
         }
 
         return taxProfile;
+    }
+
+    public override IQueryable<TaxProfile> GetMany()
+    {
+        return base.GetMany().Include(x => x.ProfileCurrency);
     }
 } 

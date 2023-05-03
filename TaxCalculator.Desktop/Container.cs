@@ -17,8 +17,9 @@ public class ServiceInfo
 public interface IContainer
 {
     void Register<TService>();
-    void Register(Type serviceType);
+    void  Register(Type serviceType);
     void Register<TAbstraction, TService>();
+    void Register<TAbstraction, TService>(Func<IReadonlyDependencyResolver, TAbstraction> factory);
     void Register(Type abstractionType, Type serviceType);
     void Compile();
 }
@@ -28,12 +29,14 @@ public class Container : IContainer
     private readonly Dictionary<Type, ServiceInfo> _dependencyMap;
     private readonly Dictionary<Type, Type> _abstractionMap;
     private readonly IMutableDependencyResolver _services;
+    private readonly IReadonlyDependencyResolver _resolver;
     
     public Container()
     {
         _dependencyMap = new();
         _abstractionMap = new();
         _services = Locator.CurrentMutable;
+        _resolver = Locator.Current;
     }
 
     public void Register<TService>()
@@ -50,6 +53,11 @@ public class Container : IContainer
     {
         AddToDependencyMap(typeof(TAbstraction), typeof(TService));
     }
+
+    public void Register<TAbstraction, TService>(Func<IReadonlyDependencyResolver, TAbstraction> factory)
+    {
+        _services.Register(() => factory(_resolver));
+    }
     
     public void Register(Type abstractionType, Type serviceType)
     {
@@ -63,7 +71,7 @@ public class Container : IContainer
             _services.Register(() => BuildService(dependencyMapItem.Value), dependencyMapItem.Value.AbstractionType ?? dependencyMapItem.Key);
         }
     }
-    
+
     private void AddToDependencyMap(Type abstractionType, Type type)
     {
         var parameterTypes = new List<Type>();
@@ -96,18 +104,31 @@ public class Container : IContainer
 
         foreach (var serviceDependencyType in serviceInfo.DependencyTypes)
         {
+            var addedDependencyViaResolver = false;
             if (!_dependencyMap.TryGetValue(serviceDependencyType, out var dependencyInfo))
             {
-                if (!_abstractionMap.TryGetValue(serviceDependencyType, out var type))
+                if (_abstractionMap.TryGetValue(serviceDependencyType, out var type))
                 {
-                    throw new Exception($"Type {serviceDependencyType} has not been registered in the container");
+                    dependencyInfo = _dependencyMap[type];
                 }
-
-                dependencyInfo = _dependencyMap[type];
+                else
+                {
+                    var dependency = _resolver.GetService(serviceDependencyType);
+                    if (dependency == null)
+                    {
+                        throw new Exception($"Type {serviceDependencyType} has not been registered in the container");
+                    }
+                    
+                    serviceDependencies.Add(dependency);
+                    addedDependencyViaResolver = true;
+                }
             }
-            
-            var serviceDependency = BuildService(dependencyInfo);
-            serviceDependencies.Add(serviceDependency);
+
+            if (!addedDependencyViaResolver)
+            {
+                var serviceDependency = BuildService(dependencyInfo);
+                serviceDependencies.Add(serviceDependency);
+            }
         }
         
         return Activator.CreateInstance(serviceInfo.ServiceType, serviceDependencies.ToArray());

@@ -31,6 +31,6 @@
                               Sortable="True"
                               ResizeableColumns="True"
                               SelectedItem="{Binding SelectedTaxProfile, Mode=TwoWay}"
-                              Items="{Binding TaxProfiles, Mode=TwoWay}" />
+                              Items="{Binding TaxProfiles^}" />
     </Grid>
 </UserControl>

@@ -18,7 +18,7 @@ public class HandlerLoader : IHandlerLoader
 
     public IEnumerable<IHandlerMetadata> LoadHandlersTypesForAssemblies(params Assembly[] assemblies)
     {
-        var result = new List<HandlerMetadata>();
+        var result = new List<IHandlerMetadata>();
         
         foreach (var assembly in assemblies)
         {
@@ -29,7 +29,7 @@ public class HandlerLoader : IHandlerLoader
         return result;
     }
 
-    private IEnumerable<HandlerMetadata> LoadTypesForAssembly(Assembly assembly)
+    public IEnumerable<IHandlerMetadata> LoadTypesForAssembly(Assembly assembly)
     {
         return assembly.GetTypes()
             .Where(t => t.GetInterfaces().Any(i =>
