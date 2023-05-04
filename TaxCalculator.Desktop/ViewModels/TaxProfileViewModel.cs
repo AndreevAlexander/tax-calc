@@ -6,18 +6,23 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using ReactiveUI;
+using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Application.TaxProfiles.Queries;
 using TaxCalculator.Contracts;
+using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
 using TaxCalculator.Desktop.Models;
+using TaxCalculator.Desktop.ViewModels.BaseTypes;
 using TaxCalculator.Domain.Entities;
 
 namespace TaxCalculator.Desktop.ViewModels;
 
-public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
+public class TaxProfileViewModel : NestedRoutedViewModel
 {
     private readonly IQueryBus _queryBus;
     
+    private readonly ICommandBus _commandBus;
+
     private readonly IMapper _mapper;
 
     public IObservable<ObservableCollection<TaxProfileModel>> TaxProfiles { get; }
@@ -33,21 +38,16 @@ public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedTaxProfile, value);
     }
 
-    public string UrlPathSegment { get; }
-    
-    public IScreen HostScreen { get; }
-
-    public TaxProfileViewModel(IScreen screen,
-                               IQueryBus queryBus,
+    public TaxProfileViewModel(IQueryBus queryBus,
+                               ICommandBus commandBus,
                                IMapper mapper)
     {
         _queryBus = queryBus;
+        _commandBus = commandBus;
         _mapper = mapper;
-        HostScreen = screen;
-        UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
-        
+
         EditCommand = ReactiveCommand.Create(EditExecute, this.WhenAnyValue(x => x.SelectedTaxProfile).Select(x => x != null));
-        RemoveCommand = ReactiveCommand.Create(RemoveExecute, this.WhenAnyValue(x => x.SelectedTaxProfile).Select(x => x != null));
+        RemoveCommand = ReactiveCommand.CreateFromTask(RemoveExecuteAsync, this.WhenAnyValue(x => x.SelectedTaxProfile).Select(x => x != null));
 
         TaxProfiles = LoadData().ToObservable();
     }
@@ -62,11 +62,17 @@ public class TaxProfileViewModel : ViewModelBase, IRoutableViewModel
 
     private void EditExecute()
     {
-        Console.WriteLine(SelectedTaxProfile.Id);
+        NavigateTo<TaxProfileEditViewModel>(vm => vm.TaxProfile = SelectedTaxProfile);
     }
 
-    private void RemoveExecute()
+    private async Task RemoveExecuteAsync()
     {
-        Console.WriteLine(SelectedTaxProfile.Id);
+        var result = await _commandBus.DispatchAsync(new RemoveTaxProfileCommand
+            { TaxProfileId = SelectedTaxProfile.Id });
+        if (result.Status == CommandStatus.Success)
+        {
+            var taxProfiles = await TaxProfiles.ToTask();
+            taxProfiles.Remove(SelectedTaxProfile);
+        }
     }
 }

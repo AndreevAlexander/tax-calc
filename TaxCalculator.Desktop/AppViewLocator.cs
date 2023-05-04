@@ -6,16 +6,16 @@ using TaxCalculator.Desktop.Views;
 
 namespace TaxCalculator.Desktop;
 
-public class AppViewLocator : IViewLocator
+public class AppViewLocator : IViewLocator 
 {
-    public IViewFor ResolveView<T>(T viewModel, string contract = null) => viewModel switch
+    /*public IViewFor ResolveView<T>(T viewModel, string contract = null) => viewModel switch
     {
         DashboardViewModel context => new DashboardView { DataContext = context },
         TaxProfileViewModel context => new TaxProfileView { DataContext = context },
         _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
-    };
+    };*/
 
-    /*private const string ViewsNamespace = "TaxCalculator.Desktop.Views";
+    private const string ViewsNamespace = "TaxCalculator.Desktop.Views";
     
     public IViewFor ResolveView<T>(T viewModel, string contract = null)
     {
@@ -34,5 +34,5 @@ public class AppViewLocator : IViewLocator
         view.DataContext = viewModel;
 
         return view as IViewFor;
-    }*/
+    }
 }

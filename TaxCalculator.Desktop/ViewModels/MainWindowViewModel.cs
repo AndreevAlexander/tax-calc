@@ -3,6 +3,7 @@ using System.Reactive;
 using ReactiveUI;
 using Splat;
 using TaxCalculator.Desktop.Controls;
+using TaxCalculator.Desktop.ViewModels.BaseTypes;
 
 namespace TaxCalculator.Desktop.ViewModels;
 
@@ -23,8 +24,10 @@ public class MainWindowViewModel : ViewModelBase, IScreen
         var typeName = parameter.Tag.ToString();
         var type = Type.GetType(typeName);
 
-        var viewModel = Locator.Current.GetService(type);
+        var viewModel = Locator.Current.GetService(type) as RoutedViewModel;
+
+        viewModel.HostScreen = this;
         
-        Router.Navigate.Execute(viewModel as IRoutableViewModel);
+        Router.Navigate.Execute(viewModel);
     }
 }

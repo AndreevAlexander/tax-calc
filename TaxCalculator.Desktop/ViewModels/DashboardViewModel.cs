@@ -1,5 +1,6 @@
 ﻿using System;
 using ReactiveUI;
+using TaxCalculator.Desktop.ViewModels.BaseTypes;
 
 namespace TaxCalculator.Desktop.ViewModels;
 

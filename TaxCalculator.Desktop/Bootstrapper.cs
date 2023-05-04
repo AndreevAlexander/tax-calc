@@ -13,6 +13,7 @@ using TaxCalculator.Cqrs.Implementation.Bus;
 using TaxCalculator.Data;
 using TaxCalculator.Desktop.Extensions;
 using TaxCalculator.Desktop.ViewModels;
+using TaxCalculator.Desktop.ViewModels.BaseTypes;
 using TaxCalculator.Infrastructure;
 using TaxCalculator.Infrastructure.Mapper;
 using TaxCalculator.Persistence;
@@ -70,9 +71,11 @@ public class Bootstrapper
     private void RegisterViewModels()
     {
         Container.Register<IScreen, MainWindowViewModel>();
-        
+
+        var baseViewModelTypes = new[]
+            { typeof(ViewModelBase), typeof(RoutedViewModel), typeof(NestedRoutedViewModel) };
         var viewModelTypes = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(x => x.BaseType != null && x.BaseType == typeof(ViewModelBase) && x != typeof(MainWindowViewModel))
+            .Where(x => x.BaseType != null && baseViewModelTypes.Contains(x.BaseType) && x != typeof(MainWindowViewModel))
             .ToArray();
 
         foreach (var viewModelType in viewModelTypes)

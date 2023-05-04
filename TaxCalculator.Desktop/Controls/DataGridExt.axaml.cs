@@ -21,8 +21,6 @@ public class DataGridExt : TemplatedControl
 
     private object _selectedItem;
 
-    private DataGrid _dataGrid;
-
     public IEnumerable Items
     {
         get => _items;
@@ -70,19 +68,11 @@ public class DataGridExt : TemplatedControl
 
     private void OnItemsPropertyChanged(DataGrid sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (_dataGrid != null)
+        var columns = GenerateColumns().ToList();
+        if (columns.Any())
         {
-            var columns = GenerateColumns().ToList();
-            if (columns.Any())
-            {
-                _dataGrid.Columns.AddRange(columns);
-            }
+            sender.Columns.AddRange(columns);
         }
-    }
-    
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        _dataGrid = e.NameScope.Find<DataGrid>("PART_DataGridExt");
     }
 
     private IEnumerable<DataGridColumn> GenerateColumns()

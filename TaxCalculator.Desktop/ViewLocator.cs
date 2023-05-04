@@ -2,6 +2,7 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using TaxCalculator.Desktop.ViewModels;
+using TaxCalculator.Desktop.ViewModels.BaseTypes;
 
 namespace TaxCalculator.Desktop;
 
