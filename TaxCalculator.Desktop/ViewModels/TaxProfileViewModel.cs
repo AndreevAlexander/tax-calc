@@ -62,7 +62,7 @@ public class TaxProfileViewModel : NestedRoutedViewModel
 
     private void EditExecute()
     {
-        NavigateTo<TaxProfileEditViewModel>(vm => vm.TaxProfile = SelectedTaxProfile);
+        NavigateTo<TaxProfileEditViewModel>(SelectedTaxProfile);
     }
 
     private async Task RemoveExecuteAsync()
@@ -74,5 +74,9 @@ public class TaxProfileViewModel : NestedRoutedViewModel
             var taxProfiles = await TaxProfiles.ToTask();
             taxProfiles.Remove(SelectedTaxProfile);
         }
+    }
+
+    public override void OnBeforeNavigated(object parameter)
+    {
     }
 }

@@ -22,6 +22,7 @@ public class UiMappingBuilder : IMappingBuilder
 
         profile.CreateMap<Currency, CurrencyModel>()
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
-            .ForMember(x => x.ExchangeRate, o => o.MapFrom(x => x.ExchangeRate));
+            .ForMember(x => x.ExchangeRate, o => o.MapFrom(x => x.ExchangeRate))
+            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
     }
 }

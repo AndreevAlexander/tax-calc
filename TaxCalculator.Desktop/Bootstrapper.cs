@@ -14,6 +14,7 @@ using TaxCalculator.Data;
 using TaxCalculator.Desktop.Extensions;
 using TaxCalculator.Desktop.ViewModels;
 using TaxCalculator.Desktop.ViewModels.BaseTypes;
+using TaxCalculator.Domain.Services.Identifier;
 using TaxCalculator.Infrastructure;
 using TaxCalculator.Infrastructure.Mapper;
 using TaxCalculator.Persistence;
@@ -66,6 +67,7 @@ public class Bootstrapper
         Container.Register<IHandlerLoader, HandlerLoader>();
         Container.Register<IMapper, MapperDecorator>(_ => new MapperDecorator(new UiMappingBuilder()));
         Container.Register<ICache, StaticCache>();
+        Container.Register<IIdentifierService, IdentifierService>();
     }
 
     private void RegisterViewModels()

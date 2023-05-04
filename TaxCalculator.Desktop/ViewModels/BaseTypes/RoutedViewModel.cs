@@ -13,4 +13,6 @@ public abstract class RoutedViewModel : ViewModelBase, IRoutableViewModel
     {
         UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
     }
+
+    public abstract void OnBeforeNavigated(object parameter);
 }

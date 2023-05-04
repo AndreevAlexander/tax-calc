@@ -13,7 +13,7 @@ public abstract class NestedRoutedViewModel : RoutedViewModel, IScreen
         Router = new RoutingState();
     }
 
-    protected void NavigateTo<TViewModel>(Action<TViewModel> parametersSetter = null) where TViewModel : RoutedViewModel
+    protected void NavigateTo<TViewModel>(object parameter = null) where TViewModel : RoutedViewModel
     {
         var viewModel = Locator.Current.GetService<TViewModel>();
         if (viewModel == null)
@@ -22,8 +22,7 @@ public abstract class NestedRoutedViewModel : RoutedViewModel, IScreen
         }
 
         viewModel.HostScreen = this;
-        
-        parametersSetter?.Invoke(viewModel);
+        viewModel.OnBeforeNavigated(parameter);
         
         Router.Navigate.Execute(viewModel);
     }
