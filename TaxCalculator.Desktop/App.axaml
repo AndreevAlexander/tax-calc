@@ -17,6 +17,6 @@
         <StyleInclude Source="/Controls/DataGridExt.axaml" />
         <StyleInclude Source="/Controls/LabeledTextBox.axaml" />
         <StyleInclude Source="/Controls/LabeledCombobox.axaml" />
-		<StyleInclude Source="/CrudStyles.axaml" />
+        <StyleInclude Source="/Controls/CrudDataGrid.axaml" />
     </Application.Styles>
 </Application>

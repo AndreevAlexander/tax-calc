@@ -1,0 +1,52 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TaxCalculator.Desktop.Controls">
+    <Design.PreviewWith>
+        <controls:CrudDataGrid />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|CrudDataGrid">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid RowDefinitions="Auto,10,*"
+                      ColumnDefinitions="Auto,*">
+                    <TextBlock Text="{TemplateBinding Title}"
+                               Classes="CrudHeader" />
+
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="0"
+                                Classes="CrudActions">
+
+                        <Button Content="Edit" 
+                                Command="{TemplateBinding EditCommand, Mode=TwoWay}"/>
+			
+                        <Button Content="Remove" 
+                                Command="{TemplateBinding RemoveCommand, Mode=TwoWay}"/>
+			
+                        <Button Content="Add" />
+                    </StackPanel>
+        
+                    <controls:DataGridExt Grid.Row="2"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="2"
+                                          Sortable="{TemplateBinding Sortable}"
+                                          ResizeableColumns="{TemplateBinding ResizeableColumns}"
+                                          SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                                          Items="{TemplateBinding Items}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+        
+    <Style Selector="TextBlock.CrudHeader">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="18" />
+    </Style>
+    
+    <Style Selector="StackPanel.CrudActions">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Spacing" Value="5" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+</Styles>

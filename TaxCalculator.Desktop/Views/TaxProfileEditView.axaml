@@ -37,12 +37,13 @@
                                       Label="Currency" />
         </StackPanel>
         
-        <controls:DataGridExt Grid.Row="4"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="2"
-                              Sortable="True"
-                              ResizeableColumns="True"
-                              Items="{Binding TaxConfigurations^}" />
+        <controls:CrudDataGrid Grid.Row="4"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Title="Manage Tax Configurations"
+                               Sortable="True"
+                               ResizeableColumns="True"
+                               Items="{Binding TaxConfigurations^}" />
     </Grid>
     
 </UserControl>

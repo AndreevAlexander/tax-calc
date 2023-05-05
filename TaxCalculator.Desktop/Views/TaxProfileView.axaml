@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="using:TaxCalculator.Desktop.Controls"
-             xmlns:vm="using:TaxCalculator.Desktop.ViewModels"
              xmlns:reactiveUi="http://reactiveui.net"
              xmlns:desktop="clr-namespace:TaxCalculator.Desktop"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -11,33 +10,13 @@
     
 	<reactiveUi:RoutedViewHost Router="{Binding Router}">
 		<reactiveUi:RoutedViewHost.DefaultContent>
-			<Grid RowDefinitions="Auto,10,*"
-			      ColumnDefinitions="Auto,*">
-				<TextBlock Text="Tax Profiles"
-				           VerticalAlignment="Center"
-				           FontSize="18" />
-
-				<StackPanel Grid.Column="1"
-				            Grid.Row="0"
-				            Classes="CrudActions">
-
-					<Button Content="Edit" 
-					        Command="{Binding EditCommand, Mode=TwoWay}"/>
-			
-					<Button Content="Remove" 
-					        Command="{Binding RemoveCommand, Mode=TwoWay}"/>
-			
-					<Button Content="Add" />
-				</StackPanel>
-        
-				<controls:DataGridExt Grid.Row="2"
-				                      Grid.Column="0"
-				                      Grid.ColumnSpan="2"
-				                      Sortable="True"
-				                      ResizeableColumns="True"
-				                      SelectedItem="{Binding SelectedTaxProfile, Mode=TwoWay}"
-				                      Items="{Binding TaxProfiles^}" />
-			</Grid>
+			<controls:CrudDataGrid Title="Tax Profiles"
+			                       EditCommand="{Binding EditCommand, Mode=TwoWay}"
+			                       RemoveCommand="{Binding RemoveCommand, Mode=TwoWay}"
+			                       Sortable="True"
+			                       ResizeableColumns="True"
+			                       SelectedItem="{Binding SelectedTaxProfile, Mode=TwoWay}"
+			                       Items="{Binding TaxProfiles^}"/>
 		</reactiveUi:RoutedViewHost.DefaultContent>
 		<reactiveUi:RoutedViewHost.ViewLocator>
 			<desktop:AppViewLocator/>
