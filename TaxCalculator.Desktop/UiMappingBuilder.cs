@@ -24,5 +24,12 @@ public class UiMappingBuilder : IMappingBuilder
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
             .ForMember(x => x.ExchangeRate, o => o.MapFrom(x => x.ExchangeRate))
             .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
+
+        profile.CreateMap<Tax, TaxModel>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
+            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType.ToString()))
+            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
     }
 }

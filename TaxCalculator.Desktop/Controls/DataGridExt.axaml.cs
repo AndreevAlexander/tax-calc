@@ -68,6 +68,8 @@ public class DataGridExt : TemplatedControl
 
     private void OnItemsPropertyChanged(DataGrid sender, AvaloniaPropertyChangedEventArgs e)
     {
+        sender.Columns.Clear();
+        
         var columns = GenerateColumns().ToList();
         if (columns.Any())
         {

@@ -5,7 +5,7 @@
              xmlns:controls="clr-namespace:TaxCalculator.Desktop.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaxCalculator.Desktop.Views.TaxProfileEditView">
-    <Grid RowDefinitions="Auto,10,*,Auto"
+    <Grid RowDefinitions="Auto,10,Auto,20,*"
           ColumnDefinitions="Auto,*">
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
@@ -17,7 +17,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Content="Save" />
+                Content="Save Basic Information" />
         
         <StackPanel Grid.Row="2"
                     Grid.ColumnSpan="2"
@@ -36,6 +36,13 @@
                                       SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
                                       Label="Currency" />
         </StackPanel>
+        
+        <controls:DataGridExt Grid.Row="4"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              Sortable="True"
+                              ResizeableColumns="True"
+                              Items="{Binding TaxConfigurations^}" />
     </Grid>
     
 </UserControl>

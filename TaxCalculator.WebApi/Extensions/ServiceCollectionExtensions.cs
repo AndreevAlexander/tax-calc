@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddMemoryCache();
-        services.AddSingleton<MappingBuilder>();
+        services.AddSingleton<IMappingBuilder, MappingBuilder>();
         services.AddSingleton<IMapper, MapperDecorator>();
         services.AddSingleton<ICache, CacheDecorator>();
         services.AddSingleton<IHandlerLoader, HandlerLoader>();

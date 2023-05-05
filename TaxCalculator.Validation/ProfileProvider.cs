@@ -13,7 +13,8 @@ public class ProfileProvider : IProfileProvider
     
     public IEnumerable<IValidationProfile> GetRules<TModel>() where TModel : class
     {
-        return _validationProfiles[typeof(TModel)];
+        _validationProfiles.TryGetValue(typeof(TModel), out var profiles);
+        return profiles ?? new List<IValidationProfile>();
     }
 
     public void RegisterValidationProfile<TProfile>() where TProfile : ValidationProfile, new()
