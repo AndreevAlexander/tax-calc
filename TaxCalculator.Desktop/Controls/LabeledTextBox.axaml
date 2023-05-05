@@ -1,0 +1,32 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TaxCalculator.Desktop.Controls">
+    <Design.PreviewWith>
+        <controls:LabeledTextBox />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|LabeledTextBox">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="-10"
+                            Width="{TemplateBinding Width}">
+                    <TextBox Text="{TemplateBinding Text}"
+                             Width="{TemplateBinding Width}"
+                             AcceptsReturn="{TemplateBinding AcceptReturns}"
+                             TextWrapping="{TemplateBinding TextWrapping}"/>
+                    <Label Content="{TemplateBinding Label}" 
+                           Classes="LabeledTextBoxLabel" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <Style Selector="Label.LabeledTextBoxLabel">
+        <Setter Property="Height" Value="18" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Margin" Value="10 0 0 0" />
+        <Setter Property="Background" Value="#fff" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+</Styles>

@@ -11,10 +11,12 @@
         <FluentTheme Mode="Light"/>
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         
-        <StyleInclude Source="/Controls/NavigationMenuItem.axaml"/>
-        <StyleInclude Source="/Controls/NavigationMenu.axaml"/>
-        <StyleInclude Source="/Controls/NavigationView.axaml"/>
+        <StyleInclude Source="/Controls/NavigationMenuItem.axaml" />
+        <StyleInclude Source="/Controls/NavigationMenu.axaml" />
+        <StyleInclude Source="/Controls/NavigationView.axaml" />
         <StyleInclude Source="/Controls/DataGridExt.axaml" />
+        <StyleInclude Source="/Controls/LabeledTextBox.axaml" />
+        <StyleInclude Source="/Controls/LabeledCombobox.axaml" />
 		<StyleInclude Source="/CrudStyles.axaml" />
     </Application.Styles>
 </Application>

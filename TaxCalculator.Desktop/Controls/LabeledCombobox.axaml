@@ -1,0 +1,39 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TaxCalculator.Desktop.Controls">
+    <Design.PreviewWith>
+        <controls:LabeledCombobox />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|LabeledCombobox">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="-10">
+                    <ComboBox Items="{TemplateBinding Items}"
+                              SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                              Width="{TemplateBinding Width}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Label Classes="LabeledComboBoxLabel"
+                           Content="{TemplateBinding Label}"/>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Width" Value="100" />
+    </Style>
+    
+    <Style Selector="Label.LabeledComboBoxLabel">
+        <Setter Property="Height" Value="18" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Margin" Value="10 0 0 0" />
+        <Setter Property="Background" Value="#fff" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+</Styles>
