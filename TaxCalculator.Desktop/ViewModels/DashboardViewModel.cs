@@ -1,18 +1,12 @@
 ﻿using System;
-using ReactiveUI;
 using TaxCalculator.Desktop.ViewModels.BaseTypes;
 
 namespace TaxCalculator.Desktop.ViewModels;
 
-public class DashboardViewModel : ViewModelBase, IRoutableViewModel
+public class DashboardViewModel : RoutedViewModel
 {
-    public string UrlPathSegment { get; }
-    
-    public IScreen HostScreen { get; }
-
-    public DashboardViewModel(IScreen screen)
+    public override void OnBeforeNavigated(object parameter)
     {
-        HostScreen = screen;
-        UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
+        
     }
 }
