@@ -31,7 +31,7 @@ public class CrudDataGrid : TemplatedControl
     private ICommand _saveCommand;
     
     private ICommand _addCommand;
-    
+
     public string Title
     {
         get => _title;

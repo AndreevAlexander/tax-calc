@@ -15,7 +15,7 @@ public class MappingBuilder : IMappingBuilder
         return mapper;
     }
 
-    private void ConfigureMappings(IProfileExpression profile)
+    protected virtual void ConfigureMappings(IProfileExpression profile)
     {
         profile.CreateMap<CreateTaxProfileCommand, TaxProfile>()
             .ForMember(x => x.ProfileCurrency, x => x.Ignore())

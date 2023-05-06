@@ -1,20 +1,25 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using TaxCalculator.Application.Taxes.Commands;
 using TaxCalculator.Desktop.Models;
 using TaxCalculator.Domain.Entities;
+using TaxCalculator.Domain.Enums;
 using TaxCalculator.Infrastructure.Mapper;
 
 namespace TaxCalculator.Desktop;
 
-public class UiMappingBuilder : IMappingBuilder
+public class UiMappingBuilder : MappingBuilder, IMappingBuilder
 {
-    public IMapper CreateMapper()
+    public new IMapper CreateMapper()
     {
         var mapper = new MapperConfiguration(x => x.CreateProfile("default", ConfigureMappings)).CreateMapper();
         return mapper;
     }
 
-    private void ConfigureMappings(IProfileExpression profile)
+    protected override void ConfigureMappings(IProfileExpression profile)
     {
+        base.ConfigureMappings(profile);
+        
         profile.CreateMap<TaxProfile, TaxProfileModel>()
             .ForMember(x => x.Id, o => o.MapFrom(x => x.Id))
             .ForMember(x => x.Description, o => o.MapFrom(x => x.Description))
@@ -30,6 +35,20 @@ public class UiMappingBuilder : IMappingBuilder
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
             .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType.ToString()))
-            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
+            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id))
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
+
+        profile.CreateMap<TaxModel, CreateTaxCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
+            .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse(typeof(TaxType), x.TaxType)))
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
+        
+        profile.CreateMap<TaxModel, UpdateTaxCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
+            .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse(typeof(TaxType), x.TaxType)));
     }
 }

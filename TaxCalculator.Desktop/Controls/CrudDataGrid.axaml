@@ -24,10 +24,10 @@
                         
                         <Button Content="Edit" 
                                 IsVisible="{TemplateBinding IsEditButtonVisible}"
-                                Command="{TemplateBinding EditCommand, Mode=TwoWay}"/>
+                                Command="{TemplateBinding EditCommand, Mode=TwoWay}" />
 			
                         <Button Content="Remove" 
-                                Command="{TemplateBinding RemoveCommand, Mode=TwoWay}"/>
+                                Command="{TemplateBinding RemoveCommand, Mode=TwoWay}" />
 			
                         <Button Content="Add" 
                                 Command="{TemplateBinding AddCommand, Mode=TwoWay}"/>

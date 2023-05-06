@@ -18,4 +18,6 @@ public class TaxModel
 
     [GridColumn("Type of Tax")]
     public string TaxType { get; set; }
+
+    public Guid TaxProfileId { get; set; }
 }
