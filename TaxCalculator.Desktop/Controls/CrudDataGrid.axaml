@@ -18,13 +18,19 @@
                                 Grid.Row="0"
                                 Classes="CrudActions">
 
+                        <Button Content="Save"
+                                IsVisible="{TemplateBinding IsSaveButtonVisible}"
+                                Command="{TemplateBinding SaveCommand, Mode=TwoWay}"/>
+                        
                         <Button Content="Edit" 
+                                IsVisible="{TemplateBinding IsEditButtonVisible}"
                                 Command="{TemplateBinding EditCommand, Mode=TwoWay}"/>
 			
                         <Button Content="Remove" 
                                 Command="{TemplateBinding RemoveCommand, Mode=TwoWay}"/>
 			
-                        <Button Content="Add" />
+                        <Button Content="Add" 
+                                Command="{TemplateBinding AddCommand, Mode=TwoWay}"/>
                     </StackPanel>
         
                     <controls:DataGridExt Grid.Row="2"
@@ -33,6 +39,7 @@
                                           Sortable="{TemplateBinding Sortable}"
                                           ResizeableColumns="{TemplateBinding ResizeableColumns}"
                                           SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                                          IsReadOnly="{TemplateBinding IsReadOnly}"
                                           Items="{TemplateBinding Items}" />
                 </Grid>
             </ControlTemplate>

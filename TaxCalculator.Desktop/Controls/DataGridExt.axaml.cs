@@ -21,6 +21,8 @@ public class DataGridExt : TemplatedControl
 
     private object _selectedItem;
 
+    private bool _isReadOnly;
+
     public IEnumerable Items
     {
         get => _items;
@@ -44,6 +46,12 @@ public class DataGridExt : TemplatedControl
         get => _selectedItem;
         set => SetAndRaise(SelectedItemProperty, ref _selectedItem, value);
     }
+
+    public bool IsReadOnly
+    {
+        get => _isReadOnly;
+        set => SetAndRaise(IsReadOnlyProperty, ref _isReadOnly, value);
+    }
     
     public static readonly DirectProperty<DataGridExt, IEnumerable> ItemsProperty =
         AvaloniaProperty.RegisterDirect<DataGridExt, IEnumerable>(nameof(Items), g => g.Items,
@@ -60,6 +68,10 @@ public class DataGridExt : TemplatedControl
     public static readonly DirectProperty<DataGridExt, object> SelectedItemProperty =
         AvaloniaProperty.RegisterDirect<DataGridExt, object>(nameof(SelectedItem), g => g.SelectedItem,
             (g, value) => g.SelectedItem = value);
+
+    public static readonly DirectProperty<DataGridExt, bool> IsReadOnlyProperty =
+        AvaloniaProperty.RegisterDirect<DataGridExt, bool>(nameof(IsReadOnly), g => g.IsReadOnly,
+            (g, value) => g.IsReadOnly = value);
 
     public DataGridExt()
     {

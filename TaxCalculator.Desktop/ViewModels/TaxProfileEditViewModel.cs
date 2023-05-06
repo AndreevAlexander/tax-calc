@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using ReactiveUI;
@@ -22,6 +23,8 @@ public class TaxProfileEditViewModel : RoutedViewModel
 
     private KeyValuePair<Guid, string> _selectedCurrency;
 
+    private TaxModel _selectedTaxConfiguration;
+    
     public TaxProfileModel TaxProfile { get; set; }
 
     public KeyValuePair<Guid, string> SelectedCurrency
@@ -33,7 +36,19 @@ public class TaxProfileEditViewModel : RoutedViewModel
     public Dictionary<Guid, string> Currencies { get; }
 
     public IObservable<ObservableCollection<TaxModel>> TaxConfigurations { get; set; }
+
+    public ReactiveCommand<Unit, Unit> SaveTaxConfigurationsCommand { get; set; }
     
+    public ReactiveCommand<Unit, Unit> AddTaxConfigurationCommand { get; set; }
+    
+    public ReactiveCommand<Unit, Unit> RemoveTaxConfigurationCommand { get; set; }
+
+    public TaxModel SelectedTaxConfiguration
+    {
+        get => _selectedTaxConfiguration;
+        set => this.RaiseAndSetIfChanged(ref _selectedTaxConfiguration, value);
+    }
+
     public TaxProfileEditViewModel(IIdentifierService identifierService,
                                    IQueryBus queryBus,
                                    IMapper mapper)
@@ -41,9 +56,13 @@ public class TaxProfileEditViewModel : RoutedViewModel
         _queryBus = queryBus;
         _mapper = mapper;
         Currencies = identifierService.Currencies.ToDictionary();
+
+        SaveTaxConfigurationsCommand = ReactiveCommand.CreateFromTask(SaveTaxConfigurationsExecuteAsync);
+        AddTaxConfigurationCommand = ReactiveCommand.CreateFromTask(AddTaxConfigurationExecuteAsync);
+        RemoveTaxConfigurationCommand = ReactiveCommand.CreateFromTask(RemoveTaxConfigurationExecuteAsync);
     }
 
-    public override async void OnBeforeNavigated(object parameter)
+    public override void OnBeforeNavigated(object parameter)
     {
         if (parameter is TaxProfileModel model)
         {
@@ -59,5 +78,21 @@ public class TaxProfileEditViewModel : RoutedViewModel
             await _queryBus.ExecuteAsync<GetTaxesQuery, List<Tax>>(new GetTaxesQuery { ProfileId = TaxProfile.Id });
 
         return _mapper.Map<ObservableCollection<TaxModel>>(taxConfigurations);
+    }
+
+    private async Task SaveTaxConfigurationsExecuteAsync()
+    {
+        
+    }
+
+    private async Task AddTaxConfigurationExecuteAsync()
+    {
+        var taxConfigurations = await TaxConfigurations.ToTask();
+        taxConfigurations.Add(new TaxModel()); 
+    }
+
+    private async Task RemoveTaxConfigurationExecuteAsync()
+    {
+        
     }
 }

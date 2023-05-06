@@ -43,6 +43,13 @@
                                Title="Manage Tax Configurations"
                                Sortable="True"
                                ResizeableColumns="True"
+                               IsReadOnly="False"
+                               IsEditButtonVisible="False"
+                               IsSaveButtonVisible="True"
+                               SaveCommand="{Binding SaveTaxConfigurationsCommand, Mode=TwoWay}"
+                               AddCommand="{Binding AddTaxConfigurationCommand, Mode=TwoWay}"
+                               RemoveCommand="{Binding RemoveTaxConfigurationCommand, Mode=TwoWay}"
+                               SelectedItem="{Binding SelectedTaxConfiguration, Mode=TwoWay}"
                                Items="{Binding TaxConfigurations^}" />
     </Grid>
     

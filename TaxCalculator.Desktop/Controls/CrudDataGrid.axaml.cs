@@ -21,7 +21,17 @@ public class CrudDataGrid : TemplatedControl
     private bool _sortable;
 
     private bool _resizeableColumns;
+    
+    private bool _isReadOnly;
 
+    private bool _isSaveButtonVisible;
+
+    private bool _isEditButtonVisible;
+    
+    private ICommand _saveCommand;
+    
+    private ICommand _addCommand;
+    
     public string Title
     {
         get => _title;
@@ -63,6 +73,36 @@ public class CrudDataGrid : TemplatedControl
         get => _resizeableColumns;
         set => SetAndRaise(ResizeableColumnsProperty, ref _resizeableColumns, value);
     }
+    
+    public bool IsReadOnly
+    {
+        get => _isReadOnly;
+        set => SetAndRaise(IsReadOnlyProperty, ref _isReadOnly, value);
+    }
+    
+    public bool IsSaveButtonVisible
+    {
+        get => _isSaveButtonVisible;
+        set => SetAndRaise(IsSaveButtonVisibleProperty, ref _isSaveButtonVisible, value);
+    }
+    
+    public bool IsEditButtonVisible
+    {
+        get => _isEditButtonVisible;
+        set => SetAndRaise(IsEditButtonVisibleProperty, ref _isEditButtonVisible, value);
+    }
+    
+    public ICommand SaveCommand
+    {
+        get => _saveCommand;
+        set => SetAndRaise(SaveCommandProperty, ref _saveCommand, value);
+    }
+    
+    public ICommand AddCommand
+    {
+        get => _addCommand;
+        set => SetAndRaise(AddCommandProperty, ref _addCommand, value);
+    }
 
     public static readonly DirectProperty<CrudDataGrid, string> TitleProperty =
         AvaloniaProperty.RegisterDirect<CrudDataGrid, string>(nameof(Title),
@@ -85,14 +125,42 @@ public class CrudDataGrid : TemplatedControl
             (grid, i) => grid.SelectedItem = i);
 
     public static readonly DirectProperty<CrudDataGrid, IEnumerable> ItemsProperty =
-        AvaloniaProperty.RegisterDirect<CrudDataGrid, IEnumerable>(nameof(Items), grid => grid.Items,
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, IEnumerable>(nameof(Items), 
+            grid => grid.Items,
             (grid, i) => grid.Items = i);
     
     public static readonly DirectProperty<CrudDataGrid, bool> SortableProperty =
-        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(Sortable), g => g.Sortable,
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(Sortable), 
+            g => g.Sortable,
             (g, value) => g.Sortable = value);
 
     public static readonly DirectProperty<CrudDataGrid, bool> ResizeableColumnsProperty =
-        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(ResizeableColumns), g => g.ResizeableColumns,
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(ResizeableColumns), 
+            g => g.ResizeableColumns,
             (g, value) => g.ResizeableColumns = value);
+    
+    public static readonly DirectProperty<CrudDataGrid, bool> IsReadOnlyProperty =
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(IsReadOnly), 
+            g => g.IsReadOnly,
+            (g, value) => g.IsReadOnly = value);
+    
+    public static readonly DirectProperty<CrudDataGrid, bool> IsSaveButtonVisibleProperty =
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(IsSaveButtonVisible), 
+            g => g.IsSaveButtonVisible,
+            (g, value) => g.IsSaveButtonVisible = value);
+    
+    public static readonly DirectProperty<CrudDataGrid, bool> IsEditButtonVisibleProperty =
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, bool>(nameof(IsEditButtonVisible), 
+            g => g.IsEditButtonVisible,
+            (g, value) => g.IsEditButtonVisible = value);
+    
+    public static readonly DirectProperty<CrudDataGrid, ICommand> SaveCommandProperty =
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, ICommand>(nameof(SaveCommand),
+            grid => grid.SaveCommand,
+            (grid, c) => grid.SaveCommand = c);
+    
+    public static readonly DirectProperty<CrudDataGrid, ICommand> AddCommandProperty =
+        AvaloniaProperty.RegisterDirect<CrudDataGrid, ICommand>(nameof(AddCommand),
+            grid => grid.AddCommand,
+            (grid, c) => grid.AddCommand = c);
 }

@@ -14,7 +14,7 @@
                           CanUserSortColumns="{TemplateBinding Sortable}"
                           CanUserReorderColumns="False"
                           AutoGenerateColumns="False"
-                          IsReadOnly="True"
+                          IsReadOnly="{TemplateBinding IsReadOnly}"
                           SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
                           Items="{TemplateBinding Items}">
 				</DataGrid>

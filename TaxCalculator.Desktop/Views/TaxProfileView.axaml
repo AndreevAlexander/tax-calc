@@ -15,6 +15,9 @@
 			                       RemoveCommand="{Binding RemoveCommand, Mode=TwoWay}"
 			                       Sortable="True"
 			                       ResizeableColumns="True"
+			                       IsReadOnly="True"
+			                       IsSaveButtonVisible="False"
+			                       IsEditButtonVisible="True"
 			                       SelectedItem="{Binding SelectedTaxProfile, Mode=TwoWay}"
 			                       Items="{Binding TaxProfiles^}"/>
 		</reactiveUi:RoutedViewHost.DefaultContent>
