@@ -42,13 +42,13 @@ public class UiMappingBuilder : MappingBuilder, IMappingBuilder
             .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
             .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
-            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse(typeof(TaxType), x.TaxType)))
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType))
             .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
         
         profile.CreateMap<TaxModel, UpdateTaxCommand>()
             .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
             .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
-            .ForMember(x => x.TaxType, o => o.MapFrom(x => Enum.Parse(typeof(TaxType), x.TaxType)));
+            .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType));
     }
 }

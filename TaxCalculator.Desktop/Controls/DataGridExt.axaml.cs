@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -150,11 +151,27 @@ public class DataGridExt : TemplatedControl
 
     private DataGridColumn CreateColumn(PropertyInfo propertyInfo, string displayName, string bindPath)
     {
-        displayName = displayName ?? propertyInfo.Name;
-        return propertyInfo.PropertyType == typeof(bool)
-        ? new DataGridCheckBoxColumn
-                { Header = displayName, Binding = new Binding(bindPath) }
-        : new DataGridTextColumn
+        DataGridColumn column;
+        displayName ??= propertyInfo.Name;
+
+        var propertyType = propertyInfo.PropertyType;
+        if (propertyType.IsEnum)
+        {
+            var comboBoxItems = Enum.GetValues(propertyInfo.PropertyType);
+            column = new DataGridComboboxColumn(comboBoxItems) 
                 { Header = displayName, Binding = new Binding(bindPath) };
+        }
+        else if (propertyType == typeof(bool))
+        {
+            column = new DataGridCheckBoxColumn
+                { Header = displayName, Binding = new Binding(bindPath) };
+        }
+        else
+        {
+            column = new DataGridTextColumn
+                { Header = displayName, Binding = new Binding(bindPath) };
+        }
+
+        return column;
     }
 }

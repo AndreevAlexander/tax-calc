@@ -1,5 +1,6 @@
 ﻿using System;
 using TaxCalculator.Desktop.Attributes;
+using TaxCalculator.Domain.Enums;
 
 namespace TaxCalculator.Desktop.Models;
 
@@ -16,8 +17,9 @@ public class TaxModel
     [GridColumn("Applies Before")]
     public decimal? AppliesBefore { get; set; }
 
+    //TODO: Create a tax type enum for UI
     [GridColumn("Type of Tax")]
-    public string TaxType { get; set; }
+    public TaxType TaxType { get; set; }
 
     public Guid TaxProfileId { get; set; }
 }
