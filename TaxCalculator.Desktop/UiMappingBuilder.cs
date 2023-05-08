@@ -1,9 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using TaxCalculator.Application.Taxes.Commands;
+using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Desktop.Models;
 using TaxCalculator.Domain.Entities;
-using TaxCalculator.Domain.Enums;
 using TaxCalculator.Infrastructure.Mapper;
 
 namespace TaxCalculator.Desktop;
@@ -28,7 +27,8 @@ public class UiMappingBuilder : MappingBuilder, IMappingBuilder
         profile.CreateMap<Currency, CurrencyModel>()
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name))
             .ForMember(x => x.ExchangeRate, o => o.MapFrom(x => x.ExchangeRate))
-            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
+            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id))
+            .ReverseMap();
 
         profile.CreateMap<Tax, TaxModel>()
             .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
@@ -50,5 +50,10 @@ public class UiMappingBuilder : MappingBuilder, IMappingBuilder
             .ForMember(x => x.AppliesBefore, o => o.MapFrom(x => x.AppliesBefore))
             .ForMember(x => x.IsPercentage, o => o.MapFrom(x => x.IsPercentage))
             .ForMember(x => x.TaxType, o => o.MapFrom(x => x.TaxType));
+
+        profile.CreateMap<TaxProfileModel, UpdateTaxProfileCommand>()
+            .ForMember(x => x.Description, o => o.MapFrom(x => x.Description))
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.Id))
+            .ForMember(x => x.Name, o => o.MapFrom(x => x.Name));
     }
 }

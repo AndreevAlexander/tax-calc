@@ -24,7 +24,7 @@ public class DataGridComboboxColumn : DataGridBoundColumn
         {
             Name = "CellComboBox", 
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Items = _comboBoxItems
+            Items = _comboBoxItems,
         };
         
         if (Binding != null)
@@ -51,7 +51,7 @@ public class DataGridComboboxColumn : DataGridBoundColumn
         {
             IsDropDownOpen = true, 
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Items = _comboBoxItems
+            Items = _comboBoxItems,
         };
 
         return comboBox;

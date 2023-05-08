@@ -12,6 +12,7 @@
                 <StackPanel Spacing="-10">
                     <ComboBox Items="{TemplateBinding Items}"
                               SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                              IsEnabled="{TemplateBinding IsEnabled}"
                               Width="{TemplateBinding Width}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -20,6 +21,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Label Classes="LabeledComboBoxLabel"
+                           IsVisible="{TemplateBinding IsEnabled}"
                            Content="{TemplateBinding Label}"/>
                 </StackPanel>
             </ControlTemplate>

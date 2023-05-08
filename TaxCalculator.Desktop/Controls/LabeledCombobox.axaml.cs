@@ -11,7 +11,7 @@ public class LabeledCombobox : TemplatedControl
     private IEnumerable _items;
 
     private object _selectedItem;
-    
+
     public string Label
     {
         get => _label;
@@ -29,7 +29,7 @@ public class LabeledCombobox : TemplatedControl
         get => _selectedItem;
         set => SetAndRaise(SelectedItemProperty, ref _selectedItem, value);
     }
-    
+
     public static readonly DirectProperty<LabeledCombobox, string> LabelProperty =
         AvaloniaProperty.RegisterDirect<LabeledCombobox, string>(nameof(Label), comboBox => comboBox.Label,
             (comboBox, value) => comboBox.Label = value);

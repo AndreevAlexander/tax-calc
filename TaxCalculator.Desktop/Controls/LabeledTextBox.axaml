@@ -11,7 +11,7 @@
             <ControlTemplate>
                 <StackPanel Spacing="-10"
                             Width="{TemplateBinding Width}">
-                    <TextBox Text="{TemplateBinding Text}"
+                    <TextBox Text="{TemplateBinding Text, Mode=TwoWay}"
                              Width="{TemplateBinding Width}"
                              AcceptsReturn="{TemplateBinding AcceptReturns}"
                              TextWrapping="{TemplateBinding TextWrapping}"/>

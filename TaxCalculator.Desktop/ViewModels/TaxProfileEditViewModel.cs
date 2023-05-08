@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using TaxCalculator.Application.Taxes.Commands;
 using TaxCalculator.Application.Taxes.Queries;
+using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Contracts;
 using TaxCalculator.Cqrs.Contracts;
 using TaxCalculator.Cqrs.Contracts.Bus;
@@ -45,12 +46,16 @@ public class TaxProfileEditViewModel : RoutedViewModel
     public ReactiveCommand<Unit, Unit> AddTaxConfigurationCommand { get; set; }
     
     public ReactiveCommand<Unit, Unit> RemoveTaxConfigurationCommand { get; set; }
+    
+    public ReactiveCommand<Unit, Unit> SaveTaxProfileCommand { get; set; }
 
     public TaxModel SelectedTaxConfiguration
     {
         get => _selectedTaxConfiguration;
         set => this.RaiseAndSetIfChanged(ref _selectedTaxConfiguration, value);
     }
+
+    public bool CurrencyEditAllowed => false;
 
     public TaxProfileEditViewModel(IIdentifierService identifierService,
                                    IQueryBus queryBus,
@@ -66,6 +71,7 @@ public class TaxProfileEditViewModel : RoutedViewModel
         AddTaxConfigurationCommand = ReactiveCommand.CreateFromTask(AddTaxConfigurationExecuteAsync);
         RemoveTaxConfigurationCommand = ReactiveCommand.CreateFromTask(RemoveTaxConfigurationExecuteAsync,
             this.WhenAnyValue(vm => vm.SelectedTaxConfiguration).Select(x => x != null));
+        SaveTaxProfileCommand = ReactiveCommand.CreateFromTask(SaveTaxProfileExecuteAsync);
     }
 
     public override void OnBeforeNavigated(object parameter)
@@ -117,6 +123,15 @@ public class TaxProfileEditViewModel : RoutedViewModel
         {
             var taxConfigurations = await TaxConfigurations.ToTask();
             taxConfigurations.Remove(SelectedTaxConfiguration);
+        }
+    }
+
+    private async Task SaveTaxProfileExecuteAsync()
+    {
+        var saveCommandResult = await _commandBus.DispatchAsync(_mapper.Map<UpdateTaxProfileCommand>(TaxProfile));
+        if (saveCommandResult.Status == CommandStatus.Success)
+        {
+            //TODO: show notification
         }
     }
 }

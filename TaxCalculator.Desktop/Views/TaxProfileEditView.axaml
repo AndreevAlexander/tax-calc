@@ -17,6 +17,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
+                Command="{Binding SaveTaxProfileCommand, Mode=TwoWay}"
                 Content="Save Basic Information" />
         
         <StackPanel Grid.Row="2"
@@ -24,16 +25,17 @@
                     Grid.Column="0"
                     Spacing="10">
             
-            <controls:LabeledTextBox Text="{Binding TaxProfile.Name}"
-                                     Label="Profile Name"/>
+            <controls:LabeledTextBox Text="{Binding TaxProfile.Name, Mode=TwoWay}"
+                                     Label="Profile Name" />
             
-            <controls:LabeledTextBox Text="{Binding TaxProfile.Description}" 
+            <controls:LabeledTextBox Text="{Binding TaxProfile.Description, Mode=TwoWay}" 
                                      Label="Description"
                                      AcceptReturns="True"
                                      TextWrapping="Wrap" />
             
             <controls:LabeledCombobox Items="{Binding Currencies}"
                                       SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
+                                      IsEnabled="{Binding CurrencyEditAllowed}"
                                       Label="Currency" />
         </StackPanel>
         
