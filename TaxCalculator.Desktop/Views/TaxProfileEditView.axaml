@@ -3,56 +3,70 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:TaxCalculator.Desktop.Controls"
+             xmlns:reactiveUi="http://reactiveui.net"
+             xmlns:desktop="clr-namespace:TaxCalculator.Desktop"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaxCalculator.Desktop.Views.TaxProfileEditView">
-    <Grid RowDefinitions="Auto,10,Auto,20,*"
-          ColumnDefinitions="Auto,*">
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Text="Edit Tax Profile"
-                   VerticalAlignment="Center"
-                   FontSize="18" />
-        
-        <Button Grid.Row="0"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Command="{Binding SaveTaxProfileCommand, Mode=TwoWay}"
-                Content="Save Basic Information" />
-        
-        <StackPanel Grid.Row="2"
-                    Grid.ColumnSpan="2"
-                    Grid.Column="0"
-                    Spacing="10">
-            
-            <controls:LabeledTextBox Text="{Binding TaxProfile.Name, Mode=TwoWay}"
-                                     Label="Profile Name" />
-            
-            <controls:LabeledTextBox Text="{Binding TaxProfile.Description, Mode=TwoWay}" 
-                                     Label="Description"
-                                     AcceptReturns="True"
-                                     TextWrapping="Wrap" />
-            
-            <controls:LabeledCombobox Items="{Binding Currencies}"
-                                      SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
-                                      IsEnabled="{Binding CurrencyEditAllowed}"
-                                      Label="Currency" />
-        </StackPanel>
-        
-        <controls:CrudDataGrid Grid.Row="4"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="2"
-                               Title="Manage Tax Configurations"
-                               Sortable="True"
-                               ResizeableColumns="True"
-                               IsReadOnly="False"
-                               IsEditButtonVisible="False"
-                               IsSaveButtonVisible="True"
-                               SaveCommand="{Binding SaveTaxConfigurationsCommand, Mode=TwoWay}"
-                               AddCommand="{Binding AddTaxConfigurationCommand, Mode=TwoWay}"
-                               RemoveCommand="{Binding RemoveTaxConfigurationCommand, Mode=TwoWay}"
-                               SelectedItem="{Binding SelectedTaxConfiguration, Mode=TwoWay}"
-                               Items="{Binding TaxConfigurations^}" />
-    </Grid>
-    
+    <reactiveUi:RoutedViewHost Router="{Binding Router}">
+        <reactiveUi:RoutedViewHost.DefaultContent>
+            <Grid RowDefinitions="Auto,10,Auto,20,*"
+                  ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Edit Tax Profile"
+                           VerticalAlignment="Center"
+                           FontSize="18" />
+                
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Spacing="5"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Content="Manage Spends"
+                            Command="{Binding ManageAdditionalSpendsCommand, Mode=TwoWay}"/>
+                    
+                    <Button Command="{Binding SaveTaxProfileCommand, Mode=TwoWay}"
+                            Content="Save Basic Information" />
+                </StackPanel>
+                
+                <StackPanel Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Grid.Column="0"
+                            Spacing="10">
+                    
+                    <controls:LabeledTextBox Text="{Binding TaxProfile.Name, Mode=TwoWay}"
+                                             Label="Profile Name" />
+                    
+                    <controls:LabeledTextBox Text="{Binding TaxProfile.Description, Mode=TwoWay}" 
+                                             Label="Description"
+                                             AcceptReturns="True"
+                                             TextWrapping="Wrap" />
+                    
+                    <controls:LabeledCombobox Items="{Binding Currencies}"
+                                              SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
+                                              IsEnabled="{Binding CurrencyEditAllowed}"
+                                              Label="Currency" />
+                </StackPanel>
+                
+                <controls:CrudDataGrid Grid.Row="4"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Title="Manage Tax Configurations"
+                                       Sortable="True"
+                                       ResizeableColumns="True"
+                                       IsReadOnly="False"
+                                       IsEditButtonVisible="False"
+                                       IsSaveButtonVisible="True"
+                                       SaveCommand="{Binding SaveTaxConfigurationsCommand, Mode=TwoWay}"
+                                       AddCommand="{Binding AddTaxConfigurationCommand, Mode=TwoWay}"
+                                       RemoveCommand="{Binding RemoveTaxConfigurationCommand, Mode=TwoWay}"
+                                       SelectedItem="{Binding SelectedTaxConfiguration, Mode=TwoWay}"
+                                       Items="{Binding TaxConfigurations^}" />
+            </Grid>
+        </reactiveUi:RoutedViewHost.DefaultContent>
+        <reactiveUi:RoutedViewHost.ViewLocator>
+            <desktop:AppViewLocator />
+        </reactiveUi:RoutedViewHost.ViewLocator>
+    </reactiveUi:RoutedViewHost>
 </UserControl>

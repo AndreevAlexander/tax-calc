@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TaxCalculator.Application.AdditionalSpends.Commands;
 using TaxCalculator.Application.Taxes.Commands;
 using TaxCalculator.Application.TaxProfiles.Commands;
 using TaxCalculator.Desktop.Models;
@@ -55,5 +56,21 @@ public class UiMappingBuilder : MappingBuilder, IMappingBuilder
             .ForMember(x => x.Description, o => o.MapFrom(x => x.Description))
             .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.Id))
             .ForMember(x => x.Name, o => o.MapFrom(x => x.Name));
+
+        profile.CreateMap<AdditionalSpend, AdditionalSpendModel>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax))
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId))
+            .ForMember(x => x.Id, o => o.MapFrom(x => x.Id));
+
+        profile.CreateMap<AdditionalSpendModel, AddAdditionalSpendCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax))
+            .ForMember(x => x.TaxProfileId, o => o.MapFrom(x => x.TaxProfileId));
+
+        profile.CreateMap<AdditionalSpendModel, UpdateAdditionalSpendCommand>()
+            .ForMember(x => x.Amount, o => o.MapFrom(x => x.Amount))
+            .ForMember(x => x.AdditionalSpendId, o => o.MapFrom(x => x.Id))
+            .ForMember(x => x.AppliedBeforeTax, o => o.MapFrom(x => x.AppliedBeforeTax));
     }
 }

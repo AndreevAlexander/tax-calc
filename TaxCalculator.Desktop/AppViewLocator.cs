@@ -1,8 +1,6 @@
 ﻿using System;
 using Avalonia.Controls;
 using ReactiveUI;
-using TaxCalculator.Desktop.ViewModels;
-using TaxCalculator.Desktop.Views;
 
 namespace TaxCalculator.Desktop;
 

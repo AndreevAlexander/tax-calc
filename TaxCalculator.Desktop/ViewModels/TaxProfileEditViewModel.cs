@@ -20,7 +20,7 @@ using TaxCalculator.Domain.Services.Identifier;
 
 namespace TaxCalculator.Desktop.ViewModels;
 
-public class TaxProfileEditViewModel : RoutedViewModel
+public class TaxProfileEditViewModel : NestedRoutedViewModel
 {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;
@@ -48,6 +48,8 @@ public class TaxProfileEditViewModel : RoutedViewModel
     public ReactiveCommand<Unit, Unit> RemoveTaxConfigurationCommand { get; set; }
     
     public ReactiveCommand<Unit, Unit> SaveTaxProfileCommand { get; set; }
+    
+    public ReactiveCommand<Unit, Unit> ManageAdditionalSpendsCommand { get; set; }
 
     public TaxModel SelectedTaxConfiguration
     {
@@ -72,6 +74,7 @@ public class TaxProfileEditViewModel : RoutedViewModel
         RemoveTaxConfigurationCommand = ReactiveCommand.CreateFromTask(RemoveTaxConfigurationExecuteAsync,
             this.WhenAnyValue(vm => vm.SelectedTaxConfiguration).Select(x => x != null));
         SaveTaxProfileCommand = ReactiveCommand.CreateFromTask(SaveTaxProfileExecuteAsync);
+        ManageAdditionalSpendsCommand = ReactiveCommand.Create(ManageAdditionalSpendsExecute);
     }
 
     public override void OnBeforeNavigated(object parameter)
@@ -133,5 +136,10 @@ public class TaxProfileEditViewModel : RoutedViewModel
         {
             //TODO: show notification
         }
+    }
+
+    public void ManageAdditionalSpendsExecute()
+    {
+        NavigateTo<AdditionalSpendViewModel>(TaxProfile);
     }
 }
